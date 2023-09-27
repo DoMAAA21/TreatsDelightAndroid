@@ -1,21 +1,84 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Image, Alert} from 'react-native';
-import { Text, Input, Block, Button, Icon } from 'galio-framework';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { View, StyleSheet, ScrollView, Image,} from 'react-native';
+import { Text, Input, Block, Button, Icon, } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
-const AddUserScreen = () => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [course, setCourse] = useState(''); // Initialize as empty string
-    const [religion, setReligion] = useState(''); // Initialize as empty string
-    const [role, setRole] = useState(''); // Initialize as empty string
-    const [avatar, setAvatar] = useState(null);
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
+import * as FileSystem from 'expo-file-system';
+import Toast from 'react-native-toast-message';
+import { newUserReset } from '../../store/reducers/auth/newUserSlice';
+import { newUser } from '../../store/reducers/auth/newUserSlice';
 
-    const courses = ['Course 1', 'Course 2', 'Course 3']; // Add your course options here
-    const religions = ['Religion 1', 'Religion 2', 'Religion 3']; // Add your religion options here
-    const roles = ['Role 1', 'Role 2', 'Role 3']; // Add your role options here
+const validationSchema = Yup.object({
+    fname: Yup.string().required('First Name is required'),
+    lname: Yup.string().required('Last Name is required'),
+    email: Yup.string().email('Invalid email address').required('Email is required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    religion: Yup.string().required('Religion is required'),
+    course: Yup.string().required('Course is required'),
+    role: Yup.string().required('Role is required'),
+});
+
+const MyInput = ({ field, form, ...props }) => (
+    <Input
+        {...props}
+        onChangeText={field.onChange(field.name)}
+        onBlur={field.onBlur(field.name)}
+        value={field.value}
+    />
+);
+
+const successMsg = (message) => {
+    Toast.show({
+        text1: 'Success',
+        text2: `${message}`,
+        type: 'success',
+        position: 'bottom',
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+        customStyles: {
+            title: {
+                fontSize: 30,
+                fontWeight: 'bold',
+            },
+            message: {
+                fontSize: 24,
+                fontWeight: 'bold',
+            },
+        },
+    });
+};
+const AddUserScreen = () => {
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+    const { loading, error, success } = useSelector(state => state.newUser);
+    const [avatar, setAvatar] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null);
+
+    const courses = [
+        { label: 'BS in Information Technology', value: 'BSIT' },
+        { label: 'BS in Civil Engineering', value: 'CE' },
+    ];
+    const religions = ['Catholic', 'Muslim', 'Iglesia ni Cristo'];
+    const roles = ['User', 'Employee'];
+
+    useEffect(() => {
+        if (error) {
+            errorMsg(error)
+            dispatch(newUserReset())
+        }
+
+        if (success) {
+            navigation.navigate('User');
+            dispatch(newUserReset())
+            successMsg('User created successfully');
+        }
+    }, [dispatch, error, success, navigation])
 
     const selectImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -26,112 +89,208 @@ const AddUserScreen = () => {
         });
 
         if (!result.canceled) {
-            // Access the selected asset through the assets array
             const selectedAsset = result.assets[0];
-            setAvatar(selectedAsset.uri);
+            setAvatarPreview(selectedAsset.uri);
+
+            // Read the selected image and convert it to base64
+            const base64 = await FileSystem.readAsStringAsync(selectedAsset.uri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+
+            // Set the avatar as a base64 data URL
+
+            setAvatar(`data:image/jpg;base64,${base64}`);
         }
     };
 
-    const handleSubmit = () => {
-        Alert.alert('Form Submitted', 'Form data has been submitted successfully!');
+    const initialValues = {
+        fname: '',
+        lname: '',
+        email: '',
+        password: '',
+        role: '',
+        course: '',
+        religion: '',
     };
+
+    const onSubmit = (values) => {
+        // Alert.alert(avatar)
+        const userData = {
+            fname: values.fname,
+            lname: values.lname,
+            email: values.email,
+            password: values.password,
+            course: values.course,
+            religion: values.religion,
+            role: values.role,
+            avatar
+        }
+        dispatch(newUser(userData));
+    };
+
+
+
+
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <View style={styles.container}>
-                <Block style={styles.formContainer}>
-                    <Text h5 style={styles.formHeader}>
-                        User Registration
-                    </Text>
-                    <Input
-                        placeholder="First Name"
-                        value={firstName}
-                        onChangeText={(text) => setFirstName(text)}
-                    />
-                    <Input
-                        placeholder="Last Name"
-                        value={lastName}
-                        onChangeText={(text) => setLastName(text)}
-                    />
-                    <Input
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={(text) => setEmail(text)}
-                        keyboardType="email-address"
-                    />
-                    <Input
-                        placeholder="Password"
-                        value={password}
-                        onChangeText={(text) => setPassword(text)}
-                        secureTextEntry
-                    />
-                    <View style={styles.inputContainer}>
-                    <Text>Course</Text>
-                    <Picker
-                        selectedValue={course}
-                        onValueChange={(value) => setCourse(value)}
-                    >
-                        {courses.map((courseOption) => (
-                            <Picker.Item label={courseOption} value={courseOption} key={courseOption} />
-                        ))}
-                    </Picker>
-                    </View>
-                    <Picker
-                        selectedValue={religion}
-                        onValueChange={(value) => setReligion(value)}
-                    >
-                        {religions.map((religionOption) => (
-                            <Picker.Item label={religionOption} value={religionOption} key={religionOption} />
-                        ))}
-                    </Picker>
-                    <Picker
-                        selectedValue={role}
-                        onValueChange={(value) => setRole(value)}
-                    >
-                        {roles.map((roleOption) => (
-                            <Picker.Item label={roleOption} value={roleOption} key={roleOption} />
-                        ))}
-                    </Picker>
-                    <View style={styles.imagePickerContainer}>
-                        {avatar ? (
-                            <Image source={{ uri: avatar }} style={styles.avatar} />
-                        ) : null}
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+            >
+                {(formik) => (
 
-                        <Button
-                            color="info"
-                            style={styles.imagePickerButton}
-                            onPress={selectImage}
-                        >
-                            <Block row middle>
-                                <Icon
-                                    family="FontAwesome"
-                                    size={16}
-                                    name="camera"
-                                    color="white"
-                                    style={{ marginRight: 5 }}
-                                />
-                                <Text color="white">Choose Avatar</Text>
-                            </Block>
-                        </Button>
+                    <View style={styles.container}>
+                        <Block style={styles.formContainer}>
+                            <Text h5 style={styles.formHeader}>
+                                User Registration
+                            </Text>
+                            <Field
+                                name="fname"
+                                placeholder="First Name"
+                                component={MyInput}
+                            />
+                            {formik.touched.fname && formik.errors.fname ? (
+                                <Text style={styles.errorMessage}>{formik.errors.fname}</Text>
+                            ) : null}
+                            <Field
+                                name="lname"
+                                placeholder="Last Name"
+                                component={MyInput}
+                            />
+                            {formik.touched.lname && formik.errors.lname ? (
+                                <Text style={styles.errorMessage}>{formik.errors.lname}</Text>
+                            ) : null}
+                            <Field
+                                name="email"
+                                placeholder="Email"
+                                keyboardType="email-address"
+                                component={MyInput}
+                            />
+                            {formik.touched.email && formik.errors.email ? (
+                                <Text style={styles.errorMessage}>{formik.errors.email}</Text>
+                            ) : null}
+                            <Field
+                                name="password"
+                                placeholder="Password"
+                                secureTextEntry
+                                component={MyInput}
+                            />
+                            {formik.touched.password && formik.errors.password ? (
+                                <Text style={styles.errorMessage}>{formik.errors.password}</Text>
+                            ) : null}
+                            <View style={styles.inputContainer}>
+                                <Field name="course">
+                                    {({ field }) => (
+                                        <View style={styles.inputContainer}>
+                                            <Text>Course</Text>
+                                            <Picker
+                                                selectedValue={field.value}
+                                                onValueChange={field.onChange('course')}
+                                            >
+                                                <Picker.Item label="Choose Option" value="" />
 
+                                                {courses.map((courseOption) => (
+                                                    <Picker.Item label={courseOption.label} value={courseOption.value} key={courseOption.value} />
+                                                ))}
+                                            </Picker>
+                                        </View>
+                                    )}
+                                </Field>
+                                {formik.touched.course && formik.errors.course ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.course}</Text>
+                                ) : null}
+                            </View>
+
+                            <View style={styles.inputContainer}>
+                                <Field name="religion">
+                                    {({ field }) => (
+                                        <View style={styles.inputContainer}>
+                                            <Text>Religion</Text>
+                                            <Picker
+                                                selectedValue={field.value}
+                                                onValueChange={field.onChange('religion')}
+                                            >
+                                                <Picker.Item label="Choose Option" value="" />
+                                                {religions.map((religionOption) => (
+                                                    <Picker.Item label={religionOption} value={religionOption} key={religionOption} />
+                                                ))}
+                                            </Picker>
+                                        </View>
+                                    )}
+                                </Field>
+                                {formik.touched.religion && formik.errors.religion ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.religion}</Text>
+                                ) : null}
+                            </View>
+
+                            <View style={styles.inputContainer}>
+                                <Field name="role">
+                                    {({ field }) => (
+                                        <View style={styles.inputContainer}>
+                                            <Text>Role</Text>
+                                            <Picker
+                                                selectedValue={field.value}
+                                                onValueChange={field.onChange('role')}
+                                            >
+                                                <Picker.Item label="Choose Option" value="" />
+                                                {roles.map((roleOption) => (
+                                                    <Picker.Item label={roleOption} value={roleOption} key={roleOption} />
+                                                ))}
+                                            </Picker>
+                                        </View>
+                                    )}
+                                </Field>
+                                {formik.touched.role && formik.errors.role ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.role}</Text>
+                                ) : null}
+                            </View>
+
+                            <View style={styles.imagePickerContainer}>
+                                {avatar ? (
+                                    <Image source={{ uri: avatar }} style={styles.avatar} />
+                                ) : null}
+
+                                <Button
+                                    color="info"
+                                    style={styles.imagePickerButton}
+                                    onPress={selectImage}
+                                >
+                                    <Block row middle>
+                                        <Icon
+                                            family="FontAwesome"
+                                            size={16}
+                                            name="camera"
+                                            color="white"
+                                            style={{ marginRight: 5 }}
+                                        />
+                                        <Text color="white">Choose Avatar</Text>
+                                    </Block>
+                                </Button>
+                            </View>
+
+                            <Button
+                                round
+                                color="success"
+                                style={[styles.submitButton, { opacity: formik.isValid && !loading ? 1 : 0.5 }]}
+                                onPress={formik.handleSubmit}
+                                disabled={!formik.isValid || loading}
+                            >
+                                Submit
+                            </Button>
+                        </Block>
                     </View>
-                    <Button
-                        round
-                        color="success"
-                        style={styles.submitButton}
-                        onPress={handleSubmit}
-                    >
-                        Submit
-                    </Button>
-                </Block>
-            </View>
+
+                )}
+            </Formik>
         </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     scrollViewContainer: {
-        flex: 1,
+        flexGrow: 1
     },
     container: {
         flex: 1,
@@ -151,9 +310,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     imagePickerButton: {
-        flex: 1, // Take up half of the available space
+        flex: 1,
         backgroundColor: '#16aec1',
-        marginRight: 10, // Add some spacing between the button and the image
+        marginRight: 10,
     },
     avatar: {
         width: 100,
@@ -167,7 +326,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     inputContainer: {
-        inputContainer: 10,
+        marginVertical: 10,
+    },
+    errorMessage: {
+        color: 'red'
     }
 });
 

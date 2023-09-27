@@ -9,22 +9,22 @@ const initialState = {
   users: [], 
 };
 
-export const newUser = createAsyncThunk('newUser/newUser', async (userData, { rejectWithValue }) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-  
-      const { data } = await axios.post(`${process.env.REACT_APP_API}/api/v1/admin/user/new`, userData, { withCredentials: true }, config);
-  
-      return data;
-    } catch (error) 
-    {
-      return rejectWithValue(error.response.data.message);
-    }
-  });
+export const newUser = createAsyncThunk('newUser/newUser', async (userData, { dispatch }) => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    };
+    const { data } = await axios.post(`${process.env.REACT_APP_API}/api/v1/admin/user/new`, userData, config);
+    dispatch(newUserSuccess(data));
+    return data;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+});
+
 
 const newUserSlice = createSlice({
   name: 'newUser',

@@ -17,7 +17,7 @@ const UserScreen = () => {
   const navigation = useNavigation();
   const { loading, error, users } = useSelector(state => state.allUsers);
   const { isDeleted } = useSelector(state => state.user)
-  // console.log(users)
+
 
   const successMsg = (message) => {
     Toast.show({

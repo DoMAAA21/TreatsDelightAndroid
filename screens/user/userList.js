@@ -43,7 +43,8 @@ const UserList = ({ users }) => {
                         return (
                             fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             user.course.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            user.email.toLowerCase().includes(searchQuery.toLowerCase())
+                            user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            user.religion.toLowerCase().includes(searchQuery.toLowerCase())
                           );
                       
                         
@@ -61,6 +62,7 @@ const UserList = ({ users }) => {
                                 <View style={styles.rightContainer}>
                                     <Text h4>{user.fname} {user.lname}</Text>
                                     <Text p>{user.course}</Text>
+                                    <Text p>{user.religion}</Text>
                                     <Text p>{user.email}</Text>
                                 </View>
                             </Block>
