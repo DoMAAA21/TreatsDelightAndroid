@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import Toast from 'react-native-toast-message';
 import { newUserReset } from '../../store/reducers/auth/newUserSlice';
 import { newUser } from '../../store/reducers/auth/newUserSlice';
@@ -53,12 +53,35 @@ const successMsg = (message) => {
         },
     });
 };
+
+const errorMsg = (message) => {
+    Toast.show({
+      text1: 'Error',
+      text2: `${message}`,
+      type: 'error',
+      position: 'bottom',
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 30,
+      bottomOffset: 40,
+      customStyles: {
+        title: {
+          fontSize: 30,
+          fontWeight: 'bold',
+        },
+        message: {
+          fontSize: 24,
+          fontWeight: 'bold',
+        },
+      },
+    });
+  };
 const AddUserScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { loading, error, success } = useSelector(state => state.newUser);
     const [avatar, setAvatar] = useState(null);
-    const [avatarPreview, setAvatarPreview] = useState(null);
+    const [avatarPreview, setAvatarPreview ]=  useState(null);
 
     const courses = [
         { label: 'BS in Information Technology', value: 'BSIT' },
@@ -74,32 +97,44 @@ const AddUserScreen = () => {
         }
 
         if (success) {
-            navigation.navigate('User');
+            navigation.navigate('Users');
             dispatch(newUserReset())
             successMsg('User created successfully');
         }
     }, [dispatch, error, success, navigation])
 
+
     const selectImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [3, 2],
             quality: 1,
         });
-
+    
         if (!result.canceled) {
             const selectedAsset = result.assets[0];
-            setAvatarPreview(selectedAsset.uri);
-
-            // Read the selected image and convert it to base64
-            const base64 = await FileSystem.readAsStringAsync(selectedAsset.uri, {
-                encoding: FileSystem.EncodingType.Base64,
-            });
-
-            // Set the avatar as a base64 data URL
-
-            setAvatar(`data:image/jpg;base64,${base64}`);
+    
+          
+            const manipulatorOptions = {
+                compress: 0.7, 
+                format: ImageManipulator.SaveFormat.JPEG, 
+                base64: true, 
+            };
+    
+            // Manipulate the image
+            const manipulatedImage = await ImageManipulator.manipulateAsync(
+                selectedAsset.uri,
+                [],
+                manipulatorOptions
+            );
+    
+    
+            if (manipulatedImage) {
+                const { uri, base64 } = manipulatedImage;
+                setAvatarPreview(uri)
+                setAvatar(`data:image/jpg;base64,${base64}`);
+            }
         }
     };
 
@@ -248,8 +283,8 @@ const AddUserScreen = () => {
                             </View>
 
                             <View style={styles.imagePickerContainer}>
-                                {avatar ? (
-                                    <Image source={{ uri: avatar }} style={styles.avatar} />
+                                {avatarPreview ? (
+                                    <Image source={{ uri: avatarPreview }} style={styles.avatar} />
                                 ) : null}
 
                                 <Button

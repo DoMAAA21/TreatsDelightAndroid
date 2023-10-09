@@ -1,6 +1,6 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
   loading: false,
@@ -15,12 +15,12 @@ export const newUser = createAsyncThunk('newUser/newUser', async (userData, { di
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      withCredentials: true,
     };
-    const { data } = await axios.post(`${process.env.REACT_APP_API}/api/v1/admin/user/new`, userData, config);
+    const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/user/new`, userData, config);
     dispatch(newUserSuccess(data));
     return data;
   } catch (error) {
+    dispatch(newUserFail(error.response.data.message))
     throw error.response.data.message;
   }
 });

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
   user: {},
@@ -12,13 +13,14 @@ export const getUserDetails = createAsyncThunk('userDetails/getUserDetails',asyn
         dispatch(userDetailsRequest()); // Dispatch the action creator instead of the constant
   
         const { data } = await axios.get(
-          `${process.env.REACT_APP_API}/api/v1/admin/user/${id}`,
+          `${BACKEND_URL}/api/v1/admin/user/${id}`,
           { withCredentials: true }
         );
   
         dispatch(userDetailsSuccess(data.user));
         return data.user;
       } catch (error) {
+        dispatch(userDetailsFail(error.response.data.message))
         return rejectWithValue(error.response.data.message);
       }
     }

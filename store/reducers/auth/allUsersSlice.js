@@ -1,6 +1,7 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {REACT_APP_API} from "@env"
+import {BACKEND_URL} from '../../../constants/constants'
+
 
 
 const initialState = {
@@ -11,7 +12,7 @@ const initialState = {
 
 export const fetchAllUsers = createAsyncThunk('allUsers/fetchAllUsers',async (_, thunkAPI) => {
     try {
-      const { data } = await axios.get(`${REACT_APP_API}/api/v1/admin/users`,{ withCredentials: true });
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/users`);
       thunkAPI.dispatch(allUsersSuccess(data.users));
       return data.users;
     } catch (error) {

@@ -2,34 +2,37 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useIsFocused } from '@react-navigation/native';
-import HomeScreen from '../screens/home/index'; // Import your HomeScreen component
-import ProfileScreen from '../screens/profile/index'; // Import your ProfileScreen component
+import HomeScreen from '../screens/home/index'; 
+import ProfileScreen from '../screens/profile/index';
 import UserScreen from '../screens/user';
 import AddUserScreen from '../screens/user/addUser';
-// const HomeIcon = <Icon name="navicon" size={30} color="#900" />;
+import EditUserScreen from '../screens/user/editUser';
+import UserInfo from '../screens/user/userInfo';
 
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const activeColor = '#05acff';
+const inactiveColor = 'gray';
 
-const HomeIcon = ({ color, size }) => {
+const HomeIcon = () => {
   const isFocused = useIsFocused();
   return (
     <Icon
       name="home"
       size={35}
-      color={isFocused ? '#759277' : 'gray'}
+      color={isFocused ? activeColor : inactiveColor}
     />
   );
 };
 
-const ProfileIcon = ({ color, size }) => {
+const ProfileIcon = () => {
   const isFocused = useIsFocused();
   return (
     <Icon
       name="user"
       size={35}
-      color={isFocused ? '#759277' : 'gray'}
+      color={isFocused ? activeColor : inactiveColor }
     />
   );
 };
@@ -39,8 +42,12 @@ const HomeStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#b4e373', } }} >
       <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: 'Dashboard' }} />
-      <Stack.Screen name="User" component={UserScreen} options={{ headerTitle: 'Users' }} />
+      <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Users' }} />
       <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
+      <Stack.Screen name="EditUser" component={EditUserScreen} options={{ headerTitle: 'Edit User' }} />
+      <Stack.Screen name="UserInfo" component={UserInfo} options={{ headerTitle: 'User Information' }} />
+      
+
     </Stack.Navigator>
   );
 };
@@ -58,7 +65,7 @@ const AppNavigator = () => {
               fontSize: 16,
             },
             tabBarStyle: {
-              backgroundColor: '#131b15',
+              backgroundColor: 'white',
             },
           })}
 
@@ -71,7 +78,7 @@ const AppNavigator = () => {
             tabBarShowLabel: false,
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
-              <HomeIcon color={color} size={size} />
+              <HomeIcon  />
             ),
 
           }}
@@ -82,7 +89,7 @@ const AppNavigator = () => {
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({ color, size }) => (
-              <ProfileIcon color={color} size={size} />
+              <ProfileIcon  />
             ),
           }}
         />

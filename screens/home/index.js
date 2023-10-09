@@ -14,7 +14,7 @@ const HomeScreen = () => {
             <TouchableOpacity
               key='User'
               style={styles.box}
-              onPress={() => navigation.navigate('User')}
+              onPress={() => navigation.navigate('Users')}
             >
               <Block middle center style={styles.content}>
                 <FontAwesomeIcon
@@ -22,7 +22,7 @@ const HomeScreen = () => {
                   size={40} 
                   color='#405b43' 
                 />
-                <Text size={16}>User</Text>
+                <Text size={16}>Users</Text>
               </Block>
             </TouchableOpacity>
 
@@ -40,6 +40,8 @@ const HomeScreen = () => {
                 <Text size={16}>Dashboard</Text>
               </Block>
             </TouchableOpacity>
+
+            
              
            
           </View>

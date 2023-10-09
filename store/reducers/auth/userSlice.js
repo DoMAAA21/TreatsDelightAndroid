@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {REACT_APP_API} from "@env"
+import { BACKEND_URL } from '../../../constants/constants';
+
 const initialState = {
   loading: false,
   isUpdated: false,
@@ -11,8 +12,7 @@ const initialState = {
 
 export const deleteUser = createAsyncThunk('user/deleteUser', async (id, thunkAPI) => {
   try {
-    const { data } = await axios.delete(`${REACT_APP_API}/api/v1/admin/user/${id}`, { withCredentials: true });
-    // console.log(data);
+    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/user/${id}`);
     thunkAPI.dispatch(deleteUserSuccess(data.success));
     return data.success;
   } catch (error) {
@@ -21,26 +21,26 @@ export const deleteUser = createAsyncThunk('user/deleteUser', async (id, thunkAP
 });
 
 
-export const updateUser = createAsyncThunk('user/updateUser',async ({id,userData},{dispatch,rejectWithValue}) => {
+export const updateUser = createAsyncThunk('user/updateUser', async (payload, {dispatch}) => {
+  const { id, userData } = payload;
+  try {
 
-  console.log(userData)
+    dispatch(updateUserRequest())
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/user/${id}`, userData, config);
 
-
-    try {
-        const config = {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          };
-      const { data } = await axios.put(`${process.env.REACT_APP_API}/api/v1/admin/user/${id}`, userData,{ withCredentials: true },config);
-      dispatch(updateUserSuccess( data.success))
-      return data.success;
-
-    } catch (error) {
-      return rejectWithValue(error.response.data.message);
-    }
+    dispatch(updateUserSuccess(data.success));
+  
+    return data.success;
+  } catch (error) {
+    dispatch(updateUserFail(error.response.data.message));
+    throw error.response.data.message;
   }
-);
+});
 
 
   
