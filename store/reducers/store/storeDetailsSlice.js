@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
   store: {},
@@ -7,19 +8,16 @@ const initialState = {
   error: null,
 };
 
-export const getStoreDetails = createAsyncThunk('storeDetails/getStoreDetails',async (id, { dispatch,rejectWithValue }) => {
+export const getStoreDetails = createAsyncThunk('storeDetails/getStoreDetails',async (id, { dispatch }) => {
       try {
-        dispatch(storeDetailsRequest()); // Dispatch the action creator instead of the constant
-  
-        const { data } = await axios.get(
-          `${process.env.REACT_APP_API}/api/v1/admin/store/${id}`,
-          { withCredentials: true }
-        );
+        dispatch(storeDetailsRequest()); 
+        const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/store/${id}`,);
   
         dispatch(storeDetailsSuccess(data.store));
         return data.store;
       } catch (error) {
-        return rejectWithValue(error.response.data.message);
+        dispatch(storeDetailsFail(error.response.data.message))
+        throw error.response.data.message;
       }
     }
   );

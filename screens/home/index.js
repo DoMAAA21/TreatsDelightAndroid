@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icon
+import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Block, Text, GalioProvider } from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 const HomeScreen = () => {
     const navigation = useNavigation();
     return (
@@ -27,17 +30,17 @@ const HomeScreen = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              key='Dashboard'
+              key='Stores'
               style={styles.box}
-              onPress={() => console.log(`Pressed Box `)}
+              onPress={() => navigation.navigate('Stores')}
             >
               <Block middle center style={styles.content}>
-                <FontAwesomeIcon
-                  name='rocket' 
+                <MaterialCommunityIcons
+                  name='store' 
                   size={40} 
                   color='#405b43' 
                 />
-                <Text size={16}>Dashboard</Text>
+                <Text size={16}>Stores</Text>
               </Block>
             </TouchableOpacity>
 
@@ -69,8 +72,8 @@ const HomeScreen = () => {
       borderColor: '#000',
       borderRadius: 10,
       overflow: 'hidden',
-      width: 100,
-      height: 100,
+      width: screenWidth * 0.25,
+      height: screenHeight * 0.12,
     },
     content: {
       flex: 1,

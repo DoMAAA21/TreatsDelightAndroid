@@ -1,5 +1,7 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { BACKEND_URL } from '../../../constants/constants';
+
 
 const initialState = {
   stores: [],
@@ -7,12 +9,15 @@ const initialState = {
   error: null,
 };
 
-export const fetchAllStores = createAsyncThunk('allStores/fetchAllStores', async (_, { rejectWithValue }) => {
+export const fetchAllStores = createAsyncThunk('allStores/fetchAllStores', async (_, { dispatch }) => {
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API}/api/v1/admin/stores`, { withCredentials: true });
+      dispatch(allStoresRequest());
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/stores`, { withCredentials: true });
+      dispatch(allStoresSuccess(data.stores));
       return data.stores;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      dispatch(allStoresFail(error.response.data.message))
+      throw error.response.data.message;
     }
   });
 

@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView, Image, View, Alert, TextInput, TouchableOpacity, Dimensions } from 'react-native'; // Import Dimensions
 import { Card, Block, Text, Button } from 'galio-framework';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { deleteUser } from '../../store/reducers/auth/userSlice';
 import { useNavigation } from '@react-navigation/native';
+import { deleteStore } from '../../store/reducers/store/storeSlice';
 
-const { width } = Dimensions.get('screen'); // Get screen width
+const { width } = Dimensions.get('screen'); 
 
-const UserList = ({ users }) => {
+const StoreList = ({ stores }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,7 +16,7 @@ const UserList = ({ users }) => {
   const confirmDelete = (id) => {
     Alert.alert(
       'Confirm Delete',
-      'Are you sure you want to delete this user?',
+      'Are you sure you want to delete this store?',
       [
         {
           text: 'Cancel',
@@ -24,7 +24,7 @@ const UserList = ({ users }) => {
         },
         {
           text: 'Delete',
-          onPress: () => dispatch(deleteUser(id)),
+          onPress: () => dispatch(deleteStore(id)),
           style: 'destructive',
         },
       ],
@@ -32,14 +32,12 @@ const UserList = ({ users }) => {
     );
   };
 
- const navigateUser = (id) =>{
-  navigation.navigate('UserInfo', { userId: id });
+ const navigateStore = (id) =>{
+  navigation.navigate('StoreInfo', { storeId: id });
   }
 
   const handleEdit = (id) => {
-    
-    // console.log(`Edit user with ID ${id}`);
-    navigation.navigate('EditUser', { userId: id });
+    navigation.navigate('EditStore', { storeId: id });
   };
 
  
@@ -52,29 +50,27 @@ const UserList = ({ users }) => {
         value={searchQuery}
       />
       <ScrollView contentContainerStyle={styles.scrollView} keyboardShouldPersistTaps="always">
-        {users
-          .filter((user) => {
-            const fullName = `${user.fname} ${user.lname}`;
+        {stores
+          .filter((store) => {
             return (
-              fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.course.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.religion.toLowerCase().includes(searchQuery.toLowerCase())
+              store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              store.slogan.toLowerCase().includes(searchQuery.toLowerCase()) 
             );
           })
-          .map((user, index) => (
-            <TouchableOpacity key={index} style={styles.touchableUsers} onPress={() => navigateUser(user._id)}>
+          .map((store, index) => (
+            <TouchableOpacity key={index} style={styles.touchableStores} onPress={() => navigateStore(store._id)}>
             <Card key={index} flex shadow style={styles.card}>
               <Block card style={styles.block}>
                 <View style={styles.leftContainer}>
                   <Image
-                    source={{ uri: user.avatar.url }}
+                    source={{ uri: store?.logo?.url }}
                     style={styles.avatar}
                   />
                 </View>
                 <View style={styles.rightContainer}>
-                  <Text h4>{user.fname} {user.lname}</Text>
-                  <Text p>{user.role}</Text>
+                  <Text h4>{store.name}</Text>
+                  <Text p>{store.slogan}</Text>
+                  <Text p>No. {store.stall}</Text>
                   
                 </View>
               </Block>
@@ -83,8 +79,8 @@ const UserList = ({ users }) => {
                   <Button
                     round
                     color="info"
-                    style={styles.editButton} // Set button width based on screen width
-                    onPress={() => handleEdit(user._id)}
+                    style={styles.editButton} 
+                    onPress={() => handleEdit(store._id)}
                   >
                     <Icon name="edit" color="white" size={width * 0.07} />
                   </Button>
@@ -92,7 +88,7 @@ const UserList = ({ users }) => {
                     round
                     color="error"
                     style={styles.deleteButton} 
-                    onPress={() => confirmDelete(user._id)}
+                    onPress={() => confirmDelete(store._id)}
                   >
                     <Icon name="trash-o" color="white" size={width * 0.07} />
                   </Button>
@@ -159,9 +155,9 @@ const styles = {
     borderWidth: 1,
     borderColor: '#ccc',
   },
-  touchableUsers: {
+  touchableStores: {
     flex: 1
   }
 };
 
-export default UserList;
+export default StoreList;

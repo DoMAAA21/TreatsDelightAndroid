@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image,} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { View, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions} from 'react-native';
 import { Text, Input, Block, Button, Icon, } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -9,17 +9,19 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
 import Toast from 'react-native-toast-message';
-import { newUserReset } from '../../store/reducers/auth/newUserSlice';
-import { newUser } from '../../store/reducers/auth/newUserSlice';
+import { getStoreDetails } from '../../store/reducers/store/storeDetailsSlice';
+import { updateStore, clearErrors } from '../../store/reducers/store/storeSlice';
+
+const screenHeight = Dimensions.get('window').height;
+const inputSize = screenHeight * 0.07;
+
 
 const validationSchema = Yup.object({
-    fname: Yup.string().required('First Name is required'),
-    lname: Yup.string().required('Last Name is required'),
-    email: Yup.string().email('Invalid email address').required('Email is required'),
-    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-    religion: Yup.string().required('Religion is required'),
-    course: Yup.string().required('Course is required'),
-    role: Yup.string().required('Role is required'),
+    name: Yup.string().required('Name is required'),
+    slogan: Yup.string().required('Slogan is required'),
+    stall: Yup.number().min(1, 'Minimum of 1').max(99, 'Maximum of 99'),
+    location: Yup.string().required('Location is required'),
+    active: Yup.boolean().required('Active or Not'),
 });
 
 const MyInput = ({ field, form, ...props }) => (
@@ -28,6 +30,7 @@ const MyInput = ({ field, form, ...props }) => (
         onChangeText={field.onChange(field.name)}
         onBlur={field.onBlur(field.name)}
         value={field.value}
+        style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
     />
 );
 
@@ -76,32 +79,44 @@ const errorMsg = (message) => {
       },
     });
   };
-const AddUserScreen = () => {
+const EditStoreScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { loading, error, success } = useSelector(state => state.newUser);
-    const [avatar, setAvatar] = useState('');
-    const [avatarPreview, setAvatarPreview ]=  useState(null);
+    const route = useRoute();
+    const { store } = useSelector(state => state.storeDetails);
+    const { error, isUpdated, loading } = useSelector(state => state.store);
+    const [storeDataFetched, setStoreDataFetched] = useState(false);
+    const [logo, setLogo] = useState('');
+    const [logoPreview, setLogoPreview ]=  useState(null);
+    const { storeId } = route.params;
 
-    const courses = [
-        { label: 'BS in Information Technology', value: 'BSIT' },
-        { label: 'BS in Civil Engineering', value: 'CE' },
+    const isActive = [
+        { label: 'True', value: true },
+        { label: 'False', value: false },
     ];
-    const religions = ['Catholic', 'Muslim', 'Iglesia ni Cristo'];
-    const roles = ['User', 'Employee'];
+
+
 
     useEffect(() => {
+        dispatch(getStoreDetails(storeId))
+            .then(() => {
+                setStoreDataFetched(true);
+            });
+        if (isUpdated) {
+            navigation.navigate('Stores');
+        }
         if (error) {
-            errorMsg(error)
-            dispatch(newUserReset())
+            errorMsg(error);
+            dispatch(clearErrors());
         }
+    }, [dispatch, storeId, isUpdated, error]);
 
-        if (success) {
-            navigation.navigate('Users');
-            dispatch(newUserReset())
-            successMsg('User created successfully');
+
+    useEffect(() => {
+        if (store && store.logo && store.logo.url) {
+            setLogoPreview(store?.logo?.url);
         }
-    }, [dispatch, error, success, navigation])
+    }, [store]);
 
 
     const selectImage = async () => {
@@ -121,8 +136,6 @@ const AddUserScreen = () => {
                 format: ImageManipulator.SaveFormat.JPEG, 
                 base64: true, 
             };
-    
-            // Manipulate the image
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
                 [],
@@ -132,38 +145,31 @@ const AddUserScreen = () => {
     
             if (manipulatedImage) {
                 const { uri, base64 } = manipulatedImage;
-                setAvatarPreview(uri)
-                setAvatar(`data:image/jpg;base64,${base64}`);
+                setLogoPreview(uri)
+                setLogo(`data:image/jpg;base64,${base64}`);
             }
         }
     };
 
-
-
     const initialValues = {
-        fname: '',
-        lname: '',
-        email: '',
-        password: '',
-        role: '',
-        course: '',
-        religion: '',
-    };
+        name: store?.name || '',
+        slogan: store?.slogan || '',
+        stall: (store?.stall || 0).toString(),
+        location: store?.location || '',
+        active: store?.active === true ? 'True' : 'False', // Convert boolean to string
+    }
 
     const onSubmit = (values) => {
-        
-        const userData = {
-            fname: values.fname,
-            lname: values.lname,
-            email: values.email,
-            password: values.password,
-            course: values.course,
-            religion: values.religion,
-            role: values.role,
-            avatar
+        const isActive = values.active === "True" ? true : false;
+        const storeData = {
+            name: values.name,
+            slogan: values.slogan,
+            stall: values.stall,
+            location: values.location,
+            active: isActive,
+            logo
         }
-   
-        dispatch(newUser( userData));
+        dispatch(updateStore({ id: storeId, storeData }));
     };
 
 
@@ -172,6 +178,7 @@ const AddUserScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+             {storeDataFetched ? (
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -182,112 +189,68 @@ const AddUserScreen = () => {
                     <View style={styles.container}>
                         <Block style={styles.formContainer}>
                             <Text h5 style={styles.formHeader}>
-                                User Registration
+                                Edit Store
                             </Text>
                             <Field
-                                name="fname"
-                                placeholder="First Name"
+                                name="name"
+                                placeholder="Name"
                                 component={MyInput}
                             />
-                            {formik.touched.fname && formik.errors.fname ? (
-                                <Text style={styles.errorMessage}>{formik.errors.fname}</Text>
+                            {formik.touched.name && formik.errors.name ? (
+                                <Text style={styles.errorMessage}>{formik.errors.name}</Text>
                             ) : null}
                             <Field
-                                name="lname"
-                                placeholder="Last Name"
+                                name="slogan"
+                                placeholder="Slogan"
                                 component={MyInput}
                             />
-                            {formik.touched.lname && formik.errors.lname ? (
-                                <Text style={styles.errorMessage}>{formik.errors.lname}</Text>
+                            {formik.touched.slogan && formik.errors.slogan ? (
+                                <Text style={styles.errorMessage}>{formik.errors.slogan}</Text>
                             ) : null}
                             <Field
-                                name="email"
-                                placeholder="Email"
-                                keyboardType="email-address"
+                                name="stall"
+                                placeholder="Stall No."
+                                keyboardType="numeric"
                                 component={MyInput}
                             />
-                            {formik.touched.email && formik.errors.email ? (
-                                <Text style={styles.errorMessage}>{formik.errors.email}</Text>
+                            {formik.touched.stall && formik.errors.stall ? (
+                                <Text style={styles.errorMessage}>{formik.errors.stall}</Text>
                             ) : null}
                             <Field
-                                name="password"
-                                placeholder="Password"
-                                secureTextEntry
+                                name="location"
+                                placeholder="Location"
+                                
                                 component={MyInput}
                             />
-                            {formik.touched.password && formik.errors.password ? (
-                                <Text style={styles.errorMessage}>{formik.errors.password}</Text>
+                            {formik.touched.location && formik.errors.location ? (
+                                <Text style={styles.errorMessage}>{formik.errors.location}</Text>
                             ) : null}
                             <View style={styles.inputContainer}>
-                                <Field name="course">
+                                <Field name="active">
                                     {({ field }) => (
                                         <View style={styles.inputContainer}>
-                                            <Text>Course</Text>
+                                            <Text>Is Active</Text>
                                             <Picker
                                                 selectedValue={field.value}
-                                                onValueChange={field.onChange('course')}
+                                                onValueChange={field.onChange('active')}
                                             >
                                                 <Picker.Item label="Choose Option" value="" />
 
-                                                {courses.map((courseOption) => (
-                                                    <Picker.Item label={courseOption.label} value={courseOption.value} key={courseOption.value} />
+                                                {isActive.map((isActiveOption) => (
+                                                    <Picker.Item label={isActiveOption.label} value={isActiveOption.label} key={isActiveOption.label} />
                                                 ))}
                                             </Picker>
                                         </View>
                                     )}
                                 </Field>
-                                {formik.touched.course && formik.errors.course ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.course}</Text>
-                                ) : null}
-                            </View>
-
-                            <View style={styles.inputContainer}>
-                                <Field name="religion">
-                                    {({ field }) => (
-                                        <View style={styles.inputContainer}>
-                                            <Text>Religion</Text>
-                                            <Picker
-                                                selectedValue={field.value}
-                                                onValueChange={field.onChange('religion')}
-                                            >
-                                                <Picker.Item label="Choose Option" value="" />
-                                                {religions.map((religionOption) => (
-                                                    <Picker.Item label={religionOption} value={religionOption} key={religionOption} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    )}
-                                </Field>
-                                {formik.touched.religion && formik.errors.religion ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.religion}</Text>
-                                ) : null}
-                            </View>
-
-                            <View style={styles.inputContainer}>
-                                <Field name="role">
-                                    {({ field }) => (
-                                        <View style={styles.inputContainer}>
-                                            <Text>Role</Text>
-                                            <Picker
-                                                selectedValue={field.value}
-                                                onValueChange={field.onChange('role')}
-                                            >
-                                                <Picker.Item label="Choose Option" value="" />
-                                                {roles.map((roleOption) => (
-                                                    <Picker.Item label={roleOption} value={roleOption} key={roleOption} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    )}
-                                </Field>
-                                {formik.touched.role && formik.errors.role ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.role}</Text>
+                                {formik.touched.active && formik.errors.active ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.active}</Text>
                                 ) : null}
                             </View>
 
                             <View style={styles.imagePickerContainer}>
-                                {avatarPreview ? (
-                                    <Image source={{ uri: avatarPreview }} style={styles.avatar} />
+                                {logoPreview ? (
+                                    <Image source={{ uri: logoPreview }} style={styles.logo} />
                                 ) : null}
 
                                 <Button
@@ -303,7 +266,7 @@ const AddUserScreen = () => {
                                             color="white"
                                             style={{ marginRight: 5 }}
                                         />
-                                        <Text color="white">Choose Avatar</Text>
+                                        <Text color="white">Choose Logo</Text>
                                     </Block>
                                 </Button>
                             </View>
@@ -322,6 +285,11 @@ const AddUserScreen = () => {
 
                 )}
             </Formik>
+             ) : (
+                <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" />
+            </View>
+                )}
         </ScrollView>
     );
 };
@@ -351,8 +319,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#16aec1',
         marginRight: 10,
+        height: inputSize
     },
-    avatar: {
+    logo: {
         width: 100,
         height: 100,
         marginTop: 10,
@@ -361,6 +330,7 @@ const styles = StyleSheet.create({
     submitButton: {
         marginTop: 20,
         width: '100%',
+        height:  inputSize,
         alignSelf: 'center',
     },
     inputContainer: {
@@ -368,7 +338,12 @@ const styles = StyleSheet.create({
     },
     errorMessage: {
         color: 'red'
+    },
+    loadingContainer:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
 
-export default AddUserScreen;
+export default EditStoreScreen;

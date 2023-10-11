@@ -11,6 +11,10 @@ const initialState = {
 
 export const newUser = createAsyncThunk('newUser/newUser', async (userData, { dispatch }) => {
   try {
+  //   for (var pair of userData.entries()) {
+  //     console.log(pair[0]+ ', ' + pair[1]); 
+  // }
+  // console.log(userData)
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',

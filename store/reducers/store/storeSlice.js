@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
   loading: false,
@@ -11,31 +12,31 @@ const initialState = {
 
 export const deleteStore = createAsyncThunk('store/deleteStore',async (id,{dispatch}) => {
       try {
-        const { data } = await axios.delete(`${process.env.REACT_APP_API}/api/v1/admin/store/${id}`, { withCredentials: true });
+        const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/store/${id}`, { withCredentials: true });
         dispatch(deleteStoreSuccess( data.success))
         return data.success;
 
       } catch (error) {
+        dispatch(deleteStore( error.response.data.message))
         throw error.response.data.message;
       }
     }
 );
 
-export const updateStore = createAsyncThunk('store/updateStore',async ({id,storeData},{dispatch,rejectWithValue}) => {
-
-
+export const updateStore = createAsyncThunk('store/updateStore',async ({id,storeData},{dispatch}) => {
     try {
         const config = {
             headers: {
               'Content-Type': 'application/json',
             },
           };
-      const { data } = await axios.put(`${process.env.REACT_APP_API}/api/v1/admin/store/${id}`, storeData,{ withCredentials: true },config);
-      dispatch(updateStoreSuccess( data.success))
+      const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/store/${id}`, storeData ,config);
+      dispatch(updateStoreSuccess(data.success))
       return data.success;
 
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      dispatch(updateStoreFail(error.response.data.message))
+      throw error.response.data.message;
     }
   }
 );

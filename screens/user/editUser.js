@@ -60,7 +60,7 @@ const EditUserScreen = () => {
     const route = useRoute();
     const { user } = useSelector(state => state.userDetails);
     const { error, isUpdated, loading } = useSelector(state => state.user);
-    const [avatar, setAvatar] = useState(null);
+    const [avatar, setAvatar] = useState('');
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [userDataFetched, setUserDataFetched] = useState(false);
     const { userId } = route.params;
@@ -82,7 +82,7 @@ const EditUserScreen = () => {
         }
         if (error) {
             errorMsg(error);
-            clearErrors();
+            dispatch(clearErrors());
         }
     }, [dispatch, userId, isUpdated, error]);
 
@@ -116,7 +116,7 @@ const EditUserScreen = () => {
         if (!result.canceled) {
             const selectedAsset = result.assets[0];
             const manipulatorOptions = {
-                compress: 0.3,
+                compress: 0.5,
                 format: ImageManipulator.SaveFormat.JPEG,
                 base64: true,
             };

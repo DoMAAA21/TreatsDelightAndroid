@@ -1,6 +1,6 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
   loading: false,
@@ -9,20 +9,24 @@ const initialState = {
   stores: [], // Initialize stores with your desired initial value
 };
 
-export const newStore = createAsyncThunk('newStore/newStore', async (storeData, { rejectWithValue }) => {
+export const newStore = createAsyncThunk('newStore/newStore', async (storeData, { dispatch }) => {
     try {
+
+      
+      dispatch(newStoreRequest())
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       };
   
-      const { data } = await axios.post(`${process.env.REACT_APP_API}/api/v1/admin/store/new`, storeData, { withCredentials: true }, config);
-  
+      const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/store/new`, storeData, { withCredentials: true }, config);
+       dispatch(newStoreSuccess(data.success))
       return data;
     } catch (error) 
     {
-      return rejectWithValue(error.response.data.message);
+       dispatch(newStoreFail(error.response.data.message));
+      throw error.response.data.message;
     }
   });
 

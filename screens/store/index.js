@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import UserList from './userList';
-import { fetchAllUsers,clearErrors } from '../../store/reducers/auth/allUsersSlice';
-import { deleteUserReset, updateUserReset } from '../../store/reducers/auth/userSlice';
+import StoreList from './storeList';
+import { fetchAllStores , clearErrors } from '../../store/reducers/store/allStoresSlice';
+import { deleteStoreReset, updateStoreReset } from '../../store/reducers/store/storeSlice';
 
 
 const successMsg = (title,message) => {
@@ -55,56 +55,54 @@ const errorMsg = (message) => {
   });
 };
 
-const UserScreen = () => {
+const StoreScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { error, users } = useSelector(state => state.allUsers);
-  const { success } = useSelector(state => state.newUser);
-  const { isDeleted, isUpdated } = useSelector(state => state.user)
+  const { error, stores } = useSelector(state => state.allStores);
+  const { success } = useSelector(state => state.newStore);
+  const { isDeleted, isUpdated } = useSelector(state => state.store)
   const [ firstLoading, setFirstLoading] = useState(true);
-
 
 
   
   useEffect(() => {
     if (success) {
-      dispatch(fetchAllUsers());
+      dispatch(fetchAllStores());
     } else {
-      dispatch(fetchAllUsers())
+      dispatch(fetchAllStores())
       .then(() => {
         setFirstLoading(false);
       });
     }
+
     if (error) {
       errorMsg(error)
       dispatch(clearErrors())
     }
 
+
   }, [dispatch, error, success]);
-
-  useEffect(() => {
-    if (isDeleted) {
-      successMsg('Deleted','User Removed');
-      dispatch(deleteUserReset());
-      dispatch(fetchAllUsers());
-    }
-
-    if (isUpdated) {
-      successMsg('Updated','User Updated');
-      dispatch(updateUserReset());
-      dispatch(fetchAllUsers());
-    }
-
-  },[isDeleted, isUpdated])
-
+  
+useEffect(()=>{
+  if (isDeleted) {
+    successMsg('Deleted','Store Removed');
+    dispatch(deleteStoreReset());
+    dispatch(fetchAllStores());
+  }
+  if (isUpdated) {
+    successMsg('Updated','Store Updated');
+    dispatch(updateStoreReset());
+    dispatch(fetchAllStores());
+  }
+},[isDeleted, isUpdated])
 
 
 
 
   return (
     <View style={styles.container}>
-      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <UserList users={users} />}
-      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddUser')}>
+      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <StoreList stores={stores} />}
+      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddStore')}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
     </View>
@@ -158,4 +156,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default UserScreen;
+export default StoreScreen;

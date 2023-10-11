@@ -1,24 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
-import HomeScreen from '../screens/home/index'; 
 import ProfileScreen from '../screens/profile/index';
-import UserScreen from '../screens/user';
-import AddUserScreen from '../screens/user/addUser';
-import EditUserScreen from '../screens/user/editUser';
-import UserInfo from '../screens/user/userInfo';
-
+import HomeStack from './HomeStack';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 const activeColor = '#05acff';
 const inactiveColor = 'gray';
 
 const HomeIcon = () => {
   const isFocused = useIsFocused();
   return (
-    <Icon
+    <MaterialCommunityIcons
       name="home"
       size={35}
       color={isFocused ? activeColor : inactiveColor}
@@ -37,20 +31,6 @@ const ProfileIcon = () => {
   );
 };
 
-
-const HomeStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#b4e373', } }} >
-      <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: 'Dashboard' }} />
-      <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Users' }} />
-      <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
-      <Stack.Screen name="EditUser" component={EditUserScreen} options={{ headerTitle: 'Edit User' }} />
-      <Stack.Screen name="UserInfo" component={UserInfo} options={{ headerTitle: 'User Information' }} />
-      
-
-    </Stack.Navigator>
-  );
-};
 
 
 const AppNavigator = () => {

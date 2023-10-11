@@ -3,7 +3,10 @@
     "name": "TreatsDelightAndroid",
     "slug": "TreatsDelightAndroid",
     "version": "1.0.0",
-    "orientation": ["portrait", "landscape"],
+    "orientation": [
+      "portrait",
+      "landscape"
+    ],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
