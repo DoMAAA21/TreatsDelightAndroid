@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image, Dimensions} from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
 import { Text, Input, Block, Button, Icon, } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -59,32 +59,32 @@ const successMsg = (message) => {
 
 const errorMsg = (message) => {
     Toast.show({
-      text1: 'Error',
-      text2: `${message}`,
-      type: 'error',
-      position: 'bottom',
-      visibilityTime: 4000,
-      autoHide: true,
-      topOffset: 30,
-      bottomOffset: 40,
-      customStyles: {
-        title: {
-          fontSize: 30,
-          fontWeight: 'bold',
+        text1: 'Error',
+        text2: `${message}`,
+        type: 'error',
+        position: 'bottom',
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+        customStyles: {
+            title: {
+                fontSize: 30,
+                fontWeight: 'bold',
+            },
+            message: {
+                fontSize: 24,
+                fontWeight: 'bold',
+            },
         },
-        message: {
-          fontSize: 24,
-          fontWeight: 'bold',
-        },
-      },
     });
-  };
+};
 const AddStoreScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { loading, error, success } = useSelector(state => state.newStore);
     const [logo, setLogo] = useState('');
-    const [logoPreview, setLogoPreview ]=  useState(null);
+    const [logoPreview, setLogoPreview] = useState(null);
 
     const isActive = [
         { label: 'True', value: true },
@@ -112,25 +112,25 @@ const AddStoreScreen = () => {
             aspect: [3, 2],
             quality: 1,
         });
-    
+
         if (!result.canceled) {
             const selectedAsset = result.assets[0];
-    
-          
+
+
             const manipulatorOptions = {
-                compress: 0.7, 
-                format: ImageManipulator.SaveFormat.JPEG, 
-                base64: true, 
+                compress: 0.7,
+                format: ImageManipulator.SaveFormat.JPEG,
+                base64: true,
             };
-    
+
             // Manipulate the image
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
                 [],
                 manipulatorOptions
             );
-    
-    
+
+
             if (manipulatedImage) {
                 const { uri, base64 } = manipulatedImage;
                 setLogoPreview(uri)
@@ -206,7 +206,7 @@ const AddStoreScreen = () => {
                             <Field
                                 name="location"
                                 placeholder="Location"
-                                
+
                                 component={MyInput}
                             />
                             {formik.touched.location && formik.errors.location ? (
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     submitButton: {
         marginTop: 20,
         width: '100%',
-        height:  inputSize,
+        height: inputSize,
         alignSelf: 'center',
     },
     inputContainer: {

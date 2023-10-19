@@ -75,6 +75,7 @@ const UserList = ({ users }) => {
                 <View style={styles.rightContainer}>
                   <Text h4>{user.fname} {user.lname}</Text>
                   <Text p>{user.role}</Text>
+                 
                   
                 </View>
               </Block>

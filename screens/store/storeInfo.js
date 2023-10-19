@@ -4,21 +4,22 @@ import { View, Text, StyleSheet, Image, Dimensions, ScrollView ,ActivityIndicato
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Card } from 'galio-framework';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import SkeletonLoader from '../loader/userInfoLoader';
-import { getUserDetails } from '../../store/reducers/auth/userDetailsSlice';
+import { getStoreDetails } from '../../store/reducers/store/storeDetailsSlice';
 
 const screenWidth = Dimensions.get('window').width;
-const UserInfo = () => {
+const StoreInfo = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
-  const { user, loading } = useSelector(state => state.userDetails);
-  const { userId } = route.params;
-
+  const { store, loading } = useSelector(state => state.storeDetails);
+  const { storeId } = route.params;
+  
   useEffect(() => {
-    dispatch(getUserDetails(userId));
-  }, [dispatch, userId]);
+    dispatch(getStoreDetails(storeId));
+
+   
+  }, [dispatch, storeId]);
 
 
   if (loading) {
@@ -36,33 +37,26 @@ const UserInfo = () => {
        
       >
       <View style={styles.contentContainer}>
-        <Image source={{ uri: user?.avatar?.url }} style={styles.avatar} />
+        <Image source={{ uri: store?.logo?.url }} style={styles.avatar} />
         <Text style={styles.name}>
-          {user.fname} {user.lname}
+          {store.name}
         </Text>
         <View style={styles.info}>
-          <Icon name="envelope" size={20} style={styles.icon} />
-          <Text style={styles.infoText}>{user.email}</Text>
+          <Icon name="quote-left" size={20} style={styles.icon} />
+          <Text style={styles.infoText}>"{store.slogan}"</Text>
         </View>
         <View style={styles.info}>
-          <Icon name="graduation-cap" size={20} style={styles.icon} />
-          <Text style={styles.infoText}>{user.course}</Text>
+          <Icon name="list" size={20} style={styles.icon} />
+          <Text style={styles.infoText}>Stall No. :{store.stall}</Text>
         </View>
         <View style={styles.info}>
-          <Icon name="globe" size={20} style={styles.icon} />
-          <Text style={styles.infoText}>{user.religion}</Text>
+          <Icon name="location-arrow" size={20} style={styles.icon} />
+          <Text style={styles.infoText}>{store.location}</Text>
         </View>
         <View style={styles.info}>
-          <Icon name="user" size={20} style={styles.icon} />
-          <Text style={styles.infoText}>{user.role}</Text>
+          <Icon name="check" size={20} style={styles.icon} />
+          <Text style={styles.infoText}>Is Active:{store?.active?.toString()}</Text>
         </View>
-        {user?.store?.name ? (
-           <View style={styles.info}>
-           <FontAwesome5 name="store" size={20} style={styles.icon} />
-           <Text style={styles.infoText}>{user?.store?.name}</Text>
-         </View>
-        ) : null }
-       
       </View>
       </Card>
     </ScrollView>
@@ -106,4 +100,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default UserInfo;
+export default StoreInfo;

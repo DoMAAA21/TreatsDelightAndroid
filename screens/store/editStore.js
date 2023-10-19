@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions} from 'react-native';
+import { View, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions } from 'react-native';
 import { Text, Input, Block, Button, Icon, } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -59,26 +59,26 @@ const successMsg = (message) => {
 
 const errorMsg = (message) => {
     Toast.show({
-      text1: 'Error',
-      text2: `${message}`,
-      type: 'error',
-      position: 'bottom',
-      visibilityTime: 4000,
-      autoHide: true,
-      topOffset: 30,
-      bottomOffset: 40,
-      customStyles: {
-        title: {
-          fontSize: 30,
-          fontWeight: 'bold',
+        text1: 'Error',
+        text2: `${message}`,
+        type: 'error',
+        position: 'bottom',
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+        customStyles: {
+            title: {
+                fontSize: 30,
+                fontWeight: 'bold',
+            },
+            message: {
+                fontSize: 24,
+                fontWeight: 'bold',
+            },
         },
-        message: {
-          fontSize: 24,
-          fontWeight: 'bold',
-        },
-      },
     });
-  };
+};
 const EditStoreScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -87,7 +87,7 @@ const EditStoreScreen = () => {
     const { error, isUpdated, loading } = useSelector(state => state.store);
     const [storeDataFetched, setStoreDataFetched] = useState(false);
     const [logo, setLogo] = useState('');
-    const [logoPreview, setLogoPreview ]=  useState(null);
+    const [logoPreview, setLogoPreview] = useState(null);
     const { storeId } = route.params;
 
     const isActive = [
@@ -126,23 +126,23 @@ const EditStoreScreen = () => {
             aspect: [3, 2],
             quality: 1,
         });
-    
+
         if (!result.canceled) {
             const selectedAsset = result.assets[0];
-    
-          
+
+
             const manipulatorOptions = {
-                compress: 0.5, 
-                format: ImageManipulator.SaveFormat.JPEG, 
-                base64: true, 
+                compress: 0.5,
+                format: ImageManipulator.SaveFormat.JPEG,
+                base64: true,
             };
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
                 [],
                 manipulatorOptions
             );
-    
-    
+
+
             if (manipulatedImage) {
                 const { uri, base64 } = manipulatedImage;
                 setLogoPreview(uri)
@@ -178,118 +178,118 @@ const EditStoreScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-             {storeDataFetched ? (
-            <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={onSubmit}
-            >
-                {(formik) => (
+            {storeDataFetched ? (
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={onSubmit}
+                >
+                    {(formik) => (
 
-                    <View style={styles.container}>
-                        <Block style={styles.formContainer}>
-                            <Text h5 style={styles.formHeader}>
-                                Edit Store
-                            </Text>
-                            <Field
-                                name="name"
-                                placeholder="Name"
-                                component={MyInput}
-                            />
-                            {formik.touched.name && formik.errors.name ? (
-                                <Text style={styles.errorMessage}>{formik.errors.name}</Text>
-                            ) : null}
-                            <Field
-                                name="slogan"
-                                placeholder="Slogan"
-                                component={MyInput}
-                            />
-                            {formik.touched.slogan && formik.errors.slogan ? (
-                                <Text style={styles.errorMessage}>{formik.errors.slogan}</Text>
-                            ) : null}
-                            <Field
-                                name="stall"
-                                placeholder="Stall No."
-                                keyboardType="numeric"
-                                component={MyInput}
-                            />
-                            {formik.touched.stall && formik.errors.stall ? (
-                                <Text style={styles.errorMessage}>{formik.errors.stall}</Text>
-                            ) : null}
-                            <Field
-                                name="location"
-                                placeholder="Location"
-                                
-                                component={MyInput}
-                            />
-                            {formik.touched.location && formik.errors.location ? (
-                                <Text style={styles.errorMessage}>{formik.errors.location}</Text>
-                            ) : null}
-                            <View style={styles.inputContainer}>
-                                <Field name="active">
-                                    {({ field }) => (
-                                        <View style={styles.inputContainer}>
-                                            <Text>Is Active</Text>
-                                            <Picker
-                                                selectedValue={field.value}
-                                                onValueChange={field.onChange('active')}
-                                            >
-                                                <Picker.Item label="Choose Option" value="" />
-
-                                                {isActive.map((isActiveOption) => (
-                                                    <Picker.Item label={isActiveOption.label} value={isActiveOption.label} key={isActiveOption.label} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    )}
-                                </Field>
-                                {formik.touched.active && formik.errors.active ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.active}</Text>
+                        <View style={styles.container}>
+                            <Block style={styles.formContainer}>
+                                <Text h5 style={styles.formHeader}>
+                                    Edit Store
+                                </Text>
+                                <Field
+                                    name="name"
+                                    placeholder="Name"
+                                    component={MyInput}
+                                />
+                                {formik.touched.name && formik.errors.name ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.name}</Text>
                                 ) : null}
-                            </View>
-
-                            <View style={styles.imagePickerContainer}>
-                                {logoPreview ? (
-                                    <Image source={{ uri: logoPreview }} style={styles.logo} />
+                                <Field
+                                    name="slogan"
+                                    placeholder="Slogan"
+                                    component={MyInput}
+                                />
+                                {formik.touched.slogan && formik.errors.slogan ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.slogan}</Text>
                                 ) : null}
+                                <Field
+                                    name="stall"
+                                    placeholder="Stall No."
+                                    keyboardType="numeric"
+                                    component={MyInput}
+                                />
+                                {formik.touched.stall && formik.errors.stall ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.stall}</Text>
+                                ) : null}
+                                <Field
+                                    name="location"
+                                    placeholder="Location"
+
+                                    component={MyInput}
+                                />
+                                {formik.touched.location && formik.errors.location ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.location}</Text>
+                                ) : null}
+                                <View style={styles.inputContainer}>
+                                    <Field name="active">
+                                        {({ field }) => (
+                                            <View style={styles.inputContainer}>
+                                                <Text>Is Active</Text>
+                                                <Picker
+                                                    selectedValue={field.value}
+                                                    onValueChange={field.onChange('active')}
+                                                >
+                                                    <Picker.Item label="Choose Option" value="" />
+
+                                                    {isActive.map((isActiveOption) => (
+                                                        <Picker.Item label={isActiveOption.label} value={isActiveOption.label} key={isActiveOption.label} />
+                                                    ))}
+                                                </Picker>
+                                            </View>
+                                        )}
+                                    </Field>
+                                    {formik.touched.active && formik.errors.active ? (
+                                        <Text style={styles.errorMessage}>{formik.errors.active}</Text>
+                                    ) : null}
+                                </View>
+
+                                <View style={styles.imagePickerContainer}>
+                                    {logoPreview ? (
+                                        <Image source={{ uri: logoPreview }} style={styles.logo} />
+                                    ) : null}
+
+                                    <Button
+                                        color="info"
+                                        style={styles.imagePickerButton}
+                                        onPress={selectImage}
+                                    >
+                                        <Block row middle>
+                                            <Icon
+                                                family="FontAwesome"
+                                                size={16}
+                                                name="camera"
+                                                color="white"
+                                                style={{ marginRight: 5 }}
+                                            />
+                                            <Text color="white">Choose Logo</Text>
+                                        </Block>
+                                    </Button>
+                                </View>
 
                                 <Button
-                                    color="info"
-                                    style={styles.imagePickerButton}
-                                    onPress={selectImage}
+                                    round
+                                    color="success"
+                                    style={[styles.submitButton, { opacity: formik.isValid && !loading ? 1 : 0.5 }]}
+                                    onPress={formik.handleSubmit}
+                                    disabled={!formik.isValid || loading}
                                 >
-                                    <Block row middle>
-                                        <Icon
-                                            family="FontAwesome"
-                                            size={16}
-                                            name="camera"
-                                            color="white"
-                                            style={{ marginRight: 5 }}
-                                        />
-                                        <Text color="white">Choose Logo</Text>
-                                    </Block>
+                                    Submit
                                 </Button>
-                            </View>
+                            </Block>
+                        </View>
 
-                            <Button
-                                round
-                                color="success"
-                                style={[styles.submitButton, { opacity: formik.isValid && !loading ? 1 : 0.5 }]}
-                                onPress={formik.handleSubmit}
-                                disabled={!formik.isValid || loading}
-                            >
-                                Submit
-                            </Button>
-                        </Block>
-                    </View>
-
-                )}
-            </Formik>
-             ) : (
+                    )}
+                </Formik>
+            ) : (
                 <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" />
-            </View>
-                )}
+                    <ActivityIndicator size="large" />
+                </View>
+            )}
         </ScrollView>
     );
 };
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     submitButton: {
         marginTop: 20,
         width: '100%',
-        height:  inputSize,
+        height: inputSize,
         alignSelf: 'center',
     },
     inputContainer: {
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     errorMessage: {
         color: 'red'
     },
-    loadingContainer:{
+    loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',

@@ -1,12 +1,15 @@
+import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
 import ProfileScreen from '../screens/profile/index';
 import HomeStack from './HomeStack';
+import LoginScreen from '../screens/auth/login';
 
 const Tab = createBottomTabNavigator();
-const activeColor = '#05acff';
+
+const activeColor = 'black';
 const inactiveColor = 'gray';
 
 const HomeIcon = () => {
@@ -31,51 +34,50 @@ const ProfileIcon = () => {
   );
 };
 
-
-
 const AppNavigator = () => {
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+
+  if (!userLoggedIn) {
+    return <LoginScreen />;
+    // return <ProfileScreen/>
+  }
+
   return (
-    <>
-      <Tab.Navigator
-        screenOptions={
-          ({ route }) => ({
-            tabBarActiveTintColor: 'blue',
-            tabBarInactiveTintColor: 'gray',
-            tabBarLabelStyle: {
-              fontSize: 16,
-            },
-            tabBarStyle: {
-              backgroundColor: 'white',
-            },
-          })}
-
-
-      >
-        <Tab.Screen
-          name="Home"
-          component={HomeStack}
-          options={{
-            tabBarShowLabel: false,
-            headerShown: false,
-            tabBarIcon: ({ color, size }) => (
-              <HomeIcon  />
-            ),
-
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{
-            tabBarShowLabel: false,
-            tabBarIcon: ({ color, size }) => (
-              <ProfileIcon  />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </>
-
+    <Tab.Navigator
+      screenOptions={
+        ({ route }) => ({
+          tabBarActiveTintColor: 'blue',
+          tabBarInactiveTintColor: 'gray',
+          tabBarLabelStyle: {
+            fontSize: 16,
+          },
+          tabBarStyle: {
+            backgroundColor: 'white',
+          },
+        })}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeStack}
+        options={{
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <HomeIcon  />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size }) => (
+            <ProfileIcon  />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { View, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions } from 'react-native';
 import { Text, Input, Block, Button, Icon } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -9,8 +9,13 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
 import { getUserDetails } from '../../store/reducers/auth/userDetailsSlice';
 import { updateUser, clearErrors } from '../../store/reducers/auth/userSlice';
+import { BACKEND_URL } from '../../constants/constants';
+
+const screenHeight = Dimensions.get('window').height;
+const inputSize = screenHeight * 0.07;
 
 const validationSchema = Yup.object({
     fname: Yup.string().required('First Name is required'),
@@ -28,6 +33,7 @@ const MyInput = ({ field, form, ...props }) => (
         onChangeText={field.onChange(field.name)}
         onBlur={field.onBlur(field.name)}
         value={field.value}
+        style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
     />
 );
 
@@ -63,6 +69,9 @@ const EditUserScreen = () => {
     const [avatar, setAvatar] = useState('');
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [userDataFetched, setUserDataFetched] = useState(false);
+    const [selectedRole, setSelectedRole] = useState('');
+    const [storeDropdown, setStoreDropdown] = useState([]);
+    const [loadingOptions, setLoadingOptions] = useState(false);
     const { userId } = route.params;
     const courses = [
         { label: 'BS in Information Technology', value: 'BSIT' },
@@ -71,8 +80,29 @@ const EditUserScreen = () => {
     const religions = ['Catholic', 'Muslim', 'Iglesia ni Cristo'];
     const roles = ['User', 'Employee'];
 
+    const fetchStores = async () => {
+        try {
+            const response = await axios.get(`${BACKEND_URL}/api/v1/admin/stores`);
+            const storeData = response.data.stores;
+            const options = storeData.map((store) => ({
+                value: store._id,
+                label: store.name,
+            }));
+            setStoreDropdown(options);
+            setLoadingOptions(true);
+            setSelectedRole(user.role);
+
+        } catch (error) {
+            console.error('Error fetching store data:', error);
+            setLoadingOptions(false);
+        }
+    };
+
 
     useEffect(() => {
+
+        fetchStores();
+
         dispatch(getUserDetails(userId))
             .then(() => {
                 setUserDataFetched(true);
@@ -84,7 +114,8 @@ const EditUserScreen = () => {
             errorMsg(error);
             dispatch(clearErrors());
         }
-    }, [dispatch, userId, isUpdated, error]);
+    }, [dispatch, userId, isUpdated, error, user.role]);
+
 
 
     useEffect(() => {
@@ -101,6 +132,7 @@ const EditUserScreen = () => {
         role: user?.role || '',
         course: user?.course || '',
         religion: user?.religion || '',
+        store: user.store ? `${user.store.storeId}-${user.store.name}` : '',
     };
 
 
@@ -151,7 +183,14 @@ const EditUserScreen = () => {
             role: values.role,
             avatar
         };
-        // console.log(user._id)
+        if (values.role === "Employee" && values.store) {
+            const selectedStoreValue = values.store.split('-');
+            const storeId = selectedStoreValue[0];
+            const storeName = selectedStoreValue[1];
+            userData.storeId = storeId;
+            userData.storeName = storeName;
+
+        }
         dispatch(updateUser({ id: userId, userData }));
     };
 
@@ -256,7 +295,10 @@ const EditUserScreen = () => {
                                                 <Text>Role</Text>
                                                 <Picker
                                                     selectedValue={field.value}
-                                                    onValueChange={field.onChange('role')}
+                                                    onValueChange={(itemValue) => {
+                                                        field.onChange('role')(itemValue);
+                                                        setSelectedRole(itemValue);
+                                                    }}
                                                 >
                                                     <Picker.Item label="Choose Option" value="" />
                                                     {roles.map((roleOption) => (
@@ -270,6 +312,28 @@ const EditUserScreen = () => {
                                         <Text style={styles.errorMessage}>{formik.errors.role}</Text>
                                     ) : null}
                                 </View>
+
+                                {selectedRole === 'Employee' && loadingOptions ? (
+                                    <View style={styles.inputContainer}>
+                                        <Field name="store">
+                                            {({ field }) => (
+                                                <View style={styles.inputContainer}>
+                                                    <Text>Store</Text>
+                                                    <Picker
+                                                        selectedValue={field.value}
+                                                        onValueChange={field.onChange('store')}
+                                                    >
+                                                        <Picker.Item label="Choose Option" value="" />
+                                                        {storeDropdown.map((option) => (
+                                                            <Picker.Item label={option.label} value={`${option.value}-${option.label}`} key={option.value} />
+                                                        ))}
+                                                    </Picker>
+                                                </View>
+                                            )}
+                                        </Field>
+                                    </View>
+
+                                ) : null}
 
                                 <View style={styles.imagePickerContainer}>
 
@@ -343,6 +407,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#16aec1',
         marginRight: 10,
+        height: inputSize
     },
     avatar: {
         width: 100,
@@ -354,6 +419,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         width: '100%',
         alignSelf: 'center',
+        height: inputSize
     },
     inputContainer: {
         marginVertical: 10,
