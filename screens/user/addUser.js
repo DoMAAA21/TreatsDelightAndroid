@@ -13,7 +13,6 @@ import axios from 'axios';
 import { newUserReset } from '../../store/reducers/user/newUserSlice';
 import { newUser } from '../../store/reducers/user/newUserSlice';
 import { BACKEND_URL } from '../../constants/constants';
-import { ActivityIndicator } from 'react-native';
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 

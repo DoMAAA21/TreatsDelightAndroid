@@ -14,19 +14,18 @@ const initialState = {
 
 export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch }) => {
   try {
+   
     dispatch(loginRequest());
     const config = {
       headers: {
         'Content-Type': 'application/json',
-      },
-      withCredentials: true,
+      }
     };
 
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/login`, { email, password }, config);
+    await AsyncStorage.setItem('token', data.token)
 
-    // await AsyncStorage.setItem('user', JSON.stringify(data.user));
-    // await AsyncStorage.setItem('role', data.user.role);
-
+   
     dispatch(loginSuccess(data.user));
     return data.user;
   } catch (error) {
@@ -39,8 +38,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, {  dispatch }) =
   try {
     const { data } = await axios.get(`${BACKEND_URL}/api/v1/logout`, { withCredentials: true });
 
-    await AsyncStorage.removeItem('user');
-    await AsyncStorage.removeItem('role');
+    await AsyncStorage.removeItem('token');
 
     return dispatch(logoutSuccess(data.success));
   } catch (error) {
@@ -85,7 +83,7 @@ const authSlice = createSlice({
     loginSuccess(state, action) {
       state.loading = false;
       state.isAuthenticated = true;
-      state.user = action.payload;
+      state.user = action.payload.user; 
     },
     loginFail(state, action) {
       state.loading = false;

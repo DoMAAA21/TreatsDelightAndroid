@@ -1,5 +1,6 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
@@ -11,16 +12,20 @@ const initialState = {
 
 export const newStore = createAsyncThunk('newStore/newStore', async (storeData, { dispatch }) => {
     try {
-
-      
       dispatch(newStoreRequest())
+      const token = await AsyncStorage.getItem('token');
+      
+      if (!token) {
+        dispatch(newStoreFail('Login First'));
+      }
       const config = {
         headers: {
+          Authorization: `${token}`,
           "Content-Type": "multipart/form-data",
         },
       };
-  
-      const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/store/new`, storeData, { withCredentials: true }, config);
+      
+      const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/store/new`, storeData, config);
        dispatch(newStoreSuccess(data.success))
       return data;
     } catch (error) 

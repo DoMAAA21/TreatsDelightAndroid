@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
@@ -10,12 +11,22 @@ const initialState = {
 };
 
 
-export const deleteUser = createAsyncThunk('user/deleteUser', async (id, thunkAPI) => {
+export const deleteUser = createAsyncThunk('user/deleteUser', async (id, {dispatch}) => {
   try {
-    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/user/${id}`);
-    thunkAPI.dispatch(deleteUserSuccess(data.success));
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      dispatch(deleteUserReset());
+    }
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/user/${id}`,config);
+    dispatch(deleteUserSuccess(data.success));
     return data.success;
   } catch (error) {
+    console.error(error.response.data.message)
     throw error.response.data.message;
   }
 });
@@ -24,13 +35,20 @@ export const deleteUser = createAsyncThunk('user/deleteUser', async (id, thunkAP
 export const updateUser = createAsyncThunk('user/updateUser', async (payload, {dispatch}) => {
   const { id, userData } = payload;
   try {
-
     dispatch(updateUserRequest())
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      dispatch(updateUserFail('Login First'));
+      throw error.response.data.message;
+    }
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `${token}`,
       },
     };
+
+   
     const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/user/${id}`, userData, config);
 
     dispatch(updateUserSuccess(data.success));

@@ -12,14 +12,17 @@ const StoreInfo = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
-  const { store, loading } = useSelector(state => state.storeDetails);
+  const { store, loading,error } = useSelector(state => state.storeDetails);
   const { storeId } = route.params;
   
   useEffect(() => {
     dispatch(getStoreDetails(storeId));
 
+    if(error) {
+      console.log(error)
+    }
    
-  }, [dispatch, storeId]);
+  }, [dispatch, storeId, error]);
 
 
   if (loading) {

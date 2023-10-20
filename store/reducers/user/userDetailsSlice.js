@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../constants/constants';
 
 const initialState = {
@@ -8,23 +9,31 @@ const initialState = {
   error: null,
 };
 
-export const getUserDetails = createAsyncThunk('userDetails/getUserDetails',async (id, { dispatch,rejectWithValue }) => {
-      try {
-        dispatch(userDetailsRequest()); // Dispatch the action creator instead of the constant
-  
-        const { data } = await axios.get(
-          `${BACKEND_URL}/api/v1/admin/user/${id}`,
-          { withCredentials: true }
-        );
-  
-        dispatch(userDetailsSuccess(data.user));
-        return data.user;
-      } catch (error) {
-        dispatch(userDetailsFail(error.response.data.message))
-        return rejectWithValue(error.response.data.message);
-      }
+export const getUserDetails = createAsyncThunk('userDetails/getUserDetails', async (id, { dispatch }) => {
+  try {
+    dispatch(userDetailsRequest()); 
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      dispatch(userDetailsFail('Login First'));
+      throw error.response.data.message;
     }
-  );
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${BACKEND_URL}/api/v1/admin/user/${id}`,config);
+
+    dispatch(userDetailsSuccess(data.user));
+    return data.user;
+  } catch (error) {
+    dispatch(userDetailsFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
+);
 
 const userDetailsSlice = createSlice({
   name: 'userDetails',

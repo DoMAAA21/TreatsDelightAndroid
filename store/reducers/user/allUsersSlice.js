@@ -1,5 +1,6 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {BACKEND_URL} from '../../../constants/constants'
 
 
@@ -10,13 +11,23 @@ const initialState = {
   error: null,
 };
 
-export const fetchAllUsers = createAsyncThunk('allUsers/fetchAllUsers',async (_, thunkAPI) => {
+export const fetchAllUsers = createAsyncThunk('allUsers/fetchAllUsers',async (_, {dispatch}) => {
     try {
-      const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/users`);
-      thunkAPI.dispatch(allUsersSuccess(data.users));
+      const token = await AsyncStorage.getItem('token');
+      
+      if (!token) {
+        dispatch(allUsersFail('Login First'));
+      }
+      const config = {
+        headers: {
+          Authorization: `${token}`,
+        },
+      };
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/users`,config);
+      dispatch(allUsersSuccess(data.users));
       return data.users;
     } catch (error) {
-      console.error('Error fetching users:', error);
+      dispatch(allUsersFail(error.response.data.message))
       throw error.response.data.message; 
     }
   }

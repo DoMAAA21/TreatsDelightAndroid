@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../constants/constants';
+import { deleteUser } from '../user/userSlice';
 
 const initialState = {
   loading: false,
@@ -10,39 +12,56 @@ const initialState = {
 };
 
 
-export const deleteStore = createAsyncThunk('store/deleteStore',async (id,{dispatch}) => {
-      try {
-        const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/store/${id}`, { withCredentials: true });
-        dispatch(deleteStoreSuccess( data.success))
-        return data.success;
+export const deleteStore = createAsyncThunk('store/deleteStore', async (id, { dispatch }) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
 
-      } catch (error) {
-        dispatch(deleteStore( error.response.data.message))
-        throw error.response.data.message;
-      }
+    if (!token) {
+      dispatch(deleteStoreReset());
     }
-);
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/store/${id}`, config);
+    dispatch(deleteStoreSuccess(data.success))
+    return data.success;
 
-export const updateStore = createAsyncThunk('store/updateStore',async ({id,storeData},{dispatch}) => {
-    try {
-        const config = {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          };
-      const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/store/${id}`, storeData ,config);
-      dispatch(updateStoreSuccess(data.success))
-      return data.success;
-
-    } catch (error) {
-      dispatch(updateStoreFail(error.response.data.message))
-      throw error.response.data.message;
-    }
+  } catch (error) {
+    dispatch(deleteStore(error.response.data.message))
+    throw error.response.data.message;
   }
+}
+);
+
+export const updateStore = createAsyncThunk('store/updateStore', async ({ id, storeData }, { dispatch }) => {
+  try {
+
+    const token = await AsyncStorage.getItem('token');
+
+    if (!token) {
+      dispatch(updateStoreFail('Login First'));
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/store/${id}`, storeData, config);
+    dispatch(updateStoreSuccess(data.success))
+    return data.success;
+
+  } catch (error) {
+    dispatch(updateStoreFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
 );
 
 
-  
+
 
 const storeSlice = createSlice({
   name: 'store',
