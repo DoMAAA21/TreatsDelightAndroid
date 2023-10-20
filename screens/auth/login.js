@@ -1,52 +1,117 @@
-import React from 'react';
-import { View, StyleSheet, ImageBackground} from 'react-native';
-import { Card, Text, Input, Button, Block } from 'galio-framework';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { View, StyleSheet, ImageBackground } from 'react-native';
+import { Card, Text, Input, Button } from 'galio-framework';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import ks from '../../assets/loginbackground.jpg'
-const LoginForm = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+import Toast from 'react-native-toast-message';
+import { login, clearErrors } from '../../store/reducers/auth/authenticationSlice';
 
-  const handleLogin = async () => {
-    // Implement your login logic here
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required('Email is required'),
+  password: Yup.string().required('Password is required'),
+});
+
+const initialValues = { email: '', password: '' };
+
+const LoginForm = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const { isAuthenticated, error, loading } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigation.navigate('Users');
+    }
+    if (error) {
+      dispatch(clearErrors());
+      errorMsg(error);
+    }
+  }, [dispatch, isAuthenticated, error]);
+
+  const onSubmit = (values) => {
+    dispatch(login({ email: values.email, password: values.password }));
+  };
+
+  const errorMsg = (message) => {
+    Toast.show({
+      text1: 'Error',
+      text2: `${message}`,
+      type: 'error',
+      position: 'top',
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 50,
+      bottomOffset: 40,
+      customStyles: {
+        title: {
+          fontSize: 30,
+          fontWeight: 'bold',
+        },
+        message: {
+          fontSize: 24,
+          fontWeight: 'bold',
+        },
+      },
+    });
   };
 
   return (
     <ImageBackground
-    source={require('../../assets/login2.jpg')} // Update the path to your image
-    style={styles.backgroundImage}
-  >
-    <View style={styles.container}>
-      <Card style={styles.card}>
-        <Text style={styles.cardTitle}>Welcome back!</Text>
-        {/* <View > */}
-        <Input
-          placeholder="Email"
-          rounded
-          style={styles.input}
-        />
-        <Input
-          placeholder="Password"
-          rounded
-          password
-          style={styles.input}
-        />
-        <Button
-          color="primary"
-          style={styles.loginButton}
-          onPress={handleLogin}
-        >
-          Log In
-        </Button>
-        <Button
-          color="google"
-          style={styles.socialButton}
-        >
-          <Icon name="google" size={20} color="white" style={styles.socialIcon} />
-        </Button>
-        {/* </View> */}
-      </Card>
-    </View>
+      source={require('../../assets/login2.jpg')}
+      style={styles.backgroundImage}
+    >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {(formik) => (
+           <View style={styles.container}>
+           <Card style={styles.card}>
+             <Text style={styles.cardTitle}>Welcome back!</Text>
+             <Input
+               placeholder="Email"
+               rounded
+               style={styles.input}
+               onChangeText={formik.handleChange('email')}
+               onBlur={formik.handleBlur('email')}
+               value={formik.values.email}
+             />
+             {formik.touched.email && formik.errors.email ? (
+               <Text style={styles.errorMessage}>{formik.errors.email}</Text>
+             ) : null}
+             <Input
+               placeholder="Password"
+               rounded
+               password
+               style={styles.input}
+               onChangeText={formik.handleChange('password')}
+               onBlur={formik.handleBlur('password')}
+               value={formik.values.password}
+             />
+             {formik.touched.password && formik.errors.password ? (
+               <Text style={styles.errorMessage}>{formik.errors.password}</Text>
+             ) : null}
+             <Button
+               color="primary"
+               style={styles.loginButton}
+               onPress={formik.handleSubmit}
+             >
+               Log In
+             </Button>
+             <Button
+               color="google"
+               style={styles.socialButton}
+             >
+               <Icon name="google" size={20} color="white" style={styles.socialIcon} />
+             </Button>
+           </Card>
+         </View>
+        )}
+      </Formik>
     </ImageBackground>
   );
 };
@@ -56,18 +121,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-   
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover', // or 'stretch' for other resizing options
+    resizeMode: 'cover',
   },
   card: {
     width: '90%',
     backgroundColor: '#b7fbd0',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 30
+    borderRadius: 30,
   },
   cardTitle: {
     fontSize: 24,
@@ -75,28 +139,34 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   input: {
-    marginBottom: 15,
+    marginBottom: 5,
     height: 70,
     width: '90%',
     marginRight: 20,
-    marginLeft: 20
+    marginLeft: 20,
+    marginTop: 5,
   },
   loginButton: {
     marginBottom: 20,
     height: 60,
     width: '80%',
     borderRadius: 25,
+    marginTop: 20
   },
   socialButton: {
     backgroundColor: '#4285F4',
     height: 60,
     width: '80%',
     borderRadius: 25,
-    marginBottom: 25
+    marginBottom: 25,
   },
   socialIcon: {
-    marginRight: 10,
+    alignContent: 'center',
   },
+  errorMessage: {
+    color: 'red',
+    fontSize: 16, // You can adjust the font size here
+  }
 });
 
 export default LoginForm;

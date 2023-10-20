@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import allUsersReducer from './auth/allUsersSlice';
-import newUserReducer from './auth/newUserSlice';
-import userReducer from './auth/userSlice';
-import userDetailsReducer from './auth/userDetailsSlice';
+import allUsersReducer from './user/allUsersSlice';
+import newUserReducer from './user/newUserSlice';
+import userReducer from './user/userSlice';
+import userDetailsReducer from './user/userDetailsSlice';
 import allStoresReducer from './store/allStoresSlice';
 import newStoreReducer from './store/newStoreSlice';
 import storeReducer from './store/storeSlice';

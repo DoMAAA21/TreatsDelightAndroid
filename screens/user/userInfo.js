@@ -6,7 +6,7 @@ import { Card } from 'galio-framework';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import SkeletonLoader from '../loader/userInfoLoader';
-import { getUserDetails } from '../../store/reducers/auth/userDetailsSlice';
+import { getUserDetails } from '../../store/reducers/user/userDetailsSlice';
 
 const screenWidth = Dimensions.get('window').width;
 const UserInfo = () => {

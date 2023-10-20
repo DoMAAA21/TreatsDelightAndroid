@@ -5,8 +5,8 @@ import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import UserList from './userList';
-import { fetchAllUsers,clearErrors } from '../../store/reducers/auth/allUsersSlice';
-import { deleteUserReset, updateUserReset } from '../../store/reducers/auth/userSlice';
+import { fetchAllUsers,clearErrors } from '../../store/reducers/user/allUsersSlice';
+import { deleteUserReset, updateUserReset } from '../../store/reducers/user/userSlice';
 
 
 const successMsg = (title,message) => {

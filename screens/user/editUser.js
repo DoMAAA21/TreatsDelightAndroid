@@ -10,8 +10,8 @@ import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
-import { getUserDetails } from '../../store/reducers/auth/userDetailsSlice';
-import { updateUser, clearErrors } from '../../store/reducers/auth/userSlice';
+import { getUserDetails } from '../../store/reducers/user/userDetailsSlice';
+import { updateUser, clearErrors } from '../../store/reducers/user/userSlice';
 import { BACKEND_URL } from '../../constants/constants';
 
 const screenHeight = Dimensions.get('window').height;

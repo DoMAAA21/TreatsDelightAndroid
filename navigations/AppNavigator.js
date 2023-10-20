@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -6,6 +7,7 @@ import { useIsFocused } from '@react-navigation/native';
 import ProfileScreen from '../screens/profile/index';
 import HomeStack from './HomeStack';
 import LoginScreen from '../screens/auth/login';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,11 +37,10 @@ const ProfileIcon = () => {
 };
 
 const AppNavigator = () => {
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const { isAuthenticated, error, loading } = useSelector((state) => state.auth);
 
-  if (!userLoggedIn) {
-    return <LoginScreen />;
-    // return <ProfileScreen/>
+  if (!isAuthenticated) {
+    return <LoginScreen/>;
   }
 
   return (

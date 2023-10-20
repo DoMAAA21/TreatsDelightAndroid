@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView, Image, View, Alert, TextInput, TouchableOpacity, Dimensions } from 'react-native'; // Import Dimensions
 import { Card, Block, Text, Button } from 'galio-framework';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { deleteUser } from '../../store/reducers/auth/userSlice';
+import { deleteUser } from '../../store/reducers/user/userSlice';
 import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('screen'); // Get screen width
