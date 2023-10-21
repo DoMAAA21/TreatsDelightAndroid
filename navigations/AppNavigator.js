@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
 import ProfileScreen from '../screens/profile/index';
-import HomeStack from './HomeStack';
-import LoginScreen from '../screens/auth/login';
-import { useNavigation } from '@react-navigation/native';
+import HomeStack from './HomeStack'; // Assuming you have a HomeStack component
+import AuthStack from './AuthStack';
+// import LoginScreen from '../screens/auth/login';
 
 const Tab = createBottomTabNavigator();
+
 
 const activeColor = 'black';
 const inactiveColor = 'gray';
@@ -31,31 +32,29 @@ const ProfileIcon = () => {
     <Icon
       name="user"
       size={35}
-      color={isFocused ? activeColor : inactiveColor }
+      color={isFocused ? activeColor : inactiveColor}
     />
   );
 };
 
 const AppNavigator = () => {
-  const { isAuthenticated, error, loading } = useSelector((state) => state.auth);
-
+  const { isAuthenticated } = useSelector((state) => state.auth);
   if (!isAuthenticated) {
-    return <LoginScreen/>;
+    return <AuthStack />;
   }
 
   return (
     <Tab.Navigator
-      screenOptions={
-        ({ route }) => ({
-          tabBarActiveTintColor: 'blue',
-          tabBarInactiveTintColor: 'gray',
-          tabBarLabelStyle: {
-            fontSize: 16,
-          },
-          tabBarStyle: {
-            backgroundColor: 'white',
-          },
-        })}
+      screenOptions={() => ({
+        tabBarActiveTintColor: 'blue',
+        tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: {
+          fontSize: 16,
+        },
+        tabBarStyle: {
+          backgroundColor: 'white',
+        },
+      })}
     >
       <Tab.Screen
         name="Home"
@@ -63,9 +62,7 @@ const AppNavigator = () => {
         options={{
           tabBarShowLabel: false,
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <HomeIcon  />
-          ),
+          tabBarIcon: () => <HomeIcon />,
         }}
       />
       <Tab.Screen
@@ -73,9 +70,7 @@ const AppNavigator = () => {
         component={ProfileScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => (
-            <ProfileIcon  />
-          ),
+          tabBarIcon: () => <ProfileIcon />,
         }}
       />
     </Tab.Navigator>

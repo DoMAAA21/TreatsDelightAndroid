@@ -99,7 +99,7 @@ const AddUserScreen = () => {
     const roles = ["User", "Employee"];
 
     const fetchStores = () => {
-        axios.get(`${BACKEND_URL}/api/v1/admin/stores`)
+    axios.get(`${BACKEND_URL}/api/v1/stores`)
             .then((response) => {
                 const storeData = response.data.stores;
                 const options = storeData.map((store) => ({

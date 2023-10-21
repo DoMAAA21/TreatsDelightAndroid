@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
 
 const initialValues = { email: '', password: '' };
 
-const LoginForm = () => {
+const LoginScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { isAuthenticated, error, loading } = useSelector((state) => state.auth);
@@ -97,8 +97,9 @@ const LoginForm = () => {
              ) : null}
              <Button
                color="primary"
-               style={styles.loginButton}
-               onPress={formik.handleSubmit}
+               style={[styles.loginButton, { opacity: !loading ? 1 : 0.5 }]}
+               onPress={formik.handleSubmit}    
+               disabled={loading}
              >
                Log In
              </Button>
@@ -108,7 +109,12 @@ const LoginForm = () => {
              >
                <Icon name="google" size={20} color="white" style={styles.socialIcon} />
              </Button>
+             <Text style={styles.dontHaveAccount}>Don't have an account? 
+                 <Text  onPress={() => navigation.navigate('Register')} style={styles.registerLink}> Register</Text>
+               </Text>
+           
            </Card>
+           
          </View>
         )}
       </Formik>
@@ -165,8 +171,18 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
-    fontSize: 16, // You can adjust the font size here
-  }
+    fontSize: 16, 
+  },
+  dontHaveAccount: {
+    marginTop: 10,
+    fontSize: 16,
+    marginBottom: 20
+
+  },
+  registerLink: {
+    color: 'blue',
+    fontSize: 16,
+  },
 });
 
-export default LoginForm;
+export default LoginScreen;

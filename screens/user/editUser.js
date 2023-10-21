@@ -82,7 +82,7 @@ const EditUserScreen = () => {
 
     const fetchStores = async () => {
         try {
-            const response = await axios.get(`${BACKEND_URL}/api/v1/admin/stores`);
+            const response = await axios.get(`${BACKEND_URL}/api/v1/stores`);
             const storeData = response.data.stores;
             const options = storeData.map((store) => ({
                 value: store._id,

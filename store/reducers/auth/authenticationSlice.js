@@ -48,26 +48,26 @@ export const logout = createAsyncThunk('auth/logout', async (_, {  dispatch }) =
 });
 
 
-// export const registerUser = createAsyncThunk('auth/register', async (userData, { rejectWithValue, dispatch }) => {
-//   try {
-//     dispatch(registerUserRequest())
-//     const config = {
-//       headers: {
-//         'Content-Type': 'multipart/form-data',
-//       },
-//       withCredentials: true,
-//     };
-//     const response = await axios.post(`${process.env.REACT_APP_API}/api/v1/register`, userData, { withCredentials: true }, config);
-//     const data = response.data;
-//     localStorage.setItem('user', JSON.stringify(data.user));
-//     dispatch(registerUserSuccess(data.user))
-//     return data.user;
-//   } catch (error) {
-//     dispatch(registerUserFail(error.response.data.message))
-//     return rejectWithValue(error.response.data.message);
-//   }
-// }
-// );
+export const registerUser = createAsyncThunk('auth/register', async (userData, { dispatch }) => {
+  try {
+    dispatch(registerUserRequest())
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    };
+    const response = await axios.post(`${BACKEND_URL}/api/v1/register`, userData, config);
+    const data = response.data;
+    await AsyncStorage.setItem('token', data.token)
+    dispatch(registerUserSuccess(data.user))
+    return data.user;
+  } catch (error) {
+    dispatch(registerUserFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
+);
 
 
 
