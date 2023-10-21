@@ -148,15 +148,11 @@ const AddUserScreen = () => {
                 format: ImageManipulator.SaveFormat.JPEG,
                 base64: true,
             };
-
-            // Manipulate the image
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
                 [],
                 manipulatorOptions
             );
-
-
             if (manipulatedImage) {
                 const { uri, base64 } = manipulatedImage;
                 setAvatarPreview(uri)

@@ -19,17 +19,14 @@ const initialValues = { email: '', password: '' };
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { isAuthenticated, error, loading } = useSelector((state) => state.auth);
+  const { error, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigation.navigate('Users');
-    }
     if (error) {
       dispatch(clearErrors());
       errorMsg(error);
     }
-  }, [dispatch, isAuthenticated, error]);
+  }, [dispatch, error]);  // AppNavigator is the one who handles isAuthenticated so no need to navigate
 
   const onSubmit = (values) => {
     dispatch(login({ email: values.email, password: values.password }));

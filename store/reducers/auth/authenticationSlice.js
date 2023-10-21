@@ -14,7 +14,7 @@ const initialState = {
 
 export const login = createAsyncThunk('auth/login', async ({ email, password }, { dispatch }) => {
   try {
-   
+
     dispatch(loginRequest());
     const config = {
       headers: {
@@ -25,7 +25,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/login`, { email, password }, config);
     await AsyncStorage.setItem('token', data.token)
 
-   
+
     dispatch(loginSuccess(data.user));
     return data.user;
   } catch (error) {
@@ -34,7 +34,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
   }
 });
 
-export const logout = createAsyncThunk('auth/logout', async (_, {  dispatch }) => {
+export const logout = createAsyncThunk('auth/logout', async (_, { dispatch }) => {
   try {
     const { data } = await axios.get(`${BACKEND_URL}/api/v1/logout`, { withCredentials: true });
 
@@ -50,12 +50,13 @@ export const logout = createAsyncThunk('auth/logout', async (_, {  dispatch }) =
 
 export const registerUser = createAsyncThunk('auth/register', async (userData, { dispatch }) => {
   try {
+
+    console.log(userData)
     dispatch(registerUserRequest())
     const config = {
       headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      withCredentials: true,
+        'Content-Type': 'application/json',
+      }
     };
     const response = await axios.post(`${BACKEND_URL}/api/v1/register`, userData, config);
     const data = response.data;
@@ -83,7 +84,7 @@ const authSlice = createSlice({
     loginSuccess(state, action) {
       state.loading = false;
       state.isAuthenticated = true;
-      state.user = action.payload.user; 
+      state.user = action.payload.user;
     },
     loginFail(state, action) {
       state.loading = false;

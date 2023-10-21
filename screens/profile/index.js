@@ -14,15 +14,15 @@ const ProfileScreen = () => {
 
   const confirmLogout = () => {
     setLogoutModalVisible(false);
-    dispatch(logout());
+    dispatch(logout()); // App navigator is the one who handles isAuthenticated
     
   };
 
   const logoutModal = (
     <Modal
       isVisible={isLogoutModalVisible}
-      animationIn="slideInLeft" // Slide in from the right
-      animationOut="slideOutLeft" // Slide out to the right
+      animationIn="slideInLeft" 
+      animationOut="slideOutLeft" 
     >
       <View style={styles.modalContainer}>
        <Text style={styles.modalTitle}>Logout</Text>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import { View, StyleSheet, ImageBackground, Dimensions, ScrollView } from 'react-native';
 import { Card, Text, Input, Button } from 'galio-framework';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
@@ -10,17 +10,15 @@ import Toast from 'react-native-toast-message';
 import { Picker } from '@react-native-picker/picker';
 import { registerUser, clearErrors } from '../../store/reducers/auth/authenticationSlice';
 
-
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
-const validationSchema = Yup.object({
+const validationSchema = Yup.object().shape({
     fname: Yup.string().required('First Name is required'),
     lname: Yup.string().required('Last Name is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     religion: Yup.string().required('Religion is required'),
     course: Yup.string().required('Course is required'),
-    role: Yup.string().required('Role is required'),
 });
 
 const initialValues = {
@@ -28,7 +26,6 @@ const initialValues = {
     lname: '',
     email: '',
     password: '',
-    role: '',
     course: '',
     religion: '',
 };
@@ -42,17 +39,14 @@ const courses = [
 const RegisterScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { isAuthenticated, error, loading } = useSelector((state) => state.auth);
+    const { error, loading } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        if (isAuthenticated) {
-            navigation.navigate('Users');
-        }
         if (error) {
             dispatch(clearErrors());
             errorMsg(error);
         }
-    }, [dispatch, isAuthenticated, error]);
+    }, [dispatch, error]); //App Navigator is the one who handles isAuthenticated
 
     const onSubmit = (values) => {
         const userData = {
@@ -63,6 +57,7 @@ const RegisterScreen = () => {
             course: values.course,
             religion: values.religion,
         }
+
         dispatch(registerUser(userData));
     };
 
@@ -90,117 +85,138 @@ const RegisterScreen = () => {
     };
 
     return (
-        <ImageBackground
-            source={require('../../assets/login3.jpg')}
-            style={styles.backgroundImage}
-        >
-            <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={onSubmit}
+        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+            <ImageBackground
+                source={require('../../assets/login3.jpg')}
+                style={styles.backgroundImage}
             >
-                {(formik) => (
-                    <View style={styles.container}>
-                        <Card style={styles.card}>
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={onSubmit}
+                >
+                    {(formik) => (
+                        <View style={styles.container}>
+                            <Card style={styles.card}>
 
-                            <Text style={styles.cardTitle}>Register</Text>
-                            <Input
-                                placeholder="First Name"
-                                rounded
-                                style={styles.input}
-                                onChangeText={formik.handleChange('fname')}
-                                onBlur={formik.handleBlur('fname')}
-                                value={formik.values.fname}
-                            />
-                            {formik.touched.fname && formik.errors.fname ? (
-                                <Text style={styles.errorMessage}>{formik.errors.fname}</Text>
-                            ) : null}
-                            <Input
-                                placeholder="Last Name"
-                                rounded
-                                style={styles.input}
-                                onChangeText={formik.handleChange('lname')}
-                                onBlur={formik.handleBlur('lname')}
-                                value={formik.values.lname}
-                            />
-                            {formik.touched.lname && formik.errors.lname ? (
-                                <Text style={styles.errorMessage}>{formik.errors.lname}</Text>
-                            ) : null}
+                                <Text style={styles.cardTitle}>Register</Text>
+                                <Input
+                                    placeholder="First Name"
+                                    rounded
+                                    style={styles.input}
+                                    onChangeText={formik.handleChange('fname')}
+                                    onBlur={formik.handleBlur('fname')}
+                                    value={formik.values.fname}
+                                />
+                                {formik.touched.fname && formik.errors.fname ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.fname}</Text>
+                                ) : null}
+                                <Input
+                                    placeholder="Last Name"
+                                    rounded
+                                    style={styles.input}
+                                    onChangeText={formik.handleChange('lname')}
+                                    onBlur={formik.handleBlur('lname')}
+                                    value={formik.values.lname}
+                                />
+                                {formik.touched.lname && formik.errors.lname ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.lname}</Text>
+                                ) : null}
 
-                            <View style={styles.inputContainer}>
-                                <Text style={styles.label}>Religion</Text>
-                                <View style={styles.pickerContainer}>
-                                    <Picker
-                                        selectedValue={formik.values.religion}
-                                        onValueChange={formik.handleChange('religion')}
-                                        style={styles.picker}
-                                    >
-                                        <Picker.Item label="Choose Option" value="" />
-                                        {religions.map((religionOption) => (
-                                            <Picker.Item label={religionOption} value={religionOption} key={religionOption} />
-                                        ))}
-                                    </Picker>
+
+
+                                <View style={styles.inputContainer}>
+                                    <View style={styles.pickerContainer}>
+                                        <Picker
+                                            selectedValue={formik.values.course}
+                                            onValueChange={formik.handleChange('course')}
+                                            style={styles.picker}
+                                        >
+                                            <Picker.Item label="Choose Course" value="" />
+                                            {courses.map((coursesOption) => (
+                                                <Picker.Item label={coursesOption.label} value={coursesOption.value} key={coursesOption.label} />
+                                            ))}
+                                        </Picker>
+                                    </View>
                                 </View>
-                                
-                            </View>
-                            {formik.touched.religion && formik.errors.religion ? (
+                                {formik.touched.course && formik.errors.course ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.course}</Text>
+                                ) : null}
+
+                                <View style={styles.inputContainer}>
+                                    <View style={styles.pickerContainer}>
+                                        <Picker
+                                            selectedValue={formik.values.religion}
+                                            onValueChange={formik.handleChange('religion')}
+                                            style={styles.picker}
+                                        >
+                                            <Picker.Item label="Choose Religion" value="" />
+                                            {religions.map((religionOption) => (
+                                                <Picker.Item label={religionOption} value={religionOption} key={religionOption} />
+                                            ))}
+                                        </Picker>
+                                    </View>
+                                </View>
+                                {formik.touched.religion && formik.errors.religion ? (
                                     <Text style={styles.errorMessage}>{formik.errors.religion}</Text>
                                 ) : null}
 
 
 
-                            <Input
-                                placeholder="Email"
-                                rounded
-                                style={styles.input}
-                                onChangeText={formik.handleChange('email')}
-                                onBlur={formik.handleBlur('email')}
-                                value={formik.values.email}
-                            />
-                            {formik.touched.email && formik.errors.email ? (
-                                <Text style={styles.errorMessage}>{formik.errors.email}</Text>
-                            ) : null}
+                                <Input
+                                    placeholder="Email"
+                                    rounded
+                                    style={styles.input}
+                                    onChangeText={formik.handleChange('email')}
+                                    onBlur={formik.handleBlur('email')}
+                                    value={formik.values.email}
+                                />
+                                {formik.touched.email && formik.errors.email ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.email}</Text>
+                                ) : null}
 
-                            <Input
-                                placeholder="Password"
-                                rounded
-                                password
-                                style={styles.input}
-                                onChangeText={formik.handleChange('password')}
-                                onBlur={formik.handleBlur('password')}
-                                value={formik.values.password}
-                            />
-                            {formik.touched.password && formik.errors.password ? (
-                                <Text style={styles.errorMessage}>{formik.errors.password}</Text>
-                            ) : null}
-                            <Button
-                                color="primary"
-                                style={[styles.loginButton, { opacity: !loading ? 1 : 0.5 }]}
-                                onPress={formik.handleSubmit}
-                                disabled={loading}
-                            >
-                                Register
-                            </Button>
-                            <Button
-                                color="google"
-                                style={styles.socialButton}
-                            >
-                                <Icon name="google" size={20} color="white" style={styles.socialIcon} />
-                            </Button>
-                            <Text style={styles.dontHaveAccount}>Already have an account?
-                                <Text onPress={() => navigation.navigate('Login')} style={styles.registerLink}> Login</Text>
-                            </Text>
-
-                        </Card>
-
-                    </View>
-                )}
-            </Formik>
-        </ImageBackground>
+                                <Input
+                                    placeholder="Password"
+                                    rounded
+                                    password
+                                    style={styles.input}
+                                    onChangeText={formik.handleChange('password')}
+                                    onBlur={formik.handleBlur('password')}
+                                    value={formik.values.password}
+                                />
+                                {formik.touched.password && formik.errors.password ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.password}</Text>
+                                ) : null}
+                                <Button
+                                    color="primary"
+                                    style={[styles.registerButton, { opacity: !loading ? 1 : 0.5 }]}
+                                    onPress={formik.handleSubmit}
+                                // disabled={loading}
+                                >
+                                    Register
+                                </Button>
+                                <Button
+                                    color="google"
+                                    style={styles.socialButton}
+                                >
+                                    <Icon name="google" size={20} color="white" style={styles.socialIcon} />
+                                </Button>
+                                <Text style={styles.dontHaveAccount}>Already have an account?
+                                    <Text onPress={() => navigation.navigate('Login')} style={styles.registerLink}> Login</Text>
+                                </Text>
+                            </Card>
+                        </View>
+                    )}
+                </Formik>
+            </ImageBackground>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    scrollViewContainer: {
+        flexGrow: 1,
+    },
     container: {
         flexGrow: 1,
         justifyContent: 'center',
@@ -216,6 +232,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 30,
+        marginTop: 30,
+        marginBottom: 30
     },
     cardTitle: {
         fontSize: 24,
@@ -229,14 +247,14 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginLeft: 20,
         marginTop: 5,
-        borderRadius: 15,
+        borderRadius: 15
     },
-    loginButton: {
+    registerButton: {
         marginBottom: 20,
         height: 60,
         width: '80%',
         borderRadius: 25,
-        marginTop: 20
+        marginTop: 20,
     },
     socialButton: {
         backgroundColor: '#4285F4',
@@ -255,8 +273,7 @@ const styles = StyleSheet.create({
     dontHaveAccount: {
         marginTop: 10,
         fontSize: 16,
-        marginBottom: 20
-
+        marginBottom: 20,
     },
     registerLink: {
         color: 'blue',
@@ -275,12 +292,11 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         height: inputSize * 1.1,
         width: inputSize * 5.5,
-        backgroundColor: "#ffffff"
+        backgroundColor: '#ffffff',
     },
     picker: {
         height: inputSize,
     },
-
 });
 
 export default RegisterScreen;
