@@ -23,8 +23,8 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
     };
 
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/login`, { email, password }, config);
-    await AsyncStorage.setItem('token', data.token)
-
+    await AsyncStorage.setItem('user', JSON.stringify(data.user));
+    await AsyncStorage.setItem('token', data.token);
 
     dispatch(loginSuccess(data.user));
     return data.user;
@@ -37,8 +37,9 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
 export const logout = createAsyncThunk('auth/logout', async (_, { dispatch }) => {
   try {
     const { data } = await axios.get(`${BACKEND_URL}/api/v1/logout`, { withCredentials: true });
-
+    await AsyncStorage.removeItem('user');
     await AsyncStorage.removeItem('token');
+  
 
     return dispatch(logoutSuccess(data.success));
   } catch (error) {
@@ -50,8 +51,6 @@ export const logout = createAsyncThunk('auth/logout', async (_, { dispatch }) =>
 
 export const registerUser = createAsyncThunk('auth/register', async (userData, { dispatch }) => {
   try {
-
-    console.log(userData)
     dispatch(registerUserRequest())
     const config = {
       headers: {
@@ -60,7 +59,8 @@ export const registerUser = createAsyncThunk('auth/register', async (userData, {
     };
     const response = await axios.post(`${BACKEND_URL}/api/v1/register`, userData, config);
     const data = response.data;
-    await AsyncStorage.setItem('token', data.token)
+    await AsyncStorage.setItem('user', data.user);
+    await AsyncStorage.setItem('token', data.token);
     dispatch(registerUserSuccess(data.user))
     return data.user;
   } catch (error) {

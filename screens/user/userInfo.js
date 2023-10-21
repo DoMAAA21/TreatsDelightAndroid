@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, Text, StyleSheet, Image, Dimensions, ScrollView ,ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, ScrollView} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Card } from 'galio-framework';
 import Icon from 'react-native-vector-icons/FontAwesome';

@@ -191,7 +191,7 @@ const RegisterScreen = () => {
                                     color="primary"
                                     style={[styles.registerButton, { opacity: !loading ? 1 : 0.5 }]}
                                     onPress={formik.handleSubmit}
-                                // disabled={loading}
+                                    disabled={loading}
                                 >
                                     Register
                                 </Button>
