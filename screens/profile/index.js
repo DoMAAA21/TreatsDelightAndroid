@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { logout } from '../../store/reducers/auth/authenticationSlice';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Card, Block, Icon } from 'galio-framework';
 import { FontAwesome } from 'react-native-vector-icons';
 
-const screenHeight = Dimensions.get('window').height;
+export default ProfileScreen = () => {
 
-const ProfileScreen = () => {
   const dispatch = useDispatch();
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [user, setUser] = useState('');
@@ -45,7 +43,7 @@ const ProfileScreen = () => {
       <View style={styles.modalContainer}>
         <Text style={styles.modalTitle}>Logout</Text>
         <Text style={styles.modalText}>Are you sure you want to log out?</Text>
-        <View style={styles.buttonContainer}>
+        <View style={styles.modalbuttonContainer}>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: '#f93a5f' }]}
             onPress={confirmLogout}>
@@ -64,109 +62,136 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}></View>
       <Image
-        source={{ uri: user?.avatar?.url }}
         style={styles.avatar}
+        source={{ uri: user?.avatar?.url }}
       />
-      <Card
-        style={styles.card}
-      >
-        <Block row style={styles.cardHeader}>
-          <Block right>
-            <Text style={styles.userName}>{user.fname} {user.lname}</Text>
-            <Text style={styles.userEmail}>{user.email}</Text>
-          </Block>
-        </Block>
-        <Block row style={styles.menuItemContent}>
-        <TouchableOpacity
-          style={styles.menuItem}
-        >
-          <FontAwesome name="user" height={35} size={35} width= {35} color="#000" />
-          <Text style={styles.menuText}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.menuItem}
-        >
-          <FontAwesome name="cog" height={35} size={35} width= {35} color="#000" />
-          <Text style={styles.menuText}>Settings</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.menuItem}
-        >
-          <FontAwesome name="info" height={35} size={35} width= {35} color="#000" />
-          <Text style={styles.menuText}>Information</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={handleLogout}
-        >
-          <FontAwesome name="sign-out" height={35} size={35} width= {35} color="#000" />
-          <Text style={styles.menuText}>Logout</Text>
-        </TouchableOpacity>
-        </Block>
-      </Card>
+
+      <View style={styles.body}>
+
+        <View style={styles.bodyContent}>
+          <Text style={styles.name}>{user.fname} {user.lname}</Text>
+          <Text style={styles.info}>{user.email}</Text>
+          
+        <View style={styles.menuCard}>
+          <View style={styles.menuContainer} >
+            <TouchableOpacity style={styles.buttonContainer} >
+              <FontAwesome name="user" height={35} size={35} width={35} color="#abafac" />
+              <Text style={styles.menuText}>Profile</Text>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.menuContainer} >
+            <TouchableOpacity style={styles.buttonContainer} >
+              <FontAwesome name="cog" height={35} size={35} width={35} color="#abafac" />
+              <Text style={styles.menuText}>Settings</Text>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+
+          <View style={styles.menuContainer} >
+            <TouchableOpacity style={styles.buttonContainer} >
+              <FontAwesome name="info-circle" height={35} size={35} width={35} color="#abafac" />
+              <Text style={styles.menuText}>Information</Text>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+
+
+          <View style={styles.menuContainer} >
+            <TouchableOpacity style={styles.buttonContainer} onPress={handleLogout}>
+              <FontAwesome name="sign-out" height={35} size={35} width={35} color="#abafac" />
+              <Text style={styles.menuText}>Logout</Text>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+              </View>
+            </TouchableOpacity>
+          </View>
+          </View>
+
+        </View>
+
+      </View>
       {logoutModal}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
+  header: {
+    backgroundColor: '#00BFFF',
+    height: 200,
   },
   avatar: {
-    borderRadius: 75,
-    position: 'absolute',
-    top: 75,
-    left: 18,
     width: 150,
     height: 150,
-    zIndex: 1,
+    borderRadius: 75,
+    borderWidth: 4,
+    borderColor: 'white',
+    marginBottom: 10,
+    alignSelf: 'center',
+    position: 'absolute',
+    marginTop: 130,
   },
-  card: {
-    width: '90%',
-    marginTop: screenHeight * 0.15,
-    padding: 20,
-    borderRadius: 10,
-    zIndex: 0,
+  name: {
+    fontSize: 22,
+    color: 'black',
+    fontWeight: '700',
   },
-  cardHeader: {
-    padding: 10,
-    paddingLeft: 100,
-    borderBottomWidth: 1,
-  },
-  userName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  userEmail: {
-    fontSize: 16,
-  },
-  menuCard: {
-    width: '90%',
-    margin: 10,
-    borderRadius: 10,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    
- 
-    borderTopWidth: 0.5,
-    borderBottomWidth: 0.5, // Add an underline
-    borderBottomColor: '#000', // Underline color
-    height: screenHeight * 0.08,
-  },
-  menuItemContent: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
-  },
-  menuText: {
+  info: {
     fontSize: 20,
-    marginLeft: 10,
+    color: 'black',
+    marginTop: 10,
+    marginBottom: 50,
   },
+  body: {
+    marginTop: 10,
+  },
+  bodyContent: {
+    paddingTop: 70,
+    alignItems: 'center',
+    padding: 0,
+  },
+  menuText:{
+    fontSize: 16,
+    fontWeight: '600'
+  },
+
+  menuContainer: {
+    width: '100%',
+    // borderBottomWidth: 0.3,
+    // borderTopWidth: 0.3,
+    height: 75,
+    marginStart: 10,
+    marginEnd: 10,
+    alignItems: 'center',
+  },
+  menuCard:{
+    width: '80%',
+    borderColor: 'black',
+    borderWidth: 0.5,
+    borderRadius: 20,
+  },
+  buttonContainer: {
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 10,
+  },
+
   modalContainer: {
     backgroundColor: 'white',
     padding: 20,
@@ -182,7 +207,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 18,
   },
-  buttonContainer: {
+  modalbuttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -198,6 +223,4 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-});
-
-export default ProfileScreen;
+})
