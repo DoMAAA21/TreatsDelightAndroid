@@ -84,6 +84,7 @@ const storeSlice = createSlice({
     },
     deleteStoreReset: (state) => {
       state.isDeleted = false;
+      state.error = null;
     },
     deleteStoreFail: (state, action) => {
       state.loading = false;

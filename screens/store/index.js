@@ -96,7 +96,7 @@ useEffect(()=>{
     dispatch(updateStoreReset());
     dispatch(fetchAllStores());
   }
-  if (errorStore){     //error for deleting
+  if (errorStore){    
     errorMsg(errorStore); 
     dispatch(deleteStoreReset());
     dispatch(fetchAllStores());
