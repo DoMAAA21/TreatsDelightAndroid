@@ -71,8 +71,8 @@ export default ProfileScreen = () => {
       <View style={styles.body}>
 
         <View style={styles.bodyContent}>
-          <Text style={styles.name}>{user.fname} {user.lname}</Text>
-          <Text style={styles.info}>{user.email}</Text>
+          <Text style={styles.name}>{user?.fname} {user?.lname}</Text>
+          <Text style={styles.info}>{user?.email}</Text>
           
         <View style={styles.menuCard}>
           <View style={styles.menuContainer} >

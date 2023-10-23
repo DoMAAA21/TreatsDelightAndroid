@@ -26,7 +26,7 @@ export const deleteUser = createAsyncThunk('user/deleteUser', async (id, {dispat
     dispatch(deleteUserSuccess(data.success));
     return data.success;
   } catch (error) {
-    console.error(error.response.data.message)
+    dispatch(deleteUserFail(error.response.data.message))
     throw error.response.data.message;
   }
 });
@@ -84,8 +84,13 @@ const userSlice = createSlice({
     },
     deleteUserReset: (state) => {
       state.isDeleted = false;
+      state.error = null;
     },
     updateUserFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    }, 
+    deleteUserFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -102,6 +107,7 @@ export const {
   updateUserReset,
   deleteUserReset,
   updateUserFail,
+  deleteUserFail,
   clearErrors,
 } = userSlice.actions;
 

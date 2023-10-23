@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ScrollView, Image, View, Alert, TextInput, TouchableOpacity, Dimensions } from 'react-native'; // Import Dimensions
-import { Card, Block, Text, Button } from 'galio-framework';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { useDispatch } from 'react-redux';
+import { ScrollView, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { deleteStore } from '../../store/reducers/store/storeSlice';
-
-const { width } = Dimensions.get('screen'); 
+const { width } = Dimensions.get('screen');  
 
 const StoreList = ({ stores }) => {
   const dispatch = useDispatch();
@@ -58,44 +55,29 @@ const StoreList = ({ stores }) => {
             );
           })
           .map((store, index) => (
-            <TouchableOpacity key={index} style={styles.touchableStores} onPress={() => navigateStore(store._id)}>
-            <Card key={index} flex shadow style={styles.card}>
-              <Block card style={styles.block}>
-                <View style={styles.leftContainer}>
-                  <Image
-                    source={{ uri: store?.logo?.url }}
-                    style={styles.avatar}
-                  />
+            <View  key={index} style={styles.container}>
+
+            <TouchableOpacity  style={styles.card} onPress={() => navigateStore(store._id)}>
+              <Image style={styles.image} source={{ uri: store?.logo?.url }} />
+              <View style={styles.cardContent}>
+                <Text style={styles.name}>{store?.name}</Text>
+                <Text style={styles.count}>{store?.slogan}</Text>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25}]}
+                    onPress={() => handleEdit(store._id)}>
+                    <Text style={styles.followButtonText}>Edit</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.followButton, { backgroundColor: '#ff2752', width: width * 0.25 }]}
+                    onPress={() => confirmDelete(store._id)}>
+                    <Text style={styles.followButtonText}>Delete</Text>
+
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.rightContainer}>
-                  <Text h4>{store.name}</Text>
-                  <Text p>{store.slogan}</Text>
-                  <Text p>No. {store.stall}</Text>
-                  
-                </View>
-              </Block>
-              <Block bottom right>
-                <View style={styles.buttonGroup}>
-                  <Button
-                    round
-                    color="info"
-                    style={styles.editButton} 
-                    onPress={() => handleEdit(store._id)}
-                  >
-                    <Icon name="edit" color="white" size={width * 0.07} />
-                  </Button>
-                  <Button
-                    round
-                    color="error"
-                    style={styles.deleteButton} 
-                    onPress={() => confirmDelete(store._id)}
-                  >
-                    <Icon name="trash-o" color="white" size={width * 0.07} />
-                  </Button>
-                </View>
-              </Block>
-            </Card>
+              </View>
             </TouchableOpacity>
+          </View>
           ))}
       </ScrollView>
     </View>
@@ -103,49 +85,11 @@ const StoreList = ({ stores }) => {
 };
 
 const styles = {
-  container: {
-    flex: 1,
-  },
   scrollView: {
     padding: 10,
   },
-  card: {
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  block: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    borderWidth: 0,
-  },
-  leftContainer: {
-    marginRight: 10,
-  },
-  rightContainer: {
-    flex: 1,
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: 10,
-  },
   buttonGroup: {
     flexDirection: 'row',
-  },
-  editButton: {
-    backgroundColor: '#2196F3',
-    color: 'white',
-    marginRight: 10,
-    width : width * 0.15
-  },
-  deleteButton: {
-    backgroundColor: '#ff2752',
-    color: 'white',
-    width : width * 0.15,
-    marginRight: 10,
   },
   searchBar: {
     padding: 10,
@@ -155,9 +99,78 @@ const styles = {
     borderWidth: 1,
     borderColor: '#ccc',
   },
-  touchableStores: {
-    flex: 1
-  }
+  container: {
+    flex: 1,
+    marginTop: 10,
+  },
+  contentList: {
+    flex: 1,
+  },
+  cardContent: {
+    marginLeft: 20,
+    marginTop: 10,
+    flex: 1,
+  },
+  image: {
+    width: 90,
+    height: 90,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#ebf0f7',
+  },
+
+  card: {
+    shadowColor: '#00000021',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
+    backgroundColor: 'white',
+    padding: 10,
+    flexDirection: 'row',
+    borderRadius: 30,
+  },
+
+  name: {
+    fontSize: 18,
+    flex: 1,
+    alignSelf: 'center',
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  count: {
+    fontSize: 14,
+    flex: 1,
+    alignSelf: 'center',
+    color: 'black',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginRight: 20
+  },
+  followButton: {
+    marginTop: 10,
+    height: 35,
+    width: 100,
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#dcdcdc',
+    marginLeft: width * 0.015,
+    marginRight: width * 0.015
+  },
+  followButtonText: {
+    color: 'white',
+    fontSize: 12,
+  },
 };
 
 export default StoreList;

@@ -72,7 +72,7 @@ const HomeScreen = () => {
       borderColor: '#000',
       borderRadius: 10,
       overflow: 'hidden',
-      width: screenWidth * 0.25,
+      width: screenHeight * 0.12,
       height: screenHeight * 0.12,
     },
     content: {

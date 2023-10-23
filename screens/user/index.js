@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -8,6 +8,8 @@ import UserList from './userList';
 import { fetchAllUsers,clearErrors } from '../../store/reducers/user/allUsersSlice';
 import { deleteUserReset, updateUserReset } from '../../store/reducers/user/userSlice';
 
+const { width , height } = Dimensions.get('screen');
+const buttonSize = Math.min(width * 0.15, height * 0.25);
 
 const successMsg = (title,message) => {
   Toast.show({
@@ -60,7 +62,7 @@ const UserScreen = () => {
   const navigation = useNavigation();
   const { error, users } = useSelector(state => state.allUsers);
   const { success } = useSelector(state => state.newUser);
-  const { isDeleted, isUpdated } = useSelector(state => state.user)
+  const { isDeleted, isUpdated, error: errorUser } = useSelector(state => state.user)
   const [ firstLoading, setFirstLoading] = useState(true);
 
 
@@ -95,8 +97,15 @@ const UserScreen = () => {
       dispatch(updateUserReset());
       dispatch(fetchAllUsers());
     }
+    if (errorUser){
+      errorMsg(errorUser);
+      dispatch(deleteUserReset());
+      dispatch(fetchAllUsers());
 
-  },[isDeleted, isUpdated])
+    }
+
+
+  },[isDeleted, isUpdated, errorUser])
 
 
 
@@ -116,6 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#ebf0f7',
   },
   card: {
     padding: 20,
@@ -141,10 +151,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#16aec1', 
+    width: buttonSize,
+    height: buttonSize,
+    borderRadius: buttonSize / 2,
+    backgroundColor: '#16aec1',
     alignItems: 'center',
     justifyContent: 'center',
   },
