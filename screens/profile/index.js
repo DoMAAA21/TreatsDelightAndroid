@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { useDispatch } from 'react-redux';
 import Modal from 'react-native-modal';
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +25,7 @@ export default ProfileScreen = () => {
   }
   useEffect(() => {
     fetchUser();
-  }, [dispatch]);
+  }, []);
   const handleLogout = () => {
     setLogoutModalVisible(true);
   };
@@ -130,7 +130,7 @@ export default ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#b4e373',
     height: 200,
   },
   avatar: {
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     marginTop: 130,
+    zIndex: 9999
   },
   name: {
     fontSize: 22,
@@ -170,8 +171,6 @@ const styles = StyleSheet.create({
 
   menuContainer: {
     width: '100%',
-    // borderBottomWidth: 0.3,
-    // borderTopWidth: 0.3,
     height: 75,
     marginStart: 10,
     marginEnd: 10,

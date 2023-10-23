@@ -1,32 +1,51 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native'
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileInfo = () => {
+
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [user, setUser] = useState('');
+
+  async function fetchUser() {
+    try {
+      const user = await AsyncStorage.getItem('user');
+
+      setUser(JSON.parse(user));
+
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+  }
+  useEffect(() => {
+    fetchUser();
+  }, []);
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: 'https://www.bootdey.com/image/900x400/FF7F50/000000' }}
-        style={styles.coverImage}
-      />
+      <View style={styles.coverContainer}/>
       <View style={styles.avatarContainer}>
         <Image
-          source={{ uri: 'https://www.bootdey.com/img/Content/avatar/avatar1.png' }}
+          source={{ uri: user?.avatar?.url }}
           style={styles.avatar}
         />
-        <Text style={[styles.name, styles.textWithShadow]}>Jane Doe</Text>
+        <Text style={[styles.name, styles.textWithShadow]}>{user?.fname} {user?.lname}</Text>
       </View>
       <View style={styles.content}>
         <View style={styles.infoContainer}>
           <Text style={styles.infoLabel}>Email:</Text>
-          <Text style={styles.infoValue}>jane.doe@example.com</Text>
+          <Text style={styles.infoValue}>{user?.email}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.infoLabel}>Location:</Text>
-          <Text style={styles.infoValue}>San Francisco, CA</Text>
+          <Text style={styles.infoLabel}>Course:</Text>
+          <Text style={styles.infoValue}>{user?.course}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.infoLabel}>Bio:</Text>
-          <Text style={styles.infoValue}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.</Text>
+          <Text style={styles.infoLabel}>Religion</Text>
+          <Text style={styles.infoValue}>{user?.religion}</Text>
         </View>
       </View>
     </View>
@@ -39,12 +58,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
   },
-  coverImage: {
-    height: 200,
+  coverContainer: {
+    height: 100,
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
+    backgroundColor: '#91b7b1'
   },
   avatarContainer: {
     alignItems: 'center',
@@ -59,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 10,
-    color:'white'
+    color:'black'
   },
   content: {
     marginTop: 20,

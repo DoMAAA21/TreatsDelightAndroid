@@ -13,6 +13,9 @@ import axios from 'axios';
 import { newUserReset } from '../../store/reducers/user/newUserSlice';
 import { newUser } from '../../store/reducers/user/newUserSlice';
 import { BACKEND_URL } from '../../constants/constants';
+import { courses, religions, roles } from '../../constants/inputs';
+
+
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 
@@ -90,13 +93,6 @@ const AddUserScreen = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const [storeDropdown, setStoreDropdown] = useState([]);
     const [loadingOptions, setLoadingOptions] = useState(false);
-
-    const courses = [
-        { label: 'BS in Information Technology', value: 'BSIT' },
-        { label: 'BS in Civil Engineering', value: 'CE' },
-    ];
-    const religions = ['Catholic', 'Muslim', 'Iglesia ni Cristo'];
-    const roles = ["User", "Employee"];
 
     const fetchStores = () => {
     axios.get(`${BACKEND_URL}/api/v1/stores`)
@@ -282,7 +278,7 @@ const AddUserScreen = () => {
                                             >
                                                 <Picker.Item label="Choose Option" value="" />
                                                 {religions.map((religionOption) => (
-                                                    <Picker.Item label={religionOption} value={religionOption} key={religionOption} />
+                                                    <Picker.Item label={religionOption.label} value={religionOption.value} key={religionOption.value} />
                                                 ))}
                                             </Picker>
                                         </View>

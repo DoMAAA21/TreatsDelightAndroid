@@ -8,8 +8,8 @@ import newStoreReducer from './store/newStoreSlice';
 import storeReducer from './store/storeSlice';
 import storeDetailsReducer from './store/storeDetailsSlice';
 import authenticationReducer from './auth/authenticationSlice';
-import storeDashboardSlice from './storeDashboard/storeDashboardSlice';
-
+// import storeDashboardSlice from './storeDashboard/storeDashboardSlice';
+import allProductsReducer from './product/allProductsSlice';
 
 const rootReducer = combineReducers({
   allUsers: allUsersReducer,
@@ -20,7 +20,8 @@ const rootReducer = combineReducers({
   newStore: newStoreReducer,
   store: storeReducer,
   storeDetails: storeDetailsReducer,
-  auth: authenticationReducer
+  auth: authenticationReducer,
+  allProducts : allProductsReducer
 });
 
 export default rootReducer

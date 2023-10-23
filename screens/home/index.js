@@ -44,6 +44,20 @@ const HomeScreen = () => {
               </Block>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              key='Products'
+              style={styles.box}
+              onPress={() => navigation.navigate('Products')}
+            >
+              <Block middle center style={styles.content}>
+                <MaterialCommunityIcons
+                  name='food' 
+                  size={40} 
+                  color='#405b43' 
+                />
+                <Text size={16}>Products</Text>
+              </Block>
+            </TouchableOpacity>
             
              
            

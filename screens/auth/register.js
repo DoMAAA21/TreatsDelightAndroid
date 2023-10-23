@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import { Picker } from '@react-native-picker/picker';
 import { registerUser, clearErrors } from '../../store/reducers/auth/authenticationSlice';
+import { courses, religions } from '../../constants/inputs';
 
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
@@ -30,11 +31,7 @@ const initialValues = {
     religion: '',
 };
 
-const religions = ['Catholic', 'Muslim', 'Iglesia ni Cristo'];
-const courses = [
-    { label: 'BS in Information Technology', value: 'BSIT' },
-    { label: 'BS in Civil Engineering', value: 'CE' },
-];
+
 
 const RegisterScreen = () => {
     const dispatch = useDispatch();
@@ -152,7 +149,7 @@ const RegisterScreen = () => {
                                         >
                                             <Picker.Item label="Choose Religion" value="" />
                                             {religions.map((religionOption) => (
-                                                <Picker.Item label={religionOption} value={religionOption} key={religionOption} />
+                                                <Picker.Item label={religionOption.label} value={religionOption.value} key={religionOption.value} />
                                             ))}
                                         </Picker>
                                     </View>

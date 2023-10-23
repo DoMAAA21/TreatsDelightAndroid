@@ -6,11 +6,9 @@ const Stack = createStackNavigator();
 
 const ProfileStack = () => {
     return (
-        <Stack.Navigator
-            initialRouteName='ProfileIndex'
-        >
-            <Stack.Screen name="ProfileIndex" component={ProfileScreen} />
-            <Stack.Screen name="ProfileInfo" component={ProfileInfo} />
+        <Stack.Navigator initialRouteName='ProfileIndex' screenOptions={{ headerStyle: { backgroundColor: '#b4e373', } }}>
+            <Stack.Screen name="ProfileIndex" component={ProfileScreen} options={{ headerTitle: 'Profile' }}/>
+            <Stack.Screen name="ProfileInfo" component={ProfileInfo} options={{ headerTitle: 'Profile Info' }}/>
         </Stack.Navigator>
     );
 
