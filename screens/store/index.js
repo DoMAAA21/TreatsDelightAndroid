@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -8,6 +8,8 @@ import StoreList from './storeList';
 import { fetchAllStores , clearErrors } from '../../store/reducers/store/allStoresSlice';
 import { deleteStoreReset, updateStoreReset } from '../../store/reducers/store/storeSlice';
 
+const { width , height } = Dimensions.get('screen');
+const buttonSize = Math.min(width * 0.15, height * 0.25);
 
 const successMsg = (title,message) => {
   Toast.show({
@@ -60,7 +62,7 @@ const StoreScreen = () => {
   const navigation = useNavigation();
   const { error, stores } = useSelector(state => state.allStores);
   const { success } = useSelector(state => state.newStore);
-  const { isDeleted, isUpdated } = useSelector(state => state.store)
+  const { isDeleted, isUpdated, error: errorStore } = useSelector(state => state.store)
   const [ firstLoading, setFirstLoading] = useState(true);
 
 
@@ -94,7 +96,12 @@ useEffect(()=>{
     dispatch(updateStoreReset());
     dispatch(fetchAllStores());
   }
-},[isDeleted, isUpdated])
+  if (errorStore){     //error for deleting
+    errorMsg(errorStore); 
+    dispatch(deleteStoreReset());
+    dispatch(fetchAllStores());
+  }
+},[isDeleted, isUpdated, errorStore])
 
 
 
@@ -138,10 +145,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#16aec1', 
+    width: buttonSize,
+    height: buttonSize,
+    borderRadius: buttonSize / 2,
+    backgroundColor: '#16aec1',
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -29,7 +29,7 @@ export const deleteStore = createAsyncThunk('store/deleteStore', async (id, { di
     return data.success;
 
   } catch (error) {
-    dispatch(deleteStore(error.response.data.message))
+    dispatch(deleteStoreFail(error.response.data.message))
     throw error.response.data.message;
   }
 }
@@ -85,6 +85,10 @@ const storeSlice = createSlice({
     deleteStoreReset: (state) => {
       state.isDeleted = false;
     },
+    deleteStoreFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
     updateStoreFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -101,6 +105,7 @@ export const {
   deleteStoreSuccess,
   updateStoreReset,
   deleteStoreReset,
+  deleteStoreFail,
   updateStoreFail,
   clearErrors,
 } = storeSlice.actions;
