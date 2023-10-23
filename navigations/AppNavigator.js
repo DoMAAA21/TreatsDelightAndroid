@@ -4,10 +4,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
-import ProfileScreen from '../screens/profile/index';
-import HomeStack from './HomeStack'; // Assuming you have a HomeStack component
+import HomeStack from './HomeStack';
 import AuthStack from './AuthStack';
-// import LoginScreen from '../screens/auth/login';
+import ProfileStack from './ProfileStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -67,9 +66,10 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStack}
         options={{
           tabBarShowLabel: false,
+          headerShown: false,
           tabBarIcon: () => <ProfileIcon />,
         }}
       />

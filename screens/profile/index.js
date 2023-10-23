@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../store/reducers/auth/authenticationSlice';
+import { useDispatch } from 'react-redux';
 import Modal from 'react-native-modal';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logout } from '../../store/reducers/auth/authenticationSlice';
 import { FontAwesome } from 'react-native-vector-icons';
 
 export default ProfileScreen = () => {
-
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [user, setUser] = useState('');
 
@@ -76,7 +77,7 @@ export default ProfileScreen = () => {
           
         <View style={styles.menuCard}>
           <View style={styles.menuContainer} >
-            <TouchableOpacity style={styles.buttonContainer} >
+            <TouchableOpacity style={styles.buttonContainer} onPress={()=> navigation.navigate('ProfileInfo')}>
               <FontAwesome name="user" height={35} size={35} width={35} color="#abafac" />
               <Text style={styles.menuText}>Profile</Text>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
