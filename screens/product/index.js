@@ -1,17 +1,17 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
-import { Text} from 'galio-framework';
+import { Text } from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import ProductList from './productList';
-import { fetchAllProducts , clearErrors } from '../../store/reducers/product/allProductsSlice';
+import { fetchAllProducts, clearErrors } from '../../store/reducers/product/allProductsSlice';
 import { deleteStoreReset, updateStoreReset } from '../../store/reducers/store/storeSlice';
 
-const { width , height } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 const buttonSize = Math.min(width * 0.15, height * 0.25);
 
-const successMsg = (title,message) => {
+const successMsg = (title, message) => {
   Toast.show({
     text1: `${title}`,
     text2: `${message}`,
@@ -61,49 +61,48 @@ const ProductScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { error, products } = useSelector(state => state.allProducts);
-  // const { success } = useSelector(state => state.newProduct);
+  const { success } = useSelector(state => state.newProduct);
   // const { isDeleted, isUpdated, error: errorProduct } = useSelector(state => state.product)
-  const [ firstLoading, setFirstLoading] = useState(true);
+  const [firstLoading, setFirstLoading] = useState(true);
 
 
   // console.log(products)
-  
+
   useEffect(() => {
-    // if (success) {
-    //   dispatch(fetchAllProducts());
-    // } else {
-    //   dispatch(fetchAllProducts())
-    //   .then(() => {
-        setFirstLoading(false);
-    //   });
-    // }
-    dispatch(fetchAllProducts());
+    if (success) {
+      dispatch(fetchAllProducts());
+    } else {
+      dispatch(fetchAllProducts())
+        .then(() => {
+          setFirstLoading(false);
+        });
+    }
     // if (error) {
     //   errorMsg(error)
     //   dispatch(clearErrors())
     // }
 
 
-  // }, [dispatch, error, success]);
-}, [dispatch, error])
-  
-// useEffect(()=>{
-//   if (isDeleted) {
-//     successMsg('Deleted','Product Removed');
-//     dispatch(deleteProductReset());
-//     dispatch(fetchAllProducts());
-//   }
-//   if (isUpdated) {
-//     successMsg('Updated','Product Updated');
-//     dispatch(updateProductReset());
-//     dispatch(fetchAllProducts());
-//   }
-//   if (errorProduct){    
-//     errorMsg(errorProduct); 
-//     dispatch(deleteProductReset());
-//     dispatch(fetchAllProducts());
-//   }
-// },[isDeleted, isUpdated, errorProduct])
+  }, [dispatch, error, success]);
+  // }, [dispatch, error])
+
+  // useEffect(()=>{
+  //   if (isDeleted) {
+  //     successMsg('Deleted','Product Removed');
+  //     dispatch(deleteProductReset());
+  //     dispatch(fetchAllProducts());
+  //   }
+  //   if (isUpdated) {
+  //     successMsg('Updated','Product Updated');
+  //     dispatch(updateProductReset());
+  //     dispatch(fetchAllProducts());
+  //   }
+  //   if (errorProduct){    
+  //     errorMsg(errorProduct); 
+  //     dispatch(deleteProductReset());
+  //     dispatch(fetchAllProducts());
+  //   }
+  // },[isDeleted, isUpdated, errorProduct])
 
 
 
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#b4e373',
   },
   title: {
-    color: 'black', 
+    color: 'black',
     textAlign: 'center',
     fontSize: 25,
     marginBottom: 10,
@@ -160,8 +159,8 @@ const styles = StyleSheet.create({
   },
   loadingIndicator: {
     flex: 1,
-    justifyContent: 'center', 
-    alignItems: 'center', 
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 

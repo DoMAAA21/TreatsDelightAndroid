@@ -11,9 +11,20 @@ const initialState = {
 };
 
 export const newProduct = createAsyncThunk('newProduct/newProduct', async (productData, { dispatch }) => {
+  
     try {
       dispatch(newProductRequest())
       const token = await AsyncStorage.getItem('token');
+      const user = await AsyncStorage.getItem('user');
+      const userCreds = JSON.parse(user);
+      const storeId = userCreds?.store?.storeId;
+      const storeName = userCreds?.store?.name;
+      productData.storeId =  storeId;
+      productData.storeName = storeName;
+
+      if(!storeId || !storeName){
+        dispatch(newProductFail('Login First'));
+      }
       
       if (!token) {
         dispatch(newProductFail('Login First'));

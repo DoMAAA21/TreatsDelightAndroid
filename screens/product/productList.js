@@ -58,7 +58,7 @@ const ProductList = ({ products }) => {
             <View  key={index} style={styles.container}>
 
             <TouchableOpacity  style={styles.card} onPress={() => navigateStore(product._id)}>
-              <Image style={styles.image} source={{ uri: product?.logo?.url }} />
+              <Image style={styles.image} source={{ uri: product?.firstImage?.url }} />
               <View style={styles.cardContent}>
                 <Text style={styles.name}>{product?.name}</Text>
                 <Text style={styles.count}>P{product?.sellPrice}</Text>

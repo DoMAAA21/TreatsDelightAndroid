@@ -21,8 +21,8 @@ const inputSize = screenHeight * 0.07;
 const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required'),
-    costPrice: Yup.number().min(1, 'Minimum of 1').max(99, 'Maximum of 99'),
-    sellPrice: Yup.number().min(1, 'Minimum of 1').max(99, 'Maximum of 99'),
+    costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(99, 'Maximum of 99'),
+    sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(99, 'Maximum of 99'),
     stock: Yup.number().min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
     category: Yup.string().required('Category is required'),
     active: Yup.boolean().required('Active or Not'),
@@ -34,7 +34,7 @@ const MyInput = ({ field, form, ...props }) => (
         onChangeText={field.onChange(field.name)}
         onBlur={field.onBlur(field.name)}
         value={field.value}
-        style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
+        style={{ fontSize: inputSize, height: inputSize, width: '100%'}}
     />
 );
 
@@ -87,11 +87,21 @@ const AddProductScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { loading, error, success } = useSelector(state => state.newProduct);
-    const [logo, setLogo] = useState('');
-    const [logoPreview, setLogoPreview] = useState(null);
+    const [image, setImage] = useState('');
+    const [imagePreview, setImagePreview] = useState(null);
 
     const [isPortion, setIsPortion] = useState(false);
-    const [stockValue, setStockValue] = useState('');
+
+    const MyStockInput = ({ field, form, ...props }) => (
+        <Input
+            {...props}
+            onChangeText={field.onChange(field.name)}
+            onBlur={field.onBlur(field.name)}
+            value={field.value}
+            style={{ fontSize: inputSize, height: inputSize, width: '100%' ,borderWidth: isPortion ? 0.5 : 1, backgroundColor: isPortion ? '#EBEBE4' : null  }}
+        />
+    );
+    
 
     const handleCheckboxChange = () => {
         setIsPortion(!isPortion);
@@ -126,15 +136,11 @@ const AddProductScreen = () => {
 
         if (!result.canceled) {
             const selectedAsset = result.assets[0];
-
-
             const manipulatorOptions = {
                 compress: 0.7,
                 format: ImageManipulator.SaveFormat.JPEG,
                 base64: true,
             };
-
-            // Manipulate the image
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
                 [],
@@ -144,8 +150,8 @@ const AddProductScreen = () => {
 
             if (manipulatedImage) {
                 const { uri, base64 } = manipulatedImage;
-                setLogoPreview(uri)
-                setLogo(`data:image/jpg;base64,${base64}`);
+                setImagePreview(uri)
+                setImage(`data:image/jpg;base64,${base64}`);
             }
         }
     };
@@ -155,7 +161,7 @@ const AddProductScreen = () => {
         description: '',
         costPrice: '',
         sellPrice: '',
-        stock: '0',
+        stock: '',
         category: '',
         active: '',
     };
@@ -166,10 +172,17 @@ const AddProductScreen = () => {
             name: values.name,
             description: values.description,
             costPrice: values.costPrice,
-            location: values.location,
+            sellPrice: values.sellPrice,   
             active: isActive,
-            logo
+            image
         }
+
+        if (!isPortion) {
+           productData.stock = values.stock;
+        }else{
+            productData.stock = null;
+        }
+
         dispatch(newProduct(productData));
     };
 
@@ -246,14 +259,13 @@ const AddProductScreen = () => {
                                     name="stock"
                                     placeholder="Stock"
                                     keyboardType="numeric"
-                                    component={Input}
-                                    style={[{ fontSize: inputSize, height: inputSize, width: '100%' }, {borderWidth: isPortion ? 0 : 1}]}
+                                    component={MyStockInput}
                                     editable={!isPortion}
-
                                 />
                                 </View>
                                
                             </View>
+
                             {formik.touched.stock && formik.errors.stock ? (
                                 <Text style={styles.errorMessage}>{formik.errors.stock}</Text>
                             ) : null}
@@ -306,8 +318,8 @@ const AddProductScreen = () => {
 
 
                             <View style={styles.imagePickerContainer}>
-                                {logoPreview ? (
-                                    <Image source={{ uri: logoPreview }} style={styles.logo} />
+                                {imagePreview ? (
+                                    <Image source={{ uri: imagePreview }} style={styles.image} />
                                 ) : null}
 
                                 <Button
@@ -323,7 +335,7 @@ const AddProductScreen = () => {
                                             color="white"
                                             style={{ marginRight: 5 }}
                                         />
-                                        <Text color="white">Choose Logo</Text>
+                                        <Text color="white">Choose Image</Text>
                                     </Block>
                                 </Button>
                             </View>
@@ -373,7 +385,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         height: inputSize
     },
-    logo: {
+    image: {
         width: 100,
         height: 100,
         marginTop: 10,
