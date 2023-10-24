@@ -9,6 +9,7 @@ import AddStoreScreen from '../screens/store/addStore';
 import EditStoreScreen from '../screens/store/editStore';
 import StoreInfo from '../screens/store/storeInfo';
 import ProductScreen from '../screens/product/index'
+import AddProductScreen from '../screens/product/addProduct';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ const HomeStack = () => {
       <Stack.Screen name="EditStore" component={EditStoreScreen} options={{ headerTitle: 'Edit Store' }} />
       <Stack.Screen name="StoreInfo" component={StoreInfo} options={{ headerTitle: 'Store Information' }} />
       <Stack.Screen name="Products" component={ProductScreen} options={{ headerTitle: 'Products' }} />
+      <Stack.Screen name="AddProduct" component={AddProductScreen} options={{ headerTitle: 'Add Product' }} />
       
       
       

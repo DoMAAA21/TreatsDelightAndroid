@@ -66,6 +66,7 @@ const ProductScreen = () => {
   const [ firstLoading, setFirstLoading] = useState(true);
 
 
+  // console.log(products)
   
   useEffect(() => {
     // if (success) {

@@ -10,6 +10,7 @@ import storeDetailsReducer from './store/storeDetailsSlice';
 import authenticationReducer from './auth/authenticationSlice';
 // import storeDashboardSlice from './storeDashboard/storeDashboardSlice';
 import allProductsReducer from './product/allProductsSlice';
+import newProductReducer from './product/newProductSlice';
 
 const rootReducer = combineReducers({
   allUsers: allUsersReducer,
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   store: storeReducer,
   storeDetails: storeDetailsReducer,
   auth: authenticationReducer,
-  allProducts : allProductsReducer
+  allProducts : allProductsReducer,
+  newProduct : newProductReducer
 });
 
 export default rootReducer
