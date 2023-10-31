@@ -144,7 +144,6 @@ const EditUserScreen = () => {
             const manipulatorOptions = {
                 compress: 0.5,
                 format: ImageManipulator.SaveFormat.JPEG,
-                base64: true,
             };
 
             // Manipulate the image
@@ -156,10 +155,10 @@ const EditUserScreen = () => {
 
 
             if (manipulatedImage) {
-                const { uri, base64 } = manipulatedImage;
+                const { uri } = manipulatedImage;
 
                 setAvatarPreview(uri);
-                setAvatar(`data:image/jpg;base64,${base64}`);
+                setAvatar(uri);
             }
         }
     };
@@ -167,26 +166,32 @@ const EditUserScreen = () => {
 
 
     const onSubmit = (values) => {
-        const userData = {
-            fname: values.fname,
-            lname: values.lname,
-            email: values.email,
-            password: values.password,
-            course: values.course,
-            religion: values.religion,
-            role: values.role,
-            avatar
-        };
-        if (values.role === "Employee" && values.store) {
-            const selectedStoreValue = values.store.split('-');
-            const storeId = selectedStoreValue[0];
-            const storeName = selectedStoreValue[1];
-            userData.storeId = storeId;
-            userData.storeName = storeName;
-
+        const formData = new FormData();
+        formData.append("fname", values.fname);
+        formData.append("lname", values.lname);
+        formData.append("email", values.email);
+        formData.append("password", values.password);
+        formData.append("course", values.course);
+        formData.append("religion", values.religion);
+        formData.append("role", values.role);
+        formData.append("avatar", avatar);
+        if (avatar) {
+            formData.append("avatar", {
+              uri: avatar,
+              type: "image/jpeg",
+              name: "avatar.jpg",
+            });
         }
-        dispatch(updateUser({ id: userId, userData }));
-    };
+        if (values.role === "Employee" && values.store) {
+          const selectedStoreValue = values.store.split('-');
+          const storeId = selectedStoreValue[0];
+          const storeName = selectedStoreValue[1];
+          formData.append("storeId", storeId);
+          formData.append("storeName", storeName);
+        }
+        dispatch(updateUser({ id: userId, userData: formData }));
+      };
+      
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>

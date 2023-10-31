@@ -142,7 +142,6 @@ const AddUserScreen = () => {
             const manipulatorOptions = {
                 compress: 0.5,
                 format: ImageManipulator.SaveFormat.JPEG,
-                base64: true,
             };
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
@@ -150,9 +149,9 @@ const AddUserScreen = () => {
                 manipulatorOptions
             );
             if (manipulatedImage) {
-                const { uri, base64 } = manipulatedImage;
+                const { uri } = manipulatedImage;
                 setAvatarPreview(uri)
-                setAvatar(`data:image/jpg;base64,${base64}`);
+                setAvatar(uri);
             }
         }
     };
@@ -170,27 +169,34 @@ const AddUserScreen = () => {
     };
 
     const onSubmit = (values) => {
+        const formData = new FormData();
+        formData.append("fname", values.fname);
+        formData.append("lname", values.lname);
+        formData.append("email", values.email);
+        formData.append("password", values.password);
+        formData.append("course", values.course);
+        formData.append("religion", values.religion);
+        formData.append("role", values.role);
+        formData.append("avatar", avatar);
 
-        const userData = {
-            fname: values.fname,
-            lname: values.lname,
-            email: values.email,
-            password: values.password,
-            course: values.course,
-            religion: values.religion,
-            role: values.role,
-            avatar
+        if (avatar) {
+            formData.append("avatar", {
+              uri: avatar,
+              type: "image/jpeg",
+              name: "avatar.jpg",
+            });
         }
+      
         if (values.role === "Employee" && values.store) {
-            const selectedStoreValue = values.store.split('-');
-            const storeId = selectedStoreValue[0];
-            const storeName = selectedStoreValue[1];
-            userData.storeId = storeId;
-            userData.storeName = storeName;
+          const selectedStoreValue = values.store.split('-');
+          const storeId = selectedStoreValue[0];
+          const storeName = selectedStoreValue[1];
+          formData.append("storeId", storeId);
+          formData.append("storeName", storeName);
         }
-
-        dispatch(newUser(userData));
-    };
+        dispatch(newUser(formData));
+      };
+      
 
 
 

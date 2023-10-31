@@ -139,7 +139,6 @@ const AddProductScreen = () => {
             const manipulatorOptions = {
                 compress: 0.7,
                 format: ImageManipulator.SaveFormat.JPEG,
-                base64: true,
             };
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
@@ -149,9 +148,9 @@ const AddProductScreen = () => {
 
 
             if (manipulatedImage) {
-                const { uri, base64 } = manipulatedImage;
+                const { uri } = manipulatedImage;
                 setImagePreview(uri)
-                setImage(`data:image/jpg;base64,${base64}`);
+                setImage(uri);
             }
         }
     };
@@ -168,23 +167,27 @@ const AddProductScreen = () => {
 
     const onSubmit = (values) => {
         const isActive = values.active === "True" ? true : false;
-        const productData = {
-            name: values.name,
-            description: values.description,
-            costPrice: values.costPrice,
-            sellPrice: values.sellPrice,   
-            active: isActive,
-            image
+        const formData = new FormData();
+        formData.append("name", values.name);
+        formData.append("description", values.description);
+        formData.append("costPrice", values.costPrice);
+        formData.append("sellPrice", values.sellPrice);
+        formData.append("active", isActive);
+        if (image) {
+            formData.append("image", {
+              uri: image,
+              type: "image/jpeg",
+              name: "image.jpg",
+            });
         }
-
         if (!isPortion) {
-           productData.stock = values.stock;
-        }else{
-            productData.stock = null;
+          formData.append("stock", values.stock);
+        } else {
+          formData.append("stock", ''); 
         }
-
-        dispatch(newProduct(productData));
-    };
+        dispatch(newProduct(formData));
+      };
+      
 
 
 

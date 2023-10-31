@@ -134,7 +134,6 @@ const EditStoreScreen = () => {
             const manipulatorOptions = {
                 compress: 0.5,
                 format: ImageManipulator.SaveFormat.JPEG,
-                base64: true,
             };
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 selectedAsset.uri,
@@ -144,9 +143,9 @@ const EditStoreScreen = () => {
 
 
             if (manipulatedImage) {
-                const { uri, base64 } = manipulatedImage;
+                const { uri } = manipulatedImage;
                 setLogoPreview(uri)
-                setLogo(`data:image/jpg;base64,${base64}`);
+                setLogo(uri);
             }
         }
     };
@@ -159,18 +158,25 @@ const EditStoreScreen = () => {
         active: store?.active === true ? 'True' : 'False', // Convert boolean to string
     }
 
-    const onSubmit = (values) => {
+    const onSubmit = async (values) => {
         const isActive = values.active === "True" ? true : false;
-        const storeData = {
-            name: values.name,
-            slogan: values.slogan,
-            stall: values.stall,
-            location: values.location,
-            active: isActive,
-            logo
+        const formData = new FormData();
+        formData.append("name", values.name);
+        formData.append("slogan", values.slogan);
+        formData.append("stall", values.stall);
+        formData.append("location", values.location);
+        formData.append("active", isActive);
+        if (logo) {
+          const logoUri = logo;
+          formData.append("logo", {
+            uri: logoUri,
+            type: "image/jpeg",
+            name: "logo.jpg",
+          });
         }
-        dispatch(updateStore({ id: storeId, storeData }));
-    };
+        dispatch(updateStore({ id: storeId, storeData: formData }));
+      };
+      
 
 
 

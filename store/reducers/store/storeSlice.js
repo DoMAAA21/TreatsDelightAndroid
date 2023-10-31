@@ -38,6 +38,7 @@ export const deleteStore = createAsyncThunk('store/deleteStore', async (id, { di
 export const updateStore = createAsyncThunk('store/updateStore', async ({ id, storeData }, { dispatch }) => {
   try {
 
+    dispatch(updateStoreRequest())
     const token = await AsyncStorage.getItem('token');
 
     if (!token) {
@@ -45,7 +46,7 @@ export const updateStore = createAsyncThunk('store/updateStore', async ({ id, st
     }
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: `${token}`,
       },
     };

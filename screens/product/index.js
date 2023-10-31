@@ -61,7 +61,7 @@ const ProductScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { error, products } = useSelector(state => state.allProducts);
-  const { success } = useSelector(state => state.newProduct);
+  const { success, error: newProductError } = useSelector(state => state.newProduct);
   // const { isDeleted, isUpdated, error: errorProduct } = useSelector(state => state.product)
   const [firstLoading, setFirstLoading] = useState(true);
 
@@ -77,13 +77,19 @@ const ProductScreen = () => {
           setFirstLoading(false);
         });
     }
-    // if (error) {
-    //   errorMsg(error)
-    //   dispatch(clearErrors())
-    // }
+
+    if (error) {
+      errorMsg(error);
+      dispatch(clearErrors());
+    }
+
+    if (newProductError) {
+      errorMsg(newProductError);
+      dispatch(clearErrors());
+    }
 
 
-  }, [dispatch, error, success]);
+  }, [dispatch, error, success, newProductError]);
   // }, [dispatch, error])
 
   // useEffect(()=>{

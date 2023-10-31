@@ -120,7 +120,6 @@ const AddStoreScreen = () => {
             const manipulatorOptions = {
                 compress: 0.7,
                 format: ImageManipulator.SaveFormat.JPEG,
-                base64: true,
             };
 
             // Manipulate the image
@@ -132,9 +131,9 @@ const AddStoreScreen = () => {
 
 
             if (manipulatedImage) {
-                const { uri, base64 } = manipulatedImage;
+                const { uri } = manipulatedImage;
                 setLogoPreview(uri)
-                setLogo(`data:image/jpg;base64,${base64}`);
+                setLogo(uri);
             }
         }
     };
@@ -149,16 +148,25 @@ const AddStoreScreen = () => {
 
     const onSubmit = (values) => {
         const isActive = values.active === "True" ? true : false;
-        const storeData = {
-            name: values.name,
-            slogan: values.slogan,
-            stall: values.stall,
-            location: values.location,
-            active: isActive,
-            logo
-        }
-        dispatch(newStore(storeData));
-    };
+        const formData = new FormData(); 
+        formData.append("name", values.name);
+        formData.append("slogan", values.slogan);
+        formData.append("stall", values.stall);
+        formData.append("location", values.location);
+        formData.append("active", isActive);
+      
+        if (logo) {
+            const logoUri = logo;
+            formData.append("logo", {
+              uri: logoUri,
+              type: "image/jpeg",
+              name: "logo.jpg",
+            });
+          }
+      
+        dispatch(newStore(formData));
+      };
+      
 
 
 

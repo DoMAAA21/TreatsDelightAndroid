@@ -43,7 +43,7 @@ export const updateUser = createAsyncThunk('user/updateUser', async (payload, {d
     }
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: `${token}`,
       },
     };
