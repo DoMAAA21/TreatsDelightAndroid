@@ -10,6 +10,7 @@ import EditStoreScreen from '../screens/store/editStore';
 import StoreInfo from '../screens/store/storeInfo';
 import ProductScreen from '../screens/product/index'
 import AddProductScreen from '../screens/product/addProduct';
+import ProductInfo from '../screens/product/productInfo';
 
 const Stack = createStackNavigator();
 
@@ -28,9 +29,7 @@ const HomeStack = () => {
       <Stack.Screen name="StoreInfo" component={StoreInfo} options={{ headerTitle: 'Store Information' }} />
       <Stack.Screen name="Products" component={ProductScreen} options={{ headerTitle: 'Products' }} />
       <Stack.Screen name="AddProduct" component={AddProductScreen} options={{ headerTitle: 'Add Product' }} />
-      
-      
-      
+      <Stack.Screen name="ProductInfo" component={ProductInfo} options={{ headerTitle: 'Product Information' }} />
     </Stack.Navigator>
   );
 };

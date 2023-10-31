@@ -11,19 +11,22 @@ import authenticationReducer from './auth/authenticationSlice';
 // import storeDashboardSlice from './storeDashboard/storeDashboardSlice';
 import allProductsReducer from './product/allProductsSlice';
 import newProductReducer from './product/newProductSlice';
-
+import productReducer from './product/productSlice';
+import productDetailsReducer from './product/productDetailsSlice';
 const rootReducer = combineReducers({
-  allUsers: allUsersReducer,
-  newUser: newUserReducer,
-  user: userReducer,
-  userDetails: userDetailsReducer,
-  allStores: allStoresReducer,
-  newStore: newStoreReducer,
-  store: storeReducer,
-  storeDetails: storeDetailsReducer,
-  auth: authenticationReducer,
+  allUsers : allUsersReducer,
+  newUser : newUserReducer,
+  user : userReducer,
+  userDetails : userDetailsReducer,
+  allStores : allStoresReducer,
+  newStore : newStoreReducer,
+  store : storeReducer,
+  storeDetails : storeDetailsReducer,
+  auth : authenticationReducer,
   allProducts : allProductsReducer,
-  newProduct : newProductReducer
+  newProduct : newProductReducer,
+  product : productReducer,
+  productDetails : productDetailsReducer
 });
 
 export default rootReducer

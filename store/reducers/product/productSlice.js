@@ -12,37 +12,37 @@ const initialState = {
 };
 
 
-export const deleteStore = createAsyncThunk('store/deleteStore', async (id, { dispatch }) => {
+export const deleteProduct = createAsyncThunk('product/deleteProduct', async (id, { dispatch }) => {
   try {
     const token = await AsyncStorage.getItem('token');
 
     if (!token) {
-      dispatch(deleteStoreReset());
+      dispatch(deleteProductReset());
     }
     const config = {
       headers: {
         Authorization: `${token}`,
       },
     };
-    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/store/${id}`, config);
-    dispatch(deleteStoreSuccess(data.success))
+    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/product/${id}`, config);
+    dispatch(deleteProductSuccess(data.success))
     return data.success;
 
   } catch (error) {
-    dispatch(deleteStoreFail(error.response.data.message))
+    dispatch(deleteProductFail(error.response.data.message))
     throw error.response.data.message;
   }
 }
 );
 
-export const updateStore = createAsyncThunk('store/updateStore', async ({ id, storeData }, { dispatch }) => {
+export const updateProduct = createAsyncThunk('product/updateProduct', async ({ id, productData }, { dispatch }) => {
   try {
 
-    dispatch(updateStoreRequest())
+    dispatch(updateProductRequest())
     const token = await AsyncStorage.getItem('token');
 
     if (!token) {
-      dispatch(updateStoreFail('Login First'));
+      dispatch(updateProductFail('Login First'));
     }
     const config = {
       headers: {
@@ -50,12 +50,12 @@ export const updateStore = createAsyncThunk('store/updateStore', async ({ id, st
         Authorization: `${token}`,
       },
     };
-    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/store/${id}`, storeData, config);
-    dispatch(updateStoreSuccess(data.success))
+    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/product/${id}`, productData, config);
+    dispatch(updateProductSuccess(data.success))
     return data.success;
 
   } catch (error) {
-    dispatch(updateStoreFail(error.response.data.message))
+    dispatch(updateProductFail(error.response.data.message))
     throw error.response.data.message;
   }
 }
@@ -64,34 +64,34 @@ export const updateStore = createAsyncThunk('store/updateStore', async ({ id, st
 
 
 
-const storeSlice = createSlice({
-  name: 'store',
+const productSlice = createSlice({
+  name: 'product',
   initialState,
   reducers: {
-    updateStoreRequest: (state) => {
+    updateProductRequest: (state) => {
       state.loading = true;
     },
-    updateStoreSuccess: (state, action) => {
+    updateProductSuccess: (state, action) => {
       state.loading = false;
       state.isUpdated = action.payload;
     },
-    deleteStoreSuccess: (state, action) => {
+    deleteProductSuccess: (state, action) => {
       state.loading = false;
       state.isDeleted = action.payload;
     },
-    updateStoreReset: (state) => {
+    updateProductReset: (state) => {
       state.isUpdated = false;
       state.error = null;
     },
-    deleteStoreReset: (state) => {
+    deleteProductReset: (state) => {
       state.isDeleted = false;
       state.error = null;
     },
-    deleteStoreFail: (state, action) => {
+    deleteProductFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
-    updateStoreFail: (state, action) => {
+    updateProductFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -102,14 +102,14 @@ const storeSlice = createSlice({
 });
 
 export const {
-  updateStoreRequest,
-  updateStoreSuccess,
-  deleteStoreSuccess,
-  updateStoreReset,
-  deleteStoreReset,
-  deleteStoreFail,
-  updateStoreFail,
+  updateProductRequest,
+  updateProductSuccess,
+  deleteProductSuccess,
+  updateProductReset,
+  deleteProductReset,
+  deleteProductFail,
+  updateProductFail,
   clearErrors,
-} = storeSlice.actions;
+} = productSlice.actions;
 
-export default storeSlice.reducer;
+export default productSlice.reducer;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ScrollView, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// import { deleteStore } from '../../store/reducers/product/p';
+import { deleteProduct } from '../../store/reducers/product/productSlice';
 const { width } = Dimensions.get('screen');  
 
 const ProductList = ({ products }) => {
@@ -21,7 +21,7 @@ const ProductList = ({ products }) => {
         },
         {
           text: 'Delete',
-          onPress: () => dispatch(deleteStore(id)),
+          onPress: () => dispatch(deleteProduct(id)),
           style: 'destructive',
         },
       ],
@@ -29,12 +29,12 @@ const ProductList = ({ products }) => {
     );
   };
 
- const navigateStore = (id) =>{
-  navigation.navigate('StoreInfo', { productId: id });
+ const navigateProduct = (id) =>{
+  navigation.navigate('ProductInfo', { productId: id });
   }
 
   const handleEdit = (id) => {
-    navigation.navigate('EditStore', { productId: id });
+    navigation.navigate('EditProduct', { productId: id });
   };
 
  
@@ -57,7 +57,7 @@ const ProductList = ({ products }) => {
           .map((product, index) => (
             <View  key={index} style={styles.container}>
 
-            <TouchableOpacity  style={styles.card} onPress={() => navigateStore(product._id)}>
+            <TouchableOpacity  style={styles.card} onPress={() => navigateProduct(product._id)}>
               <Image style={styles.image} source={{ uri: product?.firstImage?.url }} />
               <View style={styles.cardContent}>
                 <Text style={styles.name}>{product?.name}</Text>

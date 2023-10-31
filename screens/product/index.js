@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import ProductList from './productList';
 import { fetchAllProducts, clearErrors } from '../../store/reducers/product/allProductsSlice';
-import { deleteStoreReset, updateStoreReset } from '../../store/reducers/store/storeSlice';
+import { deleteProductReset, updateProductReset } from '../../store/reducers/product/productSlice';
 
 const { width, height } = Dimensions.get('screen');
 const buttonSize = Math.min(width * 0.15, height * 0.25);
@@ -62,7 +62,7 @@ const ProductScreen = () => {
   const navigation = useNavigation();
   const { error, products } = useSelector(state => state.allProducts);
   const { success, error: newProductError } = useSelector(state => state.newProduct);
-  // const { isDeleted, isUpdated, error: errorProduct } = useSelector(state => state.product)
+  const { isDeleted, isUpdated, error: errorProduct } = useSelector(state => state.product)
   const [firstLoading, setFirstLoading] = useState(true);
 
 
@@ -92,23 +92,25 @@ const ProductScreen = () => {
   }, [dispatch, error, success, newProductError]);
   // }, [dispatch, error])
 
-  // useEffect(()=>{
-  //   if (isDeleted) {
-  //     successMsg('Deleted','Product Removed');
-  //     dispatch(deleteProductReset());
-  //     dispatch(fetchAllProducts());
-  //   }
-  //   if (isUpdated) {
-  //     successMsg('Updated','Product Updated');
-  //     dispatch(updateProductReset());
-  //     dispatch(fetchAllProducts());
-  //   }
-  //   if (errorProduct){    
-  //     errorMsg(errorProduct); 
-  //     dispatch(deleteProductReset());
-  //     dispatch(fetchAllProducts());
-  //   }
+  useEffect(()=>{
+
+    if (isDeleted) {
+      successMsg('Deleted','Product Removed');
+      dispatch(deleteProductReset());
+      dispatch(fetchAllProducts());
+    }
+    // if (isUpdated) {
+    //   successMsg('Updated','Product Updated');
+    //   dispatch(updateProductReset());
+    //   dispatch(fetchAllProducts());
+    // }
+    // if (errorProduct){    
+    //   errorMsg(errorProduct); 
+    //   dispatch(deleteProductReset());
+    //   dispatch(fetchAllProducts());
+    // }
   // },[isDeleted, isUpdated, errorProduct])
+     },[isDeleted])
 
 
 

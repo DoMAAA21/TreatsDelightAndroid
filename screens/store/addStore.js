@@ -156,9 +156,8 @@ const AddStoreScreen = () => {
         formData.append("active", isActive);
       
         if (logo) {
-            const logoUri = logo;
             formData.append("logo", {
-              uri: logoUri,
+              uri: logo,
               type: "image/jpeg",
               name: "logo.jpg",
             });
