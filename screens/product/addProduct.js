@@ -9,7 +9,6 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Toast from 'react-native-toast-message';
 import { newProductReset } from '../../store/reducers/product/newProductSlice';
 import { newProduct } from '../../store/reducers/product/newProductSlice';
 import { categories } from '../../shared/inputs';
@@ -43,8 +42,12 @@ const AddProductScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { loading, error, success } = useSelector(state => state.newProduct);
-    const [images, setImages] = useState(['', '', '']);
-    const [imagePreviews, setImagePreviews] = useState([null, null, null]);
+    const [firstImage, setFirstImage] = useState('');
+    const [secondImage, setSecondImage] = useState('');
+    const [thirdImage, setThirdImage] = useState('');
+    const [firstImagePreview, setFirstImagePreview] = useState(null);
+    const [secondImagePreview, setSecondImagePreview] = useState(null);
+    const [thirdImagePreview, setThirdImagePreview] = useState(null);
 
     const [isPortion, setIsPortion] = useState(false);
 
@@ -108,12 +111,16 @@ const AddProductScreen = () => {
 
             if (manipulatedImage) {
                 const { uri } = manipulatedImage;
-                const updatedImages = [...images];
-                const updatedPreviews = [...imagePreviews];
-                updatedImages[index] = uri;
-                updatedPreviews[index] = uri;
-                setImages(updatedImages);
-                setImagePreviews(updatedPreviews);
+                if (index === 0) {
+                    setFirstImage(uri);
+                    setFirstImagePreview(uri);
+                } else if (index === 1) {
+                    setSecondImage(uri);
+                    setSecondImagePreview(uri);
+                } else if (index === 2) {
+                    setThirdImage(uri);
+                    setThirdImagePreview(uri);
+                }
             }
         }
     };
@@ -144,15 +151,27 @@ const AddProductScreen = () => {
             formData.append('stock', values.stock);
         }
 
-        images.forEach((image, index) => {
-            if (image) {
-                formData.append(`images`, {
-                    uri: image,
-                    type: 'image/jpeg',
-                    name: `image_${index + 1}.jpg`,
-                });
-            }
-        });
+        if (firstImage) {
+            formData.append('firstImage', {
+                uri: firstImage,
+                type: 'image/jpeg',
+                name: 'image_1.jpg',
+            });
+        }
+        if (secondImage) {
+            formData.append('secondImage', {
+                uri: secondImage,
+                type: 'image/jpeg',
+                name: 'image_2.jpg',
+            });
+        }
+        if (thirdImage) {
+            formData.append('thirdImage', {
+                uri: thirdImage,
+                type: 'image/jpeg',
+                name: 'image_3.jpg',
+            });
+        }
 
         dispatch(newProduct(formData));
     };
@@ -253,19 +272,32 @@ const AddProductScreen = () => {
                             </View>
 
                             <View style={styles.inputContainer}>
-                                <Text>Images</Text>
-                                <View style={styles.imagePickerContainer}>
-                                    {images.map((image, index) => (
+                                <Text>Images (Left Most is Required)</Text>
+                                <View style={styles.imagePickerContainer}>                   
                                         <Button
-                                            key={index}
                                             color="info"
                                             style={styles.imagePickerButton}
-                                            onPress={() => selectImage(index)}
+                                            onPress={() => selectImage(0)}
                                         >
-                                            <Image source={{ uri: imagePreviews[index] }} style={styles.image} />
+                                            <Image source={{ uri: firstImagePreview }} style={styles.image} />
                                         </Button>
-                                    ))}
+                                        <Button
+                                            color="info"
+                                            style={styles.imagePickerButton}
+                                            onPress={() => selectImage(1)}
+                                        >
+                                            <Image source={{ uri: secondImagePreview }} style={styles.image} />
+                                        </Button>
+                                        <Button
+                                            color="info"
+                                            style={styles.imagePickerButton}
+                                            onPress={() => selectImage(2)}
+                                        >
+                                            <Image source={{ uri: thirdImagePreview }} style={styles.image} />
+                                        </Button>
+                      
                                 </View>
+                                
                             </View>
 
                             <Button

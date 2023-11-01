@@ -1,27 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native'
-import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileInfo = () => {
-
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [user, setUser] = useState('');
 
-  async function fetchUser() {
-    try {
-      const user = await AsyncStorage.getItem('user');
-
-      setUser(JSON.parse(user));
-
-    } catch (error) {
-      console.error('Error fetching user:', error);
-    }
-  }
   useEffect(() => {
+    async function fetchUser() {
+      try {
+        const user = await AsyncStorage.getItem('user');
+  
+        setUser(JSON.parse(user));
+  
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    }
     fetchUser();
   }, []);
   return (
