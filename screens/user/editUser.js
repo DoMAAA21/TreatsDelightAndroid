@@ -74,26 +74,24 @@ const EditUserScreen = () => {
     const [loadingOptions, setLoadingOptions] = useState(false);
     const { userId } = route.params;
 
-    const fetchStores = async () => {
-        try {
-            const response = await axios.get(`${BACKEND_URL}/api/v1/stores`);
-            const storeData = response.data.stores;
-            const options = storeData.map((store) => ({
-                value: store._id,
-                label: store.name,
-            }));
-            setStoreDropdown(options);
-            setLoadingOptions(true);
-            setSelectedRole(user.role);
-
-        } catch (error) {
-            console.error('Error fetching store data:', error);
-            setLoadingOptions(false);
-        }
-    };
-
-
     useEffect(() => {
+        const fetchStores = async () => {
+            try {
+                const response = await axios.get(`${BACKEND_URL}/api/v1/stores`);
+                const storeData = response.data.stores;
+                const options = storeData.map((store) => ({
+                    value: store._id,
+                    label: store.name,
+                }));
+                setStoreDropdown(options);
+                setLoadingOptions(true);
+                setSelectedRole(user.role);
+    
+            } catch (error) {
+                console.error('Error fetching store data:', error);
+                setLoadingOptions(false);
+            }
+        };
 
         fetchStores();
 

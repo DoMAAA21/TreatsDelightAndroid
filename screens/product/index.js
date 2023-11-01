@@ -90,8 +90,7 @@ const ProductScreen = () => {
 
 
   }, [dispatch, error, success, newProductError]);
-  // }, [dispatch, error])
-
+  
   useEffect(()=>{
 
     if (isDeleted) {

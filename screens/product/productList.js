@@ -51,7 +51,7 @@ const ProductList = ({ products }) => {
           .filter((product) => {
             return (
               product.name.toLowerCase().includes(searchQuery.toLowerCase())  ||
-              product.sellPrice.toLowerCase().includes(searchQuery.toLowerCase()) 
+              product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()) 
             );
           })
           .map((product, index) => (

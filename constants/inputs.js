@@ -29,3 +29,13 @@ export const religions = [
 ];
 
 export const roles = ['User', 'Employee', 'Admin'];
+
+export const categories = [
+    {label: 'Full Meal',value: 'fullmeal'}, 
+    {label: 'Snacks',value: 'snacks'},
+    {label: 'Beverages',value: 'beverages'},
+    {label: 'Desserts',value: 'desserts'},
+    {label: 'Sandwiches and Wraps',value: 'sandwichesandwraps'},
+    {label: 'Breads',value: 'breads'},
+    {label: 'Others',value: 'Others'},
+];

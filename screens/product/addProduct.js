@@ -4,14 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { View, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Text, Input, Block, Button, Icon, } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import * as ImageManipulator from 'expo-image-manipulator';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import Toast from 'react-native-toast-message';
 import { newProductReset } from '../../store/reducers/product/newProductSlice';
 import { newProduct } from '../../store/reducers/product/newProductSlice';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import { categories } from '../../constants/inputs';
 
 
 const screenHeight = Dimensions.get('window').height;
@@ -21,8 +22,8 @@ const inputSize = screenHeight * 0.07;
 const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required'),
-    costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(99, 'Maximum of 99'),
-    sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(99, 'Maximum of 99'),
+    costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
+    sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     stock: Yup.number().min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
     category: Yup.string().required('Category is required'),
     active: Yup.boolean().required('Active or Not'),
@@ -34,7 +35,7 @@ const MyInput = ({ field, form, ...props }) => (
         onChangeText={field.onChange(field.name)}
         onBlur={field.onBlur(field.name)}
         value={field.value}
-        style={{ fontSize: inputSize, height: inputSize, width: '100%'}}
+        style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
     />
 );
 
@@ -98,10 +99,10 @@ const AddProductScreen = () => {
             onChangeText={field.onChange(field.name)}
             onBlur={field.onBlur(field.name)}
             value={field.value}
-            style={{ fontSize: inputSize, height: inputSize, width: '100%' ,borderWidth: isPortion ? 0.5 : 1, backgroundColor: isPortion ? '#EBEBE4' : null  }}
+            style={{ fontSize: inputSize, height: inputSize, width: '100%', borderWidth: isPortion ? 0.5 : 1, backgroundColor: isPortion ? '#EBEBE4' : null }}
         />
     );
-    
+
 
     const handleCheckboxChange = () => {
         setIsPortion(!isPortion);
@@ -172,22 +173,23 @@ const AddProductScreen = () => {
         formData.append("description", values.description);
         formData.append("costPrice", values.costPrice);
         formData.append("sellPrice", values.sellPrice);
+        formData.append("category", values.category);
         formData.append("active", isActive);
         if (image) {
             formData.append("image", {
-              uri: image,
-              type: "image/jpeg",
-              name: "image.jpg",
+                uri: image,
+                type: "image/jpeg",
+                name: "image.jpg",
             });
         }
         if (!isPortion) {
-          formData.append("stock", values.stock);
+            formData.append("stock", values.stock);
         } else {
-          formData.append("stock", ''); 
+            formData.append("stock", '');
         }
         dispatch(newProduct(formData));
-      };
-      
+    };
+
 
 
 
@@ -252,21 +254,21 @@ const AddProductScreen = () => {
                                             family="MaterialCommunityIcons"
                                             size={30}
                                             color={isPortion ? 'green' : 'gray'}
-                                            
+
                                         />
                                     </TouchableOpacity>
                                     <Text style={styles.checkboxLabel}>By Portion</Text>
                                 </View>
                                 <View style={styles.stockContainer}>
-                                <Field
-                                    name="stock"
-                                    placeholder="Stock"
-                                    keyboardType="numeric"
-                                    component={MyStockInput}
-                                    editable={!isPortion}
-                                />
+                                    <Field
+                                        name="stock"
+                                        placeholder="Stock"
+                                        keyboardType="numeric"
+                                        component={MyStockInput}
+                                        editable={!isPortion}
+                                    />
                                 </View>
-                               
+
                             </View>
 
                             {formik.touched.stock && formik.errors.stock ? (
@@ -285,8 +287,8 @@ const AddProductScreen = () => {
                                             >
                                                 <Picker.Item label="Choose Option" value="" />
 
-                                                {isActive.map((isActiveOption) => (
-                                                    <Picker.Item label={isActiveOption.label} value={isActiveOption.label} key={isActiveOption.label} />
+                                                {categories.map((category) => (
+                                                    <Picker.Item label={category.label} value={category.value} key={category.label} />
                                                 ))}
                                             </Picker>
                                         </View>
@@ -320,7 +322,7 @@ const AddProductScreen = () => {
                             </View>
 
 
-                            <View style={styles.imagePickerContainer}>
+                            {/* <View style={styles.imagePickerContainer}>
                                 {imagePreview ? (
                                     <Image source={{ uri: imagePreview }} style={styles.image} />
                                 ) : null}
@@ -341,7 +343,39 @@ const AddProductScreen = () => {
                                         <Text color="white">Choose Image</Text>
                                     </Block>
                                 </Button>
+                            </View> */}
+                            <View style={styles.inputContainer}>
+                                <Text>Images</Text>
+                                <View style={styles.imagePickerContainer}>
+
+                                    <Button
+                                        color="info"
+                                        style={styles.imagePickerButton}
+                                        onPress={selectImage}
+                                    >
+                                        <Image source={{ uri: imagePreview }} style={styles.image} />
+
+                                    </Button>
+                                    <Button
+                                        color="info"
+                                        style={styles.imagePickerButton}
+                                        onPress={selectImage}
+                                    >
+                                        <Image source={{ uri: imagePreview }} style={styles.image} />
+
+                                    </Button>
+                                    <Button
+                                        color="info"
+                                        style={styles.imagePickerButton}
+                                        onPress={selectImage}
+                                    >
+                                        <Image source={{ uri: imagePreview }} style={styles.image} />
+
+                                    </Button>
+
+                                </View>
                             </View>
+
 
                             <Button
                                 round
@@ -383,10 +417,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     imagePickerButton: {
-        flex: 1,
-        backgroundColor: '#16aec1',
-        marginRight: 10,
-        height: inputSize
+        width: 100,
+        height: 90,
+        marginTop: 10,
+        alignSelf: 'center',
+        backgroundColor: '#d3d3d3'
     },
     image: {
         width: 100,
@@ -415,23 +450,23 @@ const styles = StyleSheet.create({
     checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginRight: 18, 
+        marginRight: 18,
         marginLeft: 10,
         width: '20%'
     },
     stockContainer: {
-        width: '41%', 
+        width: '41%',
     },
-        
+
     disabledField: {
-        backgroundColor: 'lightgray', 
+        backgroundColor: 'lightgray',
         borderWidth: 2
     },
     checkboxLabel: {
         marginLeft: 10
     }
-  
-   
+
+
 });
 
 export default AddProductScreen;
