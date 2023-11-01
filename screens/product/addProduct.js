@@ -12,12 +12,11 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import Toast from 'react-native-toast-message';
 import { newProductReset } from '../../store/reducers/product/newProductSlice';
 import { newProduct } from '../../store/reducers/product/newProductSlice';
-import { categories } from '../../constants/inputs';
-
+import { categories } from '../../shared/inputs';
+import { successMsg, errorMsg } from '../../shared/toast';
 
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
-
 
 const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
@@ -39,57 +38,13 @@ const MyInput = ({ field, form, ...props }) => (
     />
 );
 
-const successMsg = (message) => {
-    Toast.show({
-        text1: 'Success',
-        text2: `${message}`,
-        type: 'success',
-        position: 'bottom',
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-        customStyles: {
-            title: {
-                fontSize: 30,
-                fontWeight: 'bold',
-            },
-            message: {
-                fontSize: 24,
-                fontWeight: 'bold',
-            },
-        },
-    });
-};
 
-const errorMsg = (message) => {
-    Toast.show({
-        text1: 'Error',
-        text2: `${message}`,
-        type: 'error',
-        position: 'bottom',
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-        customStyles: {
-            title: {
-                fontSize: 30,
-                fontWeight: 'bold',
-            },
-            message: {
-                fontSize: 24,
-                fontWeight: 'bold',
-            },
-        },
-    });
-};
 const AddProductScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { loading, error, success } = useSelector(state => state.newProduct);
-    const [image, setImage] = useState('');
-    const [imagePreview, setImagePreview] = useState(null);
+    const [images, setImages] = useState(['', '', '']);
+    const [imagePreviews, setImagePreviews] = useState([null, null, null]);
 
     const [isPortion, setIsPortion] = useState(false);
 
@@ -99,10 +54,15 @@ const AddProductScreen = () => {
             onChangeText={field.onChange(field.name)}
             onBlur={field.onBlur(field.name)}
             value={field.value}
-            style={{ fontSize: inputSize, height: inputSize, width: '100%', borderWidth: isPortion ? 0.5 : 1, backgroundColor: isPortion ? '#EBEBE4' : null }}
+            style={{
+                fontSize: inputSize,
+                height: inputSize,
+                width: '100%',
+                borderWidth: isPortion ? 0.5 : 1,
+                backgroundColor: isPortion ? '#EBEBE4' : null,
+            }}
         />
     );
-
 
     const handleCheckboxChange = () => {
         setIsPortion(!isPortion);
@@ -115,19 +75,18 @@ const AddProductScreen = () => {
 
     useEffect(() => {
         if (error) {
-            errorMsg(error)
-            dispatch(newProductReset())
+            errorMsg(error);
+            dispatch(newProductReset());
         }
 
         if (success) {
             navigation.navigate('Products');
-            dispatch(newProductReset())
+            dispatch(newProductReset());
             successMsg('Product created successfully');
         }
-    }, [dispatch, error, success, navigation])
+    }, [dispatch, error, success, navigation]);
 
-
-    const selectImage = async () => {
+    const selectImage = async (index) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -147,11 +106,14 @@ const AddProductScreen = () => {
                 manipulatorOptions
             );
 
-
             if (manipulatedImage) {
                 const { uri } = manipulatedImage;
-                setImagePreview(uri)
-                setImage(uri);
+                const updatedImages = [...images];
+                const updatedPreviews = [...imagePreviews];
+                updatedImages[index] = uri;
+                updatedPreviews[index] = uri;
+                setImages(updatedImages);
+                setImagePreviews(updatedPreviews);
             }
         }
     };
@@ -167,33 +129,33 @@ const AddProductScreen = () => {
     };
 
     const onSubmit = (values) => {
-        const isActive = values.active === "True" ? true : false;
+        const isActiveValue = values.active === 'True' ? true : false;
         const formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("description", values.description);
-        formData.append("costPrice", values.costPrice);
-        formData.append("sellPrice", values.sellPrice);
-        formData.append("category", values.category);
-        formData.append("active", isActive);
-        if (image) {
-            formData.append("image", {
-                uri: image,
-                type: "image/jpeg",
-                name: "image.jpg",
-            });
-        }
-        if (!isPortion) {
-            formData.append("stock", values.stock);
+        formData.append('name', values.name);
+        formData.append('description', values.description);
+        formData.append('costPrice', values.costPrice);
+        formData.append('sellPrice', values.sellPrice);
+        formData.append('category', values.category);
+        formData.append('active', isActiveValue);
+
+        if (isPortion) {
+            formData.append('stock', '');
         } else {
-            formData.append("stock", '');
+            formData.append('stock', values.stock);
         }
+
+        images.forEach((image, index) => {
+            if (image) {
+                formData.append(`images`, {
+                    uri: image,
+                    type: 'image/jpeg',
+                    name: `image_${index + 1}.jpg`,
+                });
+            }
+        });
+
         dispatch(newProduct(formData));
     };
-
-
-
-
-
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -203,47 +165,27 @@ const AddProductScreen = () => {
                 onSubmit={onSubmit}
             >
                 {(formik) => (
-
                     <View style={styles.container}>
                         <Block style={styles.formContainer}>
                             <Text h5 style={styles.formHeader}>
                                 New Product
                             </Text>
-                            <Field
-                                name="name"
-                                placeholder="Name"
-                                component={MyInput}
-                            />
+                            <Field name="name" placeholder="Name" component={MyInput} />
                             {formik.touched.name && formik.errors.name ? (
                                 <Text style={styles.errorMessage}>{formik.errors.name}</Text>
                             ) : null}
-                            <Field
-                                name="description"
-                                placeholder="Description"
-                                component={MyInput}
-                            />
+                            <Field name="description" placeholder="Description" component={MyInput} />
                             {formik.touched.description && formik.errors.description ? (
                                 <Text style={styles.errorMessage}>{formik.errors.description}</Text>
                             ) : null}
-                            <Field
-                                name="costPrice"
-                                placeholder="Cost Price"
-                                keyboardType="numeric"
-                                component={MyInput}
-                            />
+                            <Field name="costPrice" placeholder="Cost Price" keyboardType="numeric" component={MyInput} />
                             {formik.touched.costPrice && formik.errors.costPrice ? (
                                 <Text style={styles.errorMessage}>{formik.errors.costPrice}</Text>
                             ) : null}
-                            <Field
-                                name="sellPrice"
-                                placeholder="Sell Price"
-                                keyboardType="numeric"
-                                component={MyInput}
-                            />
+                            <Field name="sellPrice" placeholder="Sell Price" keyboardType="numeric" component={MyInput} />
                             {formik.touched.sellPrice && formik.errors.sellPrice ? (
                                 <Text style={styles.errorMessage}>{formik.errors.sellPrice}</Text>
                             ) : null}
-
 
                             <View style={styles.rowContainer}>
                                 <View style={styles.checkboxContainer}>
@@ -254,7 +196,6 @@ const AddProductScreen = () => {
                                             family="MaterialCommunityIcons"
                                             size={30}
                                             color={isPortion ? 'green' : 'gray'}
-
                                         />
                                     </TouchableOpacity>
                                     <Text style={styles.checkboxLabel}>By Portion</Text>
@@ -268,25 +209,19 @@ const AddProductScreen = () => {
                                         editable={!isPortion}
                                     />
                                 </View>
-
                             </View>
 
                             {formik.touched.stock && formik.errors.stock ? (
                                 <Text style={styles.errorMessage}>{formik.errors.stock}</Text>
                             ) : null}
 
-
                             <View style={styles.inputContainer}>
                                 <Field name="category">
                                     {({ field }) => (
                                         <View style={styles.inputContainer}>
                                             <Text>Category</Text>
-                                            <Picker
-                                                selectedValue={field.value}
-                                                onValueChange={field.onChange('category')}
-                                            >
+                                            <Picker selectedValue={field.value} onValueChange={field.onChange('category')}>
                                                 <Picker.Item label="Choose Option" value="" />
-
                                                 {categories.map((category) => (
                                                     <Picker.Item label={category.label} value={category.value} key={category.label} />
                                                 ))}
@@ -303,12 +238,8 @@ const AddProductScreen = () => {
                                     {({ field }) => (
                                         <View style={styles.inputContainer}>
                                             <Text>Is Active</Text>
-                                            <Picker
-                                                selectedValue={field.value}
-                                                onValueChange={field.onChange('active')}
-                                            >
+                                            <Picker selectedValue={field.value} onValueChange={field.onChange('active')}>
                                                 <Picker.Item label="Choose Option" value="" />
-
                                                 {isActive.map((isActiveOption) => (
                                                     <Picker.Item label={isActiveOption.label} value={isActiveOption.label} key={isActiveOption.label} />
                                                 ))}
@@ -321,61 +252,21 @@ const AddProductScreen = () => {
                                 ) : null}
                             </View>
 
-
-                            {/* <View style={styles.imagePickerContainer}>
-                                {imagePreview ? (
-                                    <Image source={{ uri: imagePreview }} style={styles.image} />
-                                ) : null}
-
-                                <Button
-                                    color="info"
-                                    style={styles.imagePickerButton}
-                                    onPress={selectImage}
-                                >
-                                    <Block row middle>
-                                        <Icon
-                                            family="FontAwesome"
-                                            size={16}
-                                            name="camera"
-                                            color="white"
-                                            style={{ marginRight: 5 }}
-                                        />
-                                        <Text color="white">Choose Image</Text>
-                                    </Block>
-                                </Button>
-                            </View> */}
                             <View style={styles.inputContainer}>
                                 <Text>Images</Text>
                                 <View style={styles.imagePickerContainer}>
-
-                                    <Button
-                                        color="info"
-                                        style={styles.imagePickerButton}
-                                        onPress={selectImage}
-                                    >
-                                        <Image source={{ uri: imagePreview }} style={styles.image} />
-
-                                    </Button>
-                                    <Button
-                                        color="info"
-                                        style={styles.imagePickerButton}
-                                        onPress={selectImage}
-                                    >
-                                        <Image source={{ uri: imagePreview }} style={styles.image} />
-
-                                    </Button>
-                                    <Button
-                                        color="info"
-                                        style={styles.imagePickerButton}
-                                        onPress={selectImage}
-                                    >
-                                        <Image source={{ uri: imagePreview }} style={styles.image} />
-
-                                    </Button>
-
+                                    {images.map((image, index) => (
+                                        <Button
+                                            key={index}
+                                            color="info"
+                                            style={styles.imagePickerButton}
+                                            onPress={() => selectImage(index)}
+                                        >
+                                            <Image source={{ uri: imagePreviews[index] }} style={styles.image} />
+                                        </Button>
+                                    ))}
                                 </View>
                             </View>
-
 
                             <Button
                                 round
@@ -388,12 +279,12 @@ const AddProductScreen = () => {
                             </Button>
                         </Block>
                     </View>
-
                 )}
             </Formik>
         </ScrollView>
     );
 };
+
 
 const styles = StyleSheet.create({
     scrollViewContainer: {
@@ -419,14 +310,12 @@ const styles = StyleSheet.create({
     imagePickerButton: {
         width: 100,
         height: 90,
-        marginTop: 10,
         alignSelf: 'center',
         backgroundColor: '#d3d3d3'
     },
     image: {
         width: 100,
-        height: 100,
-        marginTop: 10,
+        height: 90,
         alignSelf: 'center',
     },
     submitButton: {

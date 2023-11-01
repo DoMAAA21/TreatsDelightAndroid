@@ -8,10 +8,9 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
-import Toast from 'react-native-toast-message';
 import { newStoreReset } from '../../store/reducers/store/newStoreSlice';
 import { newStore } from '../../store/reducers/store/newStoreSlice';
-
+import { successMsg, errorMsg } from '../../shared/toast';
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 
@@ -34,51 +33,6 @@ const MyInput = ({ field, form, ...props }) => (
     />
 );
 
-const successMsg = (message) => {
-    Toast.show({
-        text1: 'Success',
-        text2: `${message}`,
-        type: 'success',
-        position: 'bottom',
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-        customStyles: {
-            title: {
-                fontSize: 30,
-                fontWeight: 'bold',
-            },
-            message: {
-                fontSize: 24,
-                fontWeight: 'bold',
-            },
-        },
-    });
-};
-
-const errorMsg = (message) => {
-    Toast.show({
-        text1: 'Error',
-        text2: `${message}`,
-        type: 'error',
-        position: 'bottom',
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-        customStyles: {
-            title: {
-                fontSize: 30,
-                fontWeight: 'bold',
-            },
-            message: {
-                fontSize: 24,
-                fontWeight: 'bold',
-            },
-        },
-    });
-};
 const AddStoreScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();

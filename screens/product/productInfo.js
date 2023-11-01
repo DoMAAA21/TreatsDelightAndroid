@@ -3,7 +3,7 @@ import { View, ScrollView, Image, Text, Button, ActivityIndicator } from 'react-
 import { useDispatch, useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
-import { categories } from '../../constants/inputs';
+import { categories } from '../../shared/inputs';
 
 const ProductInfo = () => {
   const dispatch = useDispatch();

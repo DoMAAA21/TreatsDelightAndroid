@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import { Picker } from '@react-native-picker/picker';
 import { registerUser, clearErrors } from '../../store/reducers/auth/authenticationSlice';
-import { courses, religions } from '../../constants/inputs';
+import { courses, religions } from '../../shared/inputs';
 
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;

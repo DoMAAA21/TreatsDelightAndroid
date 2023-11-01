@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions } from 'react-native';
 import { Text, Input, Block, Button, Icon } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,12 +8,12 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
-import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import { getUserDetails } from '../../store/reducers/user/userDetailsSlice';
 import { updateUser, clearErrors } from '../../store/reducers/user/userSlice';
-import { BACKEND_URL } from '../../constants/constants';
-import { courses, religions, roles } from '../../constants/inputs';
+import { BACKEND_URL } from '../../shared/constants';
+import { courses, religions, roles } from '../../shared/inputs';
+import { errorMsg } from '../../shared/toast';
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 
@@ -37,28 +37,6 @@ const MyInput = ({ field, form, ...props }) => (
     />
 );
 
-const errorMsg = (message) => {
-    Toast.show({
-        text1: 'Error',
-        text2: `${message}`,
-        type: 'error',
-        position: 'bottom',
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-        customStyles: {
-            title: {
-                fontSize: 30,
-                fontWeight: 'bold',
-            },
-            message: {
-                fontSize: 24,
-                fontWeight: 'bold',
-            },
-        },
-    });
-};
 
 const EditUserScreen = () => {
     const dispatch = useDispatch();
