@@ -25,7 +25,6 @@ export const getProductDetails = createAsyncThunk('productDetails/getProductDeta
       },
     };
     const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/product/${id}`, config);
-
     dispatch(productDetailsSuccess(data.product));
     return data.product;
   } catch (error) {
