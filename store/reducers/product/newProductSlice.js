@@ -37,7 +37,7 @@ export const newProduct = createAsyncThunk('newProduct/newProduct', async (produ
       };
       
       const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/product/new`, productData, config);
-       dispatch(newProductSuccess(data.success))
+       dispatch(newProductSuccess(data))
       return data;
     } catch (error) 
     {

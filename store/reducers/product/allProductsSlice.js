@@ -16,7 +16,6 @@ export const fetchAllProducts = createAsyncThunk('allProducts/fetchAllProducts',
       const token = await AsyncStorage.getItem('token');
       const user = await AsyncStorage.getItem('user');
       const userCreds = JSON.parse(user);
-      // console.log(userCreds)
       const storeId = userCreds.store.storeId;
 
       if(!storeId){

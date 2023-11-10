@@ -26,7 +26,7 @@ export const newStore = createAsyncThunk('newStore/newStore', async (storeData, 
     };
 
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/store/new`, storeData, config);
-    dispatch(newStoreSuccess(data.success))
+    dispatch(newStoreSuccess(data))
     return data;
   } catch (error) {
     dispatch(newStoreFail(error.response.data.message));
