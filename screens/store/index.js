@@ -1,10 +1,10 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState, useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { Text} from 'galio-framework';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import StoreList from './storeList';
-import { fetchAllStores , clearErrors } from '../../store/reducers/store/allStoresSlice';
+import { fetchAllStores , clearErrors, clearStores } from '../../store/reducers/store/allStoresSlice';
 import { deleteStoreReset, updateStoreReset } from '../../store/reducers/store/storeSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
 
@@ -14,21 +14,19 @@ const buttonSize = Math.min(width * 0.15, height * 0.25);
 const StoreScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { error, stores } = useSelector(state => state.allStores);
+  const { error, stores, loading } = useSelector(state => state.allStores);
   const { success } = useSelector(state => state.newStore);
   const { isDeleted, isUpdated, error: errorStore } = useSelector(state => state.store)
-  const [ firstLoading, setFirstLoading] = useState(true);
+
 
 
   
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     if (success) {
       dispatch(fetchAllStores());
     } else {
       dispatch(fetchAllStores())
-      .then(() => {
-        setFirstLoading(false);
-      });
     }
 
     if (error) {
@@ -36,9 +34,13 @@ const StoreScreen = () => {
       dispatch(clearErrors())
     }
 
+    return () => {
+      dispatch(clearStores())
+  };
 
-  }, [dispatch, error, success]);
-  
+
+  }, [dispatch, error, success])
+);
 useEffect(()=>{
   if (isDeleted) {
     successMsg('Deleted','Store Removed');
@@ -62,7 +64,7 @@ useEffect(()=>{
 
   return (
     <View style={styles.container}>
-      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <StoreList stores={stores} />}
+      {loading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <StoreList stores={stores} />}
       <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddStore')}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
