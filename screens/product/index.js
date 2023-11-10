@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { Text } from 'galio-framework';
@@ -64,8 +64,6 @@ const ProductScreen = () => {
   const { success, error: newProductError } = useSelector(state => state.newProduct);
   const { isDeleted, isUpdated, error: errorProduct } = useSelector(state => state.product)
   const [firstLoading, setFirstLoading] = useState(true);
-
-
   useEffect(() => {
     if (success) {
       dispatch(fetchAllProducts());
@@ -88,26 +86,26 @@ const ProductScreen = () => {
 
 
   }, [dispatch, error, success, newProductError]);
-  
-  useEffect(()=>{
+
+  useEffect(() => {
 
     if (isDeleted) {
-      successMsg('Deleted','Product Removed');
+      successMsg('Deleted', 'Product Removed');
       dispatch(deleteProductReset());
       dispatch(fetchAllProducts());
     }
     if (isUpdated) {
-      successMsg('Updated','Product Updated');
+      successMsg('Updated', 'Product Updated');
       dispatch(updateProductReset());
       dispatch(fetchAllProducts());
     }
-    // if (errorProduct){    
-    //   errorMsg(errorProduct); 
-    //   dispatch(deleteProductReset());
-    //   dispatch(fetchAllProducts());
-    // }
-  // },[isDeleted, isUpdated, errorProduct])
-     },[isDeleted,isUpdated])
+    if (errorProduct) {
+      errorMsg(errorProduct);
+      dispatch(deleteProductReset());
+      dispatch(fetchAllProducts());
+    }
+  }, [isDeleted, isUpdated, errorProduct])
+
 
 
 

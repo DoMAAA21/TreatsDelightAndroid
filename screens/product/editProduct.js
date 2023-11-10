@@ -1,8 +1,8 @@
-import React, { useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Text, Input, Block, Button, Icon, } from 'galio-framework';
+import { Text, Input, Block, Button} from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
@@ -10,9 +10,9 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
-import { updateProduct, updateProductSuccess,clearErrors } from '../../store/reducers/product/productSlice';
+import { updateProduct, updateProductSuccess, clearErrors } from '../../store/reducers/product/productSlice';
 import { categories } from '../../shared/inputs';
-import {  errorMsg } from '../../shared/toast';
+import { errorMsg } from '../../shared/toast';
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 
@@ -52,7 +52,7 @@ const EditProductScreen = () => {
     const [secondImagePreview, setSecondImagePreview] = useState('');
     const [thirdImagePreview, setThirdImagePreview] = useState('');
     const [isPortion, setIsPortion] = useState(false);
-    
+
     const MyStockInput = ({ field, form, ...props }) => (
         <Input
             {...props}
@@ -95,12 +95,12 @@ const EditProductScreen = () => {
             if (isUpdated) {
 
                 navigation.navigate('Products');
-                
+
             }
             if (error) {
                 errorMsg(error);
                 dispatch(clearErrors());
-             }
+            }
 
             return () => {
             };
@@ -127,7 +127,7 @@ const EditProductScreen = () => {
             }
         }, [product])
     );
-    
+
 
 
     const selectImage = async (index) => {
@@ -170,8 +170,8 @@ const EditProductScreen = () => {
         name: product?.name || '',
         description: product?.description || '',
         costPrice: (product?.costPrice || 0).toString(),
-        sellPrice:  (product?.sellPrice || 0).toString(),
-        stock:  (product?.stock || 0).toString() || '',
+        sellPrice: (product?.sellPrice || 0).toString(),
+        stock: (product?.stock || 0).toString() || '',
         category: product?.category || '',
         active: product?.active === true ? 'True' : 'False'
     };
@@ -220,100 +220,100 @@ const EditProductScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-             {productDataFetched ? (
-            <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={onSubmit}
-            >
-                {(formik) => (
-                    <View style={styles.container}>
-                        <Block style={styles.formContainer}>
-                            <Field name="name" placeholder="Name" component={MyInput} />
-                            {formik.touched.name && formik.errors.name ? (
-                                <Text style={styles.errorMessage}>{formik.errors.name}</Text>
-                            ) : null}
-                            <Field name="description" placeholder="Description" component={MyInput} />
-                            {formik.touched.description && formik.errors.description ? (
-                                <Text style={styles.errorMessage}>{formik.errors.description}</Text>
-                            ) : null}
-                            <Field name="costPrice" placeholder="Cost Price" keyboardType="numeric" component={MyInput} />
-                            {formik.touched.costPrice && formik.errors.costPrice ? (
-                                <Text style={styles.errorMessage}>{formik.errors.costPrice}</Text>
-                            ) : null}
-                            <Field name="sellPrice" placeholder="Sell Price" keyboardType="numeric" component={MyInput} />
-                            {formik.touched.sellPrice && formik.errors.sellPrice ? (
-                                <Text style={styles.errorMessage}>{formik.errors.sellPrice}</Text>
-                            ) : null}
+            {productDataFetched ? (
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={onSubmit}
+                >
+                    {(formik) => (
+                        <View style={styles.container}>
+                            <Block style={styles.formContainer}>
+                                <Field name="name" placeholder="Name" component={MyInput} />
+                                {formik.touched.name && formik.errors.name ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.name}</Text>
+                                ) : null}
+                                <Field name="description" placeholder="Description" component={MyInput} />
+                                {formik.touched.description && formik.errors.description ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.description}</Text>
+                                ) : null}
+                                <Field name="costPrice" placeholder="Cost Price" keyboardType="numeric" component={MyInput} />
+                                {formik.touched.costPrice && formik.errors.costPrice ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.costPrice}</Text>
+                                ) : null}
+                                <Field name="sellPrice" placeholder="Sell Price" keyboardType="numeric" component={MyInput} />
+                                {formik.touched.sellPrice && formik.errors.sellPrice ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.sellPrice}</Text>
+                                ) : null}
 
-                            <View style={styles.rowContainer}>
-                                <View style={styles.checkboxContainer}>
-                                    <TouchableOpacity onPress={handleCheckboxChange}>
-                                        <Fontisto
-                                            name={isPortion ? 'checkbox-active' : 'checkbox-passive'}
-                                            width={32}
-                                            family="MaterialCommunityIcons"
-                                            size={30}
-                                            color={isPortion ? 'green' : 'gray'}
+                                <View style={styles.rowContainer}>
+                                    <View style={styles.checkboxContainer}>
+                                        <TouchableOpacity onPress={handleCheckboxChange}>
+                                            <Fontisto
+                                                name={isPortion ? 'checkbox-active' : 'checkbox-passive'}
+                                                width={32}
+                                                family="MaterialCommunityIcons"
+                                                size={30}
+                                                color={isPortion ? 'green' : 'gray'}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text style={styles.checkboxLabel}>By Portion</Text>
+                                    </View>
+                                    <View style={styles.stockContainer}>
+                                        <Field
+                                            name="stock"
+                                            placeholder="Stock"
+                                            keyboardType="numeric"
+                                            component={MyStockInput}
+                                            editable={!isPortion}
                                         />
-                                    </TouchableOpacity>
-                                    <Text style={styles.checkboxLabel}>By Portion</Text>
+                                    </View>
                                 </View>
-                                <View style={styles.stockContainer}>
-                                    <Field
-                                        name="stock"
-                                        placeholder="Stock"
-                                        keyboardType="numeric"
-                                        component={MyStockInput}
-                                        editable={!isPortion}
-                                    />
+
+                                {formik.touched.stock && formik.errors.stock ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.stock}</Text>
+                                ) : null}
+
+                                <View style={styles.inputContainer}>
+                                    <Field name="category">
+                                        {({ field }) => (
+                                            <View style={styles.inputContainer}>
+                                                <Text>Category</Text>
+                                                <Picker selectedValue={field.value} onValueChange={field.onChange('category')}>
+                                                    <Picker.Item label="Choose Option" value="" />
+                                                    {categories.map((category) => (
+                                                        <Picker.Item label={category.label} value={category.value} key={category.label} />
+                                                    ))}
+                                                </Picker>
+                                            </View>
+                                        )}
+                                    </Field>
+                                    {formik.touched.category && formik.errors.category ? (
+                                        <Text style={styles.errorMessage}>{formik.errors.category}</Text>
+                                    ) : null}
                                 </View>
-                            </View>
+                                <View style={styles.inputContainer}>
+                                    <Field name="active">
+                                        {({ field }) => (
+                                            <View style={styles.inputContainer}>
+                                                <Text>Is Active</Text>
+                                                <Picker selectedValue={field.value} onValueChange={field.onChange('active')}>
+                                                    <Picker.Item label="Choose Option" value="" />
+                                                    {isActive.map((isActiveOption) => (
+                                                        <Picker.Item label={isActiveOption.label} value={isActiveOption.label} key={isActiveOption.label} />
+                                                    ))}
+                                                </Picker>
+                                            </View>
+                                        )}
+                                    </Field>
+                                    {formik.touched.active && formik.errors.active ? (
+                                        <Text style={styles.errorMessage}>{formik.errors.active}</Text>
+                                    ) : null}
+                                </View>
 
-                            {formik.touched.stock && formik.errors.stock ? (
-                                <Text style={styles.errorMessage}>{formik.errors.stock}</Text>
-                            ) : null}
-
-                            <View style={styles.inputContainer}>
-                                <Field name="category">
-                                    {({ field }) => (
-                                        <View style={styles.inputContainer}>
-                                            <Text>Category</Text>
-                                            <Picker selectedValue={field.value} onValueChange={field.onChange('category')}>
-                                                <Picker.Item label="Choose Option" value="" />
-                                                {categories.map((category) => (
-                                                    <Picker.Item label={category.label} value={category.value} key={category.label} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    )}
-                                </Field>
-                                {formik.touched.category && formik.errors.category ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.category}</Text>
-                                ) : null}
-                            </View>
-                            <View style={styles.inputContainer}>
-                                <Field name="active">
-                                    {({ field }) => (
-                                        <View style={styles.inputContainer}>
-                                            <Text>Is Active</Text>
-                                            <Picker selectedValue={field.value} onValueChange={field.onChange('active')}>
-                                                <Picker.Item label="Choose Option" value="" />
-                                                {isActive.map((isActiveOption) => (
-                                                    <Picker.Item label={isActiveOption.label} value={isActiveOption.label} key={isActiveOption.label} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    )}
-                                </Field>
-                                {formik.touched.active && formik.errors.active ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.active}</Text>
-                                ) : null}
-                            </View>
-
-                            <View style={styles.inputContainer}>
-                                <Text>Images (Left Most is Required)</Text>
-                                <View style={styles.imagePickerContainer}>                   
+                                <View style={styles.inputContainer}>
+                                    <Text>Images (Left Most is Required)</Text>
+                                    <View style={styles.imagePickerContainer}>
                                         <Button
                                             color="info"
                                             style={styles.imagePickerButton}
@@ -326,7 +326,7 @@ const EditProductScreen = () => {
                                             style={styles.imagePickerButton}
                                             onPress={() => selectImage(1)}
                                         >
-                                            <Image source={{ uri: secondImagePreview}} style={styles.image} />
+                                            <Image source={{ uri: secondImagePreview }} style={styles.image} />
                                         </Button>
                                         <Button
                                             color="info"
@@ -335,25 +335,25 @@ const EditProductScreen = () => {
                                         >
                                             <Image source={{ uri: thirdImagePreview }} style={styles.image} />
                                         </Button>
-                      
-                                </View>
-                                
-                            </View>
 
-                            <Button
-                                round
-                                color="success"
-                                style={[styles.submitButton, { opacity: formik.isValid && !loading ? 1 : 0.5 }]}
-                                onPress={formik.handleSubmit}
-                                disabled={!formik.isValid || loading}
-                            >
-                                Submit
-                            </Button>
-                        </Block>
-                    </View>
-                )}
-            </Formik>
-             ) : (
+                                    </View>
+
+                                </View>
+
+                                <Button
+                                    round
+                                    color="success"
+                                    style={[styles.submitButton, { opacity: formik.isValid && !loading ? 1 : 0.5 }]}
+                                    onPress={formik.handleSubmit}
+                                    disabled={!formik.isValid || loading}
+                                >
+                                    Submit
+                                </Button>
+                            </Block>
+                        </View>
+                    )}
+                </Formik>
+            ) : (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" />
                 </View>
