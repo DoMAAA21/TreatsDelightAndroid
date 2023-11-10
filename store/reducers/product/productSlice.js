@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 
 const initialState = {
@@ -10,7 +11,7 @@ const initialState = {
   isDeleted: false,
   error: null,
 };
-
+const maxRetries = 3;
 
 export const deleteProduct = createAsyncThunk('product/deleteProduct', async (id, { dispatch }) => {
   try {
@@ -37,29 +38,79 @@ export const deleteProduct = createAsyncThunk('product/deleteProduct', async (id
 
 export const updateProduct = createAsyncThunk('product/updateProduct', async ({ id, productData }, { dispatch }) => {
   try {
-
-    dispatch(updateProductRequest())
+    dispatch(updateProductRequest());
     const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem('user');
+    const userCreds = JSON.parse(user);
+    const storeId = userCreds?.store?.storeId;
+    const storeName = userCreds?.store?.name;
+    productData.append("storeId", storeId);
+    productData.append("storeName", storeName);
 
     if (!token) {
       dispatch(updateProductFail('Login First'));
     }
+
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `${token}`,
       },
     };
-    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/product/${id}`, productData, config);
-    dispatch(updateProductSuccess(data.success))
-    return data.success;
 
+    let retryCount = 0;
+    let success = false;
+
+    while (!success && retryCount < maxRetries) {
+      try {
+        // console.log(productData)
+        const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/product/${id}`, productData, config);
+        console.log(data)
+        dispatch(updateProductSuccess(data.success));
+        success = true;
+        return data.success;
+      } catch (error) {
+        retryCount++;
+      }
+    }
+
+    dispatch(updateProductFail('Server is Busy'))
   } catch (error) {
     dispatch(updateProductFail(error.response.data.message))
-    throw error.response.data.message;
+    throw error.response.data.message; 
   }
-}
-);
+});
+// export const updateProduct = createAsyncThunk('product/updateProduct', async ({ id, productData }, { dispatch }) => {
+//   try {
+//     dispatch(updateProductRequest())
+//     const token = await AsyncStorage.getItem('token');
+//     const user = await AsyncStorage.getItem('user');
+//     const userCreds = JSON.parse(user);
+//     const storeId = userCreds?.store?.storeId;
+//     const storeName = userCreds?.store?.name;
+//     productData.append("storeId", storeId);
+//     productData.append("storeName", storeName);
+
+//     if (!token) {
+//       dispatch(updateProductFail('Login First'));
+//     }
+//     const config = {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//         Authorization: `${token}`,
+//       },
+//     };
+//     console.log(productData)
+//     const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/product/${id}`, productData, config);
+//     dispatch(updateProductSuccess(data.success))
+//     return data.success;
+
+//   } catch (error) {
+//     dispatch(updateProductFail(error.response.data.message))
+//     throw error.response.data.message;
+//   }
+// }
+// );
 
 
 
@@ -82,6 +133,7 @@ const productSlice = createSlice({
     updateProductReset: (state) => {
       state.isUpdated = false;
       state.error = null;
+      state.loading = false
     },
     deleteProductReset: (state) => {
       state.isDeleted = false;

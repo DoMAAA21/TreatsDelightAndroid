@@ -1,29 +1,50 @@
-import React from 'react';
+import React,{useState , useEffect} from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Block, Text, GalioProvider } from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [user, setUser] = useState('');
+  const currentDate = new Date();
+  const options = { month: 'short', day: 'numeric', year: 'numeric' };
+  const formattedDate = currentDate.toLocaleDateString(undefined, options);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const user = await AsyncStorage.getItem('user');
+  
+        setUser(JSON.parse(user));
+  
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    }
+    fetchUser();
+  }, []);
+
+
   return (
 
     <>
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Welcome</Text>
-            <Text style={styles.headerSubtitle}>24 March, 18pm - 19pm</Text>
+            <Text style={styles.headerTitle}>Howdy!</Text>
+            <Text style={styles.headerSubtitle}>{formattedDate}</Text>
           </View>
 
           <View style={styles.body}>
-            <Image source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar6.png' }} style={styles.avatar} />
+            <Image source={{ uri: user?.avatar?.url}} style={styles.avatar} />
             <View style={styles.userInfo}>
-              <Text style={styles.userName}>Mr. Cody Fisher</Text>
-              <Text style={styles.userRole}>Professor</Text>
+              <Text style={styles.userName}>{user?.fname} {user?.lname}</Text>
+              <Text style={styles.userRole}>{user?.role}</Text>
             </View>
           </View>
         </View>

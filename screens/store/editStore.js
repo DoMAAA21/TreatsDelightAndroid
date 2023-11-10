@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { getStoreDetails } from '../../store/reducers/store/storeDetailsSlice';
 import { updateStore, clearErrors } from '../../store/reducers/store/storeSlice';
-import {  errorMsg } from '../../shared/toast';
+import { errorMsg } from '../../shared/toast';
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 
@@ -121,15 +121,15 @@ const EditStoreScreen = () => {
         formData.append("location", values.location);
         formData.append("active", isActive);
         if (logo) {
-          formData.append("logo", {
-            uri: logo,
-            type: "image/jpeg",
-            name: "logo.jpg",
-          });
+            formData.append("logo", {
+                uri: logo,
+                type: "image/jpeg",
+                name: "logo.jpg",
+            });
         }
         dispatch(updateStore({ id: storeId, storeData: formData }));
-      };
-      
+    };
+
 
 
 
@@ -147,9 +147,6 @@ const EditStoreScreen = () => {
 
                         <View style={styles.container}>
                             <Block style={styles.formContainer}>
-                                <Text h5 style={styles.formHeader}>
-                                    Edit Store
-                                </Text>
                                 <Field
                                     name="name"
                                     placeholder="Name"
@@ -264,11 +261,6 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         backgroundColor: 'transparent',
-    },
-    formHeader: {
-        marginBottom: 20,
-        textAlign: 'center',
-        color: '#333',
     },
     imagePickerContainer: {
         flexDirection: 'row',

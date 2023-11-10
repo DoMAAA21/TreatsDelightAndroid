@@ -66,8 +66,6 @@ const ProductScreen = () => {
   const [firstLoading, setFirstLoading] = useState(true);
 
 
-  // console.log(products)
-
   useEffect(() => {
     if (success) {
       dispatch(fetchAllProducts());
@@ -98,18 +96,18 @@ const ProductScreen = () => {
       dispatch(deleteProductReset());
       dispatch(fetchAllProducts());
     }
-    // if (isUpdated) {
-    //   successMsg('Updated','Product Updated');
-    //   dispatch(updateProductReset());
-    //   dispatch(fetchAllProducts());
-    // }
+    if (isUpdated) {
+      successMsg('Updated','Product Updated');
+      dispatch(updateProductReset());
+      dispatch(fetchAllProducts());
+    }
     // if (errorProduct){    
     //   errorMsg(errorProduct); 
     //   dispatch(deleteProductReset());
     //   dispatch(fetchAllProducts());
     // }
   // },[isDeleted, isUpdated, errorProduct])
-     },[isDeleted])
+     },[isDeleted,isUpdated])
 
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { View, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text, Input, Block, Button, Icon, } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -9,11 +9,10 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import { newProductReset } from '../../store/reducers/product/newProductSlice';
-import { newProduct } from '../../store/reducers/product/newProductSlice';
+import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
+import { updateProduct, updateProductSuccess,clearErrors } from '../../store/reducers/product/productSlice';
 import { categories } from '../../shared/inputs';
-import { successMsg, errorMsg } from '../../shared/toast';
-
+import {  errorMsg } from '../../shared/toast';
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 
@@ -38,15 +37,22 @@ const MyInput = ({ field, form, ...props }) => (
 );
 
 
-const AddProductScreen = () => {
+const EditProductScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { loading, error, success } = useSelector(state => state.newProduct);
+    const route = useRoute();
+    const { productId } = route.params;
+    const { product } = useSelector(state => state.productDetails);
+    const { error, isUpdated, loading } = useSelector(state => state.product);
+    const [productDataFetched, setProductFetched] = useState(false);
     const [firstImage, setFirstImage] = useState(null);
     const [secondImage, setSecondImage] = useState(null);
     const [thirdImage, setThirdImage] = useState(null);
+    const [firstImagePreview, setFirstImagePreview] = useState('');
+    const [secondImagePreview, setSecondImagePreview] = useState('');
+    const [thirdImagePreview, setThirdImagePreview] = useState('');
     const [isPortion, setIsPortion] = useState(false);
-
+    
     const MyStockInput = ({ field, form, ...props }) => (
         <Input
             {...props}
@@ -73,17 +79,42 @@ const AddProductScreen = () => {
     ];
 
     useEffect(() => {
-        if (error) {
-            errorMsg(error);
-            dispatch(newProductReset());
-        }
-
-        if (success) {
+        dispatch(getProductDetails(productId))
+            .then(() => {
+                setProductFetched(true);
+            });
+        if (isUpdated) {
+            // dispatch(updateProductSuccess());
             navigation.navigate('Products');
-            dispatch(newProductReset());
-            successMsg('Product created successfully');
+            
         }
-    }, [dispatch, error, success, navigation]);
+        // if (error) {
+        //     errorMsg(error);
+        //     dispatch(clearErrors());
+        // }
+    }, [dispatch, productId, isUpdated, error]);
+
+
+    useEffect(() => {
+        setIsPortion(product?.portion);
+        
+        if (product && product.images && product.images.length > 0 && !loading) {
+            const productImages = product.images;
+            const imagePreviews = Array(3).fill(null); // Initialize with empty strings
+    
+            productImages.forEach(image => {
+                if (image.index >= 0 && image.index < 3 && image.url) {
+                    imagePreviews[image.index] = image.url;
+                }
+            });
+    
+            setFirstImagePreview(imagePreviews[0]);
+            setSecondImagePreview(imagePreviews[1]);
+            setThirdImagePreview(imagePreviews[2]);
+        }
+    }, [product]);
+    
+
 
     const selectImage = async (index) => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -109,26 +140,26 @@ const AddProductScreen = () => {
                 const { uri } = manipulatedImage;
                 if (index === 0) {
                     setFirstImage(uri);
-                    // setFirstImagePreview(uri);
+                    setFirstImagePreview(uri);
                 } else if (index === 1) {
                     setSecondImage(uri);
-                    // setSecondImagePreview(uri);
+                    setSecondImagePreview(uri);
                 } else if (index === 2) {
                     setThirdImage(uri);
-                    // setThirdImagePreview(uri);
+                    setThirdImagePreview(uri);
                 }
             }
         }
     };
 
     const initialValues = {
-        name: '',
-        description: '',
-        costPrice: '',
-        sellPrice: '',
-        stock: '',
-        category: '',
-        active: '',
+        name: product?.name || '',
+        description: product?.description || '',
+        costPrice: (product?.costPrice || 0).toString(),
+        sellPrice:  (product?.sellPrice || 0).toString(),
+        stock:  (product?.stock || 0).toString() || '',
+        category: product?.category || '',
+        active: product?.active === true ? 'True' : 'False'
     };
 
     const onSubmit = (values) => {
@@ -170,11 +201,12 @@ const AddProductScreen = () => {
             });
         }
 
-        dispatch(newProduct(formData));
+        dispatch(updateProduct({ id: productId, productData: formData }))
     };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+             {productDataFetched ? (
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -183,9 +215,6 @@ const AddProductScreen = () => {
                 {(formik) => (
                     <View style={styles.container}>
                         <Block style={styles.formContainer}>
-                            <Text h5 style={styles.formHeader}>
-                                New Product
-                            </Text>
                             <Field name="name" placeholder="Name" component={MyInput} />
                             {formik.touched.name && formik.errors.name ? (
                                 <Text style={styles.errorMessage}>{formik.errors.name}</Text>
@@ -276,21 +305,21 @@ const AddProductScreen = () => {
                                             style={styles.imagePickerButton}
                                             onPress={() => selectImage(0)}
                                         >
-                                            <Image source={{ uri: firstImage }} style={styles.image} />
+                                            <Image source={{ uri: firstImagePreview }} style={styles.image} />
                                         </Button>
                                         <Button
                                             color="info"
                                             style={styles.imagePickerButton}
                                             onPress={() => selectImage(1)}
                                         >
-                                            <Image source={{ uri: secondImage }} style={styles.image} />
+                                            <Image source={{ uri: secondImagePreview}} style={styles.image} />
                                         </Button>
                                         <Button
                                             color="info"
                                             style={styles.imagePickerButton}
                                             onPress={() => selectImage(2)}
                                         >
-                                            <Image source={{ uri: thirdImage }} style={styles.image} />
+                                            <Image source={{ uri: thirdImagePreview }} style={styles.image} />
                                         </Button>
                       
                                 </View>
@@ -310,6 +339,11 @@ const AddProductScreen = () => {
                     </View>
                 )}
             </Formik>
+             ) : (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" />
+                </View>
+            )}
         </ScrollView>
     );
 };
@@ -382,9 +416,14 @@ const styles = StyleSheet.create({
     },
     checkboxLabel: {
         marginLeft: 10
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 
 
 });
 
-export default AddProductScreen;
+export default EditProductScreen;

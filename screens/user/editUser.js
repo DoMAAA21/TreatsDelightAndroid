@@ -64,7 +64,7 @@ const EditUserScreen = () => {
                 setStoreDropdown(options);
                 setLoadingOptions(true);
                 setSelectedRole(user.role);
-    
+
             } catch (error) {
                 console.error('Error fetching store data:', error);
                 setLoadingOptions(false);
@@ -153,21 +153,21 @@ const EditUserScreen = () => {
         formData.append("avatar", avatar);
         if (avatar) {
             formData.append("avatar", {
-              uri: avatar,
-              type: "image/jpeg",
-              name: "avatar.jpg",
+                uri: avatar,
+                type: "image/jpeg",
+                name: "avatar.jpg",
             });
         }
         if (values.role === "Employee" && values.store) {
-          const selectedStoreValue = values.store.split('-');
-          const storeId = selectedStoreValue[0];
-          const storeName = selectedStoreValue[1];
-          formData.append("storeId", storeId);
-          formData.append("storeName", storeName);
+            const selectedStoreValue = values.store.split('-');
+            const storeId = selectedStoreValue[0];
+            const storeName = selectedStoreValue[1];
+            formData.append("storeId", storeId);
+            formData.append("storeName", storeName);
         }
         dispatch(updateUser({ id: userId, userData: formData }));
-      };
-      
+    };
+
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -181,9 +181,6 @@ const EditUserScreen = () => {
 
                         <View style={styles.container}>
                             <Block style={styles.formContainer}>
-                                <Text h5 style={styles.formHeader}>
-                                    Edit Information
-                                </Text>
                                 <Field
                                     name="fname"
                                     placeholder="First Name"
@@ -368,11 +365,6 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         backgroundColor: 'transparent',
-    },
-    formHeader: {
-        marginBottom: 20,
-        textAlign: 'center',
-        color: '#333',
     },
     imagePickerContainer: {
         flexDirection: 'row',

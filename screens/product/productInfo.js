@@ -87,7 +87,7 @@ const ProductInfo = () => {
             {renderCarousel()}
           </View>
           <View style={styles.info}>
-            <Text style={styles.name}>{product.name}</Text>
+            <Text style={styles.name}>{product?.name}</Text>
             <Text style={styles.description}>{product?.description}</Text>
             <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>Category:</Text>
