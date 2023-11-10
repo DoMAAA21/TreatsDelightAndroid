@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { Text } from 'galio-framework';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import ProductList from './productList';
-import { fetchAllProducts, clearErrors } from '../../store/reducers/product/allProductsSlice';
+import { fetchAllProducts, clearErrors ,clearProducts } from '../../store/reducers/product/allProductsSlice';
 import { deleteProductReset, updateProductReset } from '../../store/reducers/product/productSlice';
 
 const { width, height } = Dimensions.get('screen');
@@ -60,34 +60,40 @@ const errorMsg = (message) => {
 const ProductScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { error, products } = useSelector(state => state.allProducts);
+  const { error, products, loading } = useSelector(state => state.allProducts);
   const { success, error: newProductError } = useSelector(state => state.newProduct);
   const { isDeleted, isUpdated, error: errorProduct } = useSelector(state => state.product)
-  const [firstLoading, setFirstLoading] = useState(true);
-  useEffect(() => {
-    if (success) {
-      dispatch(fetchAllProducts());
-    } else {
-      dispatch(fetchAllProducts())
-        .then(() => {
-          setFirstLoading(false);
-        });
-    }
-
-    if (error) {
-      errorMsg(error);
-      dispatch(clearErrors());
-    }
-
-    if (newProductError) {
-      errorMsg(newProductError);
-      dispatch(clearErrors());
-    }
 
 
-  }, [dispatch, error, success, newProductError]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        if (success) {
+          dispatch(fetchAllProducts());
+        } else {
+          dispatch(fetchAllProducts());
+        }
 
-  useEffect(() => {
+        if (error) {
+          errorMsg(error);
+          dispatch(clearErrors());
+        }
+
+        if (newProductError) {
+          errorMsg(newProductError);
+          dispatch(clearErrors());
+        }
+      };
+      fetchData();
+      return () => {
+          dispatch(clearProducts())
+      };
+    }, [dispatch, success, error, newProductError])
+  );
+
+  useFocusEffect(
+    
+    useCallback(() => {
 
     if (isDeleted) {
       successMsg('Deleted', 'Product Removed');
@@ -106,13 +112,13 @@ const ProductScreen = () => {
     }
   }, [isDeleted, isUpdated, errorProduct])
 
-
+  );
 
 
 
   return (
     <View style={styles.container}>
-      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ProductList products={products} />}
+      {loading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ProductList products={products} />}
       <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddProduct')}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>

@@ -48,9 +48,9 @@ const EditProductScreen = () => {
     const [firstImage, setFirstImage] = useState(null);
     const [secondImage, setSecondImage] = useState(null);
     const [thirdImage, setThirdImage] = useState(null);
-    const [firstImagePreview, setFirstImagePreview] = useState('');
-    const [secondImagePreview, setSecondImagePreview] = useState('');
-    const [thirdImagePreview, setThirdImagePreview] = useState('');
+    const [firstImagePreview, setFirstImagePreview] = useState(null);
+    const [secondImagePreview, setSecondImagePreview] = useState(null);
+    const [thirdImagePreview, setThirdImagePreview] = useState(null);
     const [isPortion, setIsPortion] = useState(false);
 
     const MyStockInput = ({ field, form, ...props }) => (
@@ -103,6 +103,12 @@ const EditProductScreen = () => {
             }
 
             return () => {
+                setFirstImage(null);
+                setSecondImage(null);
+                setThirdImage(null);
+                setFirstImagePreview(null);
+                setSecondImagePreview(null);
+                setThirdImagePreview(null);
             };
         }, [dispatch, productId, isUpdated, error])
     );

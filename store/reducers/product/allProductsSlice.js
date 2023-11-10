@@ -58,6 +58,9 @@ const allProductsSlice = createSlice({
     clearErrors: (state) => {
       state.error = null;
     },
+    clearProducts: (state) => {
+      state.products = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,6 +83,7 @@ export const {
   allProductsSuccess,
   allProductsFail,
   clearErrors,
+  clearProducts
 } = allProductsSlice.actions;
 
 export default allProductsSlice.reducer;

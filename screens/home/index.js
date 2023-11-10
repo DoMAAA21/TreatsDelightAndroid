@@ -1,8 +1,9 @@
 import React,{useState , useEffect} from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Block, Text, GalioProvider } from 'galio-framework';
+import { Block, Text } from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -55,7 +56,7 @@ const HomeScreen = () => {
           >
             <Block middle center style={styles.content}>
               <FontAwesomeIcon
-                name='user'
+                name='users'
                 size={40}
                 color='#405b43'
               />
@@ -93,7 +94,20 @@ const HomeScreen = () => {
             </Block>
           </TouchableOpacity>
 
-
+          <TouchableOpacity
+            key='Employees'
+            style={styles.box}
+            onPress={() => navigation.navigate('Employees')}
+          >
+            <Block middle center style={styles.content}>
+              <FontAwesome5Icon
+                name='users-cog'
+                size={40}
+                color='#405b43'
+              />
+              <Text size={16}>Employees</Text>
+            </Block>
+          </TouchableOpacity>
 
         </View>
       </View>
