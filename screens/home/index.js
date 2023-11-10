@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState('');
@@ -29,14 +28,13 @@ const HomeScreen = () => {
     fetchUser();
   }, []);
 
-
   return (
 
     <>
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Howdy!</Text>
+            <Text style={styles.headerTitle}>Howdy! {user?.store?.name} {user.role === "Employee" ? 'Store' : null}</Text>
             <Text style={styles.headerSubtitle}>{formattedDate}</Text>
           </View>
 

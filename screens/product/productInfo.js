@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { View, ScrollView, Image, Text, Button, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
+import { View, ScrollView, Image, Text, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRoute, useFocusEffect } from '@react-navigation/native';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
@@ -16,18 +16,28 @@ const ProductInfo = () => {
   const [fetchLoading, setFetchLoading] = useState(false);
   const [images, setImages] = useState([]);
 
-  useEffect(() => {
-    setImages([]);
-    dispatch(getProductDetails(productId))
-      .then(() => {
-        setImages(product.images);
-        setFetchLoading(true)
-      });
-  
-    if (error) {
-      console.log(error);
-    }
-  }, [dispatch, productId, error, fetchLoading]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        setImages([]);
+        try {
+          dispatch(getProductDetails(productId));
+          setImages(product.images);
+          setFetchLoading(true);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      fetchData();
+
+      return () => {
+        setImages([]);
+      };
+    }, [dispatch, productId, error, setFetchLoading])
+  );
+
 
 
   const changeActiveIndex = (index) => {
@@ -38,8 +48,8 @@ const ProductInfo = () => {
   const categoryLabel = categories.find(category => category.value === product?.category)?.label;
 
   const renderCarousel = () => {
-      return (
-        <>
+    return (
+      <>
         <ScrollView
           ref={scrollViewRef}
           horizontal={true}
@@ -60,21 +70,21 @@ const ProductInfo = () => {
             </View>
           ))}
         </ScrollView>
-         <View style={styles.dotContainer}>
+        <View style={styles.dotContainer}>
           {images.map((_, index) => (
             <TouchableOpacity key={index} onPress={() => changeActiveIndex(index)}>
               <View
                 style={[
                   styles.dot,
-                  { backgroundColor: index === activeIndex ? '#bfbaba' : '#f8f7f7'  },
+                  { backgroundColor: index === activeIndex ? '#bfbaba' : '#f8f7f7' },
                 ]}
               />
             </TouchableOpacity>
           ))}
-        </View> 
-        </>
-      );
-              
+        </View>
+      </>
+    );
+
   };
 
 
@@ -112,7 +122,7 @@ const ProductInfo = () => {
       )}
     </>
   );
-  
+
 };
 
 const styles = {

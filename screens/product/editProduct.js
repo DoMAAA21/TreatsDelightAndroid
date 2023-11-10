@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text, Input, Block, Button, Icon, } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
@@ -78,41 +78,55 @@ const EditProductScreen = () => {
         { label: 'False', value: false },
     ];
 
-    useEffect(() => {
-        dispatch(getProductDetails(productId))
-            .then(() => {
-                setProductFetched(true);
-            });
-        if (isUpdated) {
-            // dispatch(updateProductSuccess());
-            navigation.navigate('Products');
-            
-        }
-        // if (error) {
-        //     errorMsg(error);
-        //     dispatch(clearErrors());
-        // }
-    }, [dispatch, productId, isUpdated, error]);
-
-
-    useEffect(() => {
-        setIsPortion(product?.portion);
-        
-        if (product && product.images && product.images.length > 0 && !loading) {
-            const productImages = product.images;
-            const imagePreviews = Array(3).fill(null); // Initialize with empty strings
-    
-            productImages.forEach(image => {
-                if (image.index >= 0 && image.index < 3 && image.url) {
-                    imagePreviews[image.index] = image.url;
+    useFocusEffect(
+        useCallback(() => {
+            const fetchData = async () => {
+                try {
+                    dispatch(getProductDetails(productId));
+                    setProductFetched(true);
+                } catch (error) {
+                    errorMsg(error);
+                    dispatch(clearErrors());
                 }
-            });
-    
-            setFirstImagePreview(imagePreviews[0]);
-            setSecondImagePreview(imagePreviews[1]);
-            setThirdImagePreview(imagePreviews[2]);
-        }
-    }, [product]);
+            };
+
+            fetchData();
+
+            if (isUpdated) {
+
+                navigation.navigate('Products');
+                
+            }
+            if (error) {
+                errorMsg(error);
+                dispatch(clearErrors());
+             }
+
+            return () => {
+            };
+        }, [dispatch, productId, isUpdated, error])
+    );
+
+    useFocusEffect(
+        useCallback(() => {
+            setIsPortion(product?.portion);
+
+            if (product && product.images && product.images.length > 0 && !loading) {
+                const productImages = product.images;
+                const imagePreviews = Array(3).fill(null);
+
+                productImages.forEach(image => {
+                    if (image.index >= 0 && image.index < 3 && image.url) {
+                        imagePreviews[image.index] = image.url;
+                    }
+                });
+
+                setFirstImagePreview(imagePreviews[0]);
+                setSecondImagePreview(imagePreviews[1]);
+                setThirdImagePreview(imagePreviews[2]);
+            }
+        }, [product])
+    );
     
 
 
