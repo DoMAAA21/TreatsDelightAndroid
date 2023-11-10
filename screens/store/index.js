@@ -14,10 +14,10 @@ const buttonSize = Math.min(width * 0.15, height * 0.25);
 const StoreScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { error, stores, loading } = useSelector(state => state.allStores);
+  const { error, stores } = useSelector(state => state.allStores);
   const { success } = useSelector(state => state.newStore);
   const { isDeleted, isUpdated, error: errorStore } = useSelector(state => state.store)
-
+  const [ firstLoading, setFirstLoading] = useState(true);
 
 
   
@@ -27,6 +27,9 @@ const StoreScreen = () => {
       dispatch(fetchAllStores());
     } else {
       dispatch(fetchAllStores())
+      .then(() => {
+        setFirstLoading(false);
+      });
     }
 
     if (error) {
@@ -64,7 +67,7 @@ useEffect(()=>{
 
   return (
     <View style={styles.container}>
-      {loading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <StoreList stores={stores} />}
+      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <StoreList stores={stores} />}
       <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddStore')}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>

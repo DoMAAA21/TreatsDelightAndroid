@@ -7,55 +7,11 @@ import Toast from 'react-native-toast-message';
 import EmployeeList from './employeeList';
 import { fetchAllEmployees, clearErrors, clearEmployee } from '../../store/reducers/employee/allEmployeesSlice';
 // import { deleteEmployeeReset, updateEmployeeReset } from '../../store/reducers/employee/employeeSlice';
+import { successMsg, errorMsg } from '../../shared/toast';
 
 const { width, height } = Dimensions.get('screen');
 const buttonSize = Math.min(width * 0.15, height * 0.25);
 
-const successMsg = (title, message) => {
-  Toast.show({
-    text1: `${title}`,
-    text2: `${message}`,
-    type: 'success',
-    position: 'bottom',
-    visibilityTime: 4000,
-    autoHide: true,
-    topOffset: 30,
-    bottomOffset: 40,
-    customStyles: {
-      title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-      },
-      message: {
-        fontSize: 24,
-        fontWeight: 'bold',
-      },
-    },
-  });
-};
-
-const errorMsg = (message) => {
-  Toast.show({
-    text1: 'Error',
-    text2: `${message}`,
-    type: 'error',
-    position: 'bottom',
-    visibilityTime: 4000,
-    autoHide: true,
-    topOffset: 30,
-    bottomOffset: 40,
-    customStyles: {
-      title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-      },
-      message: {
-        fontSize: 24,
-        fontWeight: 'bold',
-      },
-    },
-  });
-};
 
 const EmployeeScreen = () => {
   const dispatch = useDispatch();

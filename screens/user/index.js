@@ -97,7 +97,7 @@ const UserScreen = () => {
       dispatch(updateUserReset());
       dispatch(fetchAllUsers());
     }
-    if (errorUser){        //error for deleting
+    if (errorUser){      
       errorMsg(errorUser);
       dispatch(deleteUserReset());
       dispatch(fetchAllUsers());
