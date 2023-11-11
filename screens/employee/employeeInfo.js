@@ -1,45 +1,44 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native'
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { getEmployeeDetails } from '../../store/reducers/employee/employeeDetailsSlice';
 
-const ProfileInfo = () => {
-  const [user, setUser] = useState('');
+const EmployeeInfo = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { employee, loading } = useSelector(state => state.employeeDetails);
+  const { employeeId } = route.params;
 
   useEffect(() => {
-    async function fetchUser() {
-      try {
-        const user = await AsyncStorage.getItem('user');
-  
-        setUser(JSON.parse(user));
-  
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    }
-    fetchUser();
-  }, []);
+    dispatch(getEmployeeDetails(employeeId));
+  }, [dispatch, employeeId]);
+
+  if (loading) {
+    return (
+      <ActivityIndicator size="large" style={styles.loadingIndicator}/>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.coverContainer}/>
       <View style={styles.avatarContainer}>
         <Image
-          source={{ uri: user?.avatar?.url }}
+          source={{ uri: employee?.avatar?.url }}
           style={styles.avatar}
         />
-        <Text style={[styles.name, styles.textWithShadow]}>{user?.fname} {user?.lname}</Text>
+        <Text style={[styles.name, styles.textWithShadow]}>{employee?.fname} {employee?.lname}</Text>
       </View>
       <View style={styles.content}>
         <View style={styles.infoContainer}>
           <Text style={styles.infoLabel}>Email:</Text>
-          <Text style={styles.infoValue}>{user?.email}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoLabel}>Course:</Text>
-          <Text style={styles.infoValue}>{user?.course}</Text>
+          <Text style={styles.infoValue}>{employee?.email}</Text>
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.infoLabel}>Religion</Text>
-          <Text style={styles.infoValue}>{user?.religion}</Text>
+          <Text style={styles.infoValue}>{employee?.religion}</Text>
         </View>
       </View>
     </View>
@@ -62,8 +61,8 @@ const styles = StyleSheet.create({
 
   },
   avatarContainer: {
-    alignItems: 'left',
-    marginTop: 60,
+    alignItems: 'center',
+    marginTop: 80,
   },
   avatar: {
     width: 150,
@@ -88,6 +87,11 @@ const styles = StyleSheet.create({
   infoValue: {
     marginTop: 5,
   },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
-export default ProfileInfo;
+export default EmployeeInfo;

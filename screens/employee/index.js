@@ -18,7 +18,7 @@ const EmployeeScreen = () => {
   const { error, employees } = useSelector(state => state.allEmployees);
   const { success } = useSelector(state => state.newEmployee);
   const { isDeleted, isUpdated, error: errorEmployee } = useSelector(state => state.employee)
-  const [ firstLoading, setFirstLoading] = useState(true);
+  const [firstLoading, setFirstLoading] = useState(true);
 
 
 
@@ -29,9 +29,9 @@ const EmployeeScreen = () => {
         dispatch(fetchAllEmployees());
       } else {
         dispatch(fetchAllEmployees())
-        .then(() => {
-          setFirstLoading(false);
-        });
+          .then(() => {
+            setFirstLoading(false);
+          });
       }
       if (error) {
         errorMsg(error)
@@ -41,29 +41,29 @@ const EmployeeScreen = () => {
         dispatch(clearEmployee())
       };
 
-    }, [dispatch])
+    }, [dispatch, success, error])
   );
 
   useEffect(() => {
     if (isDeleted) {
-      successMsg('Deleted','Employee Removed');
+      successMsg('Deleted', 'Employee Removed');
       dispatch(deleteEmployeeReset());
       dispatch(fetchAllEmployees());
     }
 
     if (isUpdated) {
-      successMsg('Updated','Employee Updated');
+      successMsg('Updated', 'Employee Updated');
       dispatch(updateEmployeeReset());
       dispatch(fetchAllEmployees());
     }
-    if (errorEmployee){       
+    if (errorEmployee) {
       errorMsg(errorEmployee);
       dispatch(deleteEmployeeReset());
       dispatch(fetchAllEmployees());
     }
 
 
-  },[isDeleted, isUpdated, errorEmployee])
+  }, [isDeleted, isUpdated, errorEmployee])
 
 
   return (
