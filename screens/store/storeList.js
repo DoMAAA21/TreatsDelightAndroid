@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ScrollView, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { FlatList, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { deleteStore } from '../../store/reducers/store/storeSlice';
-const { width } = Dimensions.get('screen');  
+
+const { width } = Dimensions.get('screen');
 
 const StoreList = ({ stores }) => {
   const dispatch = useDispatch();
@@ -29,15 +30,14 @@ const StoreList = ({ stores }) => {
     );
   };
 
- const navigateStore = (id) =>{
-  navigation.navigate('StoreInfo', { storeId: id });
-  }
+  const navigateStore = (id) => {
+    navigation.navigate('StoreInfo', { storeId: id });
+  };
 
   const handleEdit = (id) => {
     navigation.navigate('EditStore', { storeId: id });
   };
 
- 
   return (
     <View style={styles.container}>
       <TextInput
@@ -46,25 +46,23 @@ const StoreList = ({ stores }) => {
         onChangeText={(text) => setSearchQuery(text)}
         value={searchQuery}
       />
-      <ScrollView contentContainerStyle={styles.scrollView} keyboardShouldPersistTaps="always">
-        {stores
-          .filter((store) => {
-            return (
-              store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              store.slogan.toLowerCase().includes(searchQuery.toLowerCase()) 
-            );
-          })
-          .map((store, index) => (
-            <View  key={index} style={styles.container}>
-
-            <TouchableOpacity  style={styles.card} onPress={() => navigateStore(store._id)}>
+      <FlatList
+        data={stores.filter((store) =>
+          store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          store.slogan.toLowerCase().includes(searchQuery.toLowerCase())
+        )}
+        contentContainerStyle={styles.flatList}
+        keyExtractor={(store) => store._id.toString()}
+        renderItem={({ item: store }) => (
+          <View key={store._id} style={styles.container}>
+            <TouchableOpacity style={styles.card} onPress={() => navigateStore(store._id)}>
               <Image style={styles.image} source={{ uri: store?.logo?.url }} />
               <View style={styles.cardContent}>
                 <Text style={styles.name}>{store?.name}</Text>
                 <Text style={styles.count}>{store?.slogan}</Text>
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
-                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25}]}
+                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25 }]}
                     onPress={() => handleEdit(store._id)}>
                     <Text style={styles.followButtonText}>Edit</Text>
                   </TouchableOpacity>
@@ -72,24 +70,21 @@ const StoreList = ({ stores }) => {
                     style={[styles.followButton, { backgroundColor: '#ff2752', width: width * 0.25 }]}
                     onPress={() => confirmDelete(store._id)}>
                     <Text style={styles.followButtonText}>Delete</Text>
-
                   </TouchableOpacity>
                 </View>
               </View>
             </TouchableOpacity>
           </View>
-          ))}
-      </ScrollView>
+        )}
+        
+      />
     </View>
   );
 };
 
 const styles = {
-  scrollView: {
+  flatList: {
     padding: 10,
-  },
-  buttonGroup: {
-    flexDirection: 'row',
   },
   searchBar: {
     padding: 10,
@@ -103,9 +98,6 @@ const styles = {
     flex: 1,
     marginTop: 10,
   },
-  contentList: {
-    flex: 1,
-  },
   cardContent: {
     marginLeft: 20,
     marginTop: 10,
@@ -118,7 +110,6 @@ const styles = {
     borderWidth: 2,
     borderColor: '#ebf0f7',
   },
-
   card: {
     shadowColor: '#00000021',
     shadowOffset: {
@@ -133,7 +124,6 @@ const styles = {
     flexDirection: 'row',
     borderRadius: 30,
   },
-
   name: {
     fontSize: 18,
     flex: 1,
@@ -150,7 +140,7 @@ const styles = {
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginRight: 20
+    marginRight: 20,
   },
   followButton: {
     marginTop: 10,
@@ -165,7 +155,7 @@ const styles = {
     borderWidth: 1,
     borderColor: '#dcdcdc',
     marginLeft: width * 0.015,
-    marginRight: width * 0.015
+    marginRight: width * 0.015,
   },
   followButtonText: {
     color: 'white',

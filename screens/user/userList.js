@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ScrollView, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, Text } from 'react-native';
+import { FlatList, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, Text } from 'react-native';
 import { deleteUser } from '../../store/reducers/user/userSlice';
 import { useNavigation } from '@react-navigation/native';
 
-const { width } = Dimensions.get('screen'); 
+const { width } = Dimensions.get('screen');
 
 const UserList = ({ users }) => {
   const dispatch = useDispatch();
@@ -38,7 +38,6 @@ const UserList = ({ users }) => {
     navigation.navigate('EditUser', { userId: id });
   };
 
-
   return (
     <View style={styles.container}>
       <TextInput
@@ -47,8 +46,8 @@ const UserList = ({ users }) => {
         onChangeText={(text) => setSearchQuery(text)}
         value={searchQuery}
       />
-      <ScrollView contentContainerStyle={styles.scrollView} keyboardShouldPersistTaps="always">
-        {users
+      <FlatList
+        data={users
           .filter((user) => {
             const fullName = `${user.fname} ${user.lname}`;
             return (
@@ -57,39 +56,40 @@ const UserList = ({ users }) => {
               user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
               user.religion.toLowerCase().includes(searchQuery.toLowerCase())
             );
-          })
-          .map((user, index) => (
-            <View  key={index} style={styles.container}>
-
-              <TouchableOpacity  style={styles.card} onPress={() => navigateUser(user._id)}>
-                <Image style={styles.image} source={{ uri: user?.avatar?.url }} />
-                <View style={styles.cardContent}>
-                  <Text style={styles.name}>{user?.fname} {user?.lname}</Text>
-                  <Text style={styles.count}>{user?.email}</Text>
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25}]}
-                      onPress={() => handleEdit(user._id)}>
-                      <Text style={styles.followButtonText}>Edit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.followButton, { backgroundColor: '#ff2752', width: width * 0.25 }]}
-                      onPress={() => confirmDelete(user._id)}>
-                      <Text style={styles.followButtonText}>Delete</Text>
-
-                    </TouchableOpacity>
-                  </View>
+          })}
+        contentContainerStyle={styles.flatList}
+        keyExtractor={(user) => user._id.toString()}
+        renderItem={({ item: user }) => (
+          <View style={styles.container}>
+            <TouchableOpacity style={styles.card} onPress={() => navigateUser(user._id)}>
+              <Image style={styles.image} source={{ uri: user?.avatar?.url }} />
+              <View style={styles.cardContent}>
+                <Text style={styles.name}>{user?.fname} {user?.lname}</Text>
+                <Text style={styles.count}>{user?.email}</Text>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25 }]}
+                    onPress={() => handleEdit(user._id)}>
+                    <Text style={styles.followButtonText}>Edit</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.followButton, { backgroundColor: '#ff2752', width: width * 0.25 }]}
+                    onPress={() => confirmDelete(user._id)}>
+                    <Text style={styles.followButtonText}>Delete</Text>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </View>
-          ))}
-      </ScrollView>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
     </View>
   );
+
 };
 
 const styles = {
-  scrollView: {
+  flatList: {
     padding: 10,
   },
   buttonGroup: {

@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-nat
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Block, Text } from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -109,6 +110,20 @@ const HomeScreen = () => {
             </Block>
           </TouchableOpacity>
 
+          <TouchableOpacity
+            key='ManageMenu'
+            style={styles.box}
+            onPress={() => navigation.navigate('ManageMenu')}
+          >
+            <Block middle center style={styles.content}>
+              <MaterialIcons
+                name='restaurant-menu'
+                size={40}
+                color='#405b43'
+              />
+              <Text size={16}>Menu Today</Text>
+            </Block>
+          </TouchableOpacity>
         </View>
       </View>
     </>

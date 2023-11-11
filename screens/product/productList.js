@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ScrollView, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { FlatList, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { deleteProduct } from '../../store/reducers/product/productSlice';
-const { width } = Dimensions.get('screen');  
+
+const { width } = Dimensions.get('screen');
 
 const ProductList = ({ products }) => {
   const dispatch = useDispatch();
@@ -29,15 +30,14 @@ const ProductList = ({ products }) => {
     );
   };
 
- const navigateProduct = (id) =>{
-  navigation.navigate('ProductInfo', { productId: id });
-  }
+  const navigateProduct = (id) => {
+    navigation.navigate('ProductInfo', { productId: id });
+  };
 
   const handleEdit = (id) => {
     navigation.navigate('EditProduct', { productId: id });
   };
 
- 
   return (
     <View style={styles.container}>
       <TextInput
@@ -46,25 +46,23 @@ const ProductList = ({ products }) => {
         onChangeText={(text) => setSearchQuery(text)}
         value={searchQuery}
       />
-      <ScrollView contentContainerStyle={styles.scrollView} keyboardShouldPersistTaps="always">
-        {products
-          .filter((product) => {
-            return (
-              product.name.toLowerCase().includes(searchQuery.toLowerCase())  ||
-              product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()) 
-            );
-          })
-          .map((product, index) => (
-            <View  key={index} style={styles.container}>
-
-            <TouchableOpacity  style={styles.card} onPress={() => navigateProduct(product._id)}>
+      <FlatList
+        data={products.filter((product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        )}
+        contentContainerStyle={styles.flatList}
+        keyExtractor={(product) => product._id.toString()}
+        renderItem={({ item: product }) => (
+          <View key={product._id} style={styles.container}>
+            <TouchableOpacity style={styles.card} onPress={() => navigateProduct(product._id)}>
               <Image style={styles.image} source={{ uri: product?.images[0]?.url }} />
               <View style={styles.cardContent}>
                 <Text style={styles.name}>{product?.name}</Text>
                 <Text style={styles.count}>P{product?.sellPrice}</Text>
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
-                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25}]}
+                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25 }]}
                     onPress={() => handleEdit(product._id)}>
                     <Text style={styles.followButtonText}>Edit</Text>
                   </TouchableOpacity>
@@ -72,24 +70,21 @@ const ProductList = ({ products }) => {
                     style={[styles.followButton, { backgroundColor: '#ff2752', width: width * 0.25 }]}
                     onPress={() => confirmDelete(product._id)}>
                     <Text style={styles.followButtonText}>Delete</Text>
-
                   </TouchableOpacity>
                 </View>
               </View>
             </TouchableOpacity>
           </View>
-          ))}
-      </ScrollView>
+        )}
+       
+      />
     </View>
   );
 };
 
 const styles = {
-  scrollView: {
+  flatList: {
     padding: 10,
-  },
-  buttonGroup: {
-    flexDirection: 'row',
   },
   searchBar: {
     padding: 10,
@@ -103,9 +98,6 @@ const styles = {
     flex: 1,
     marginTop: 10,
   },
-  contentList: {
-    flex: 1,
-  },
   cardContent: {
     marginLeft: 20,
     marginTop: 10,
@@ -118,7 +110,6 @@ const styles = {
     borderWidth: 2,
     borderColor: '#ebf0f7',
   },
-
   card: {
     shadowColor: '#00000021',
     shadowOffset: {
@@ -133,7 +124,6 @@ const styles = {
     flexDirection: 'row',
     borderRadius: 30,
   },
-
   name: {
     fontSize: 18,
     flex: 1,
@@ -150,7 +140,7 @@ const styles = {
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginRight: 20
+    marginRight: 20,
   },
   followButton: {
     marginTop: 10,
@@ -165,7 +155,7 @@ const styles = {
     borderWidth: 1,
     borderColor: '#dcdcdc',
     marginLeft: width * 0.015,
-    marginRight: width * 0.015
+    marginRight: width * 0.015,
   },
   followButtonText: {
     color: 'white',

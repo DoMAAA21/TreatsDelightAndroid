@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ScrollView, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, Text } from 'react-native';
+import { FlatList, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, Text } from 'react-native';
 import { deleteEmployee } from '../../store/reducers/employee/employeeSlice';
 import { useNavigation } from '@react-navigation/native';
 
@@ -38,7 +38,6 @@ const EmployeeList = ({ employees }) => {
     navigation.navigate('EditEmployee', { employeeId: id });
   };
 
-
   return (
     <View style={styles.container}>
       <TextInput
@@ -47,8 +46,8 @@ const EmployeeList = ({ employees }) => {
         onChangeText={(text) => setSearchQuery(text)}
         value={searchQuery}
       />
-      <ScrollView contentContainerStyle={styles.scrollView} keyboardShouldPersistTaps="always">
-        {employees
+      <FlatList
+        data={employees
           .filter((employee) => {
             const fullName = `${employee.fname} ${employee.lname}`;
             return (
@@ -57,43 +56,40 @@ const EmployeeList = ({ employees }) => {
               employee.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
               employee.religion.toLowerCase().includes(searchQuery.toLowerCase())
             );
-          })
-          .map((employee, index) => (
-            <View  key={index} style={styles.container}>
-
-              <TouchableOpacity  style={styles.card} onPress={() => navigateEmployee(employee._id)}>
-                <Image style={styles.image} source={{ uri: employee?.avatar?.url }} />
-                <View style={styles.cardContent}>
-                  <Text style={styles.name}>{employee?.fname} {employee?.lname}</Text>
-                  <Text style={styles.count}>{employee?.email}</Text>
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25}]}
-                      onPress={() => handleEdit(employee._id)}>
-                      <Text style={styles.followButtonText}>Edit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.followButton, { backgroundColor: '#ff2752', width: width * 0.25 }]}
-                      onPress={() => confirmDelete(employee._id)}>
-                      <Text style={styles.followButtonText}>Delete</Text>
-
-                    </TouchableOpacity>
-                  </View>
+          })}
+        keyExtractor={(employee) => employee._id.toString()}
+        renderItem={({ item: employee }) => (
+          <View key={employee._id} style={styles.container}>
+            <TouchableOpacity style={styles.card} onPress={() => navigateEmployee(employee._id)}>
+              <Image style={styles.image} source={{ uri: employee?.avatar?.url }} />
+              <View style={styles.cardContent}>
+                <Text style={styles.name}>{employee?.fname} {employee?.lname}</Text>
+                <Text style={styles.count}>{employee?.email}</Text>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25}]}
+                    onPress={() => handleEdit(employee._id)}>
+                    <Text style={styles.followButtonText}>Edit</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.followButton, { backgroundColor: '#ff2752', width: width * 0.25 }]}
+                    onPress={() => confirmDelete(employee._id)}>
+                    <Text style={styles.followButtonText}>Delete</Text>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </View>
-          ))}
-      </ScrollView>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+        contentContainerStyle={styles.flatList}
+      />
     </View>
   );
 };
 
 const styles = {
-  scrollView: {
+  flatList: {
     padding: 10,
-  },
-  buttonGroup: {
-    flexDirection: 'row',
   },
   searchBar: {
     padding: 10,
@@ -107,9 +103,6 @@ const styles = {
     flex: 1,
     marginTop: 10,
   },
-  contentList: {
-    flex: 1,
-  },
   cardContent: {
     marginLeft: 20,
     marginTop: 10,
@@ -122,7 +115,6 @@ const styles = {
     borderWidth: 2,
     borderColor: '#ebf0f7',
   },
-
   card: {
     shadowColor: '#00000021',
     shadowOffset: {
@@ -137,7 +129,6 @@ const styles = {
     flexDirection: 'row',
     borderRadius: 30,
   },
-
   name: {
     fontSize: 18,
     flex: 1,
@@ -154,7 +145,7 @@ const styles = {
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginRight: 20
+    marginRight: 20,
   },
   followButton: {
     marginTop: 10,
@@ -169,7 +160,7 @@ const styles = {
     borderWidth: 1,
     borderColor: '#dcdcdc',
     marginLeft: width * 0.015,
-    marginRight: width * 0.015
+    marginRight: width * 0.015,
   },
   followButtonText: {
     color: 'white',
