@@ -82,8 +82,11 @@ const EditProductScreen = () => {
         useCallback(() => {
             const fetchData = async () => {
                 try {
-                    dispatch(getProductDetails(productId));
-                    setProductFetched(true);
+                    dispatch(getProductDetails(productId))
+                    .then(() => {
+                        setProductFetched(true);
+                      });
+                    
                 } catch (error) {
                     errorMsg(error);
                     dispatch(clearErrors());

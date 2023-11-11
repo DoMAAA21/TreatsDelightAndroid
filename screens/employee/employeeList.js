@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ScrollView, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, Text } from 'react-native';
-// import { deleteEmployee } from '../../store/reducers/employee/employeeSlice';
+import { deleteEmployee } from '../../store/reducers/employee/employeeSlice';
 import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('screen'); 

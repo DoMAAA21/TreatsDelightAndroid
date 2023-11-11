@@ -14,6 +14,7 @@ import EditProductScreen from '../screens/product/editProduct';
 import ProductInfo from '../screens/product/productInfo';
 import EmployeeScreen from '../screens/employee/index';
 import AddEmployeeScreen from '../screens/employee/addEmployee';
+import EditEmployeeScreen from '../screens/employee/editEmployee';
 
 
 const Stack = createStackNavigator();
@@ -37,6 +38,7 @@ const HomeStack = () => {
       <Stack.Screen name="ProductInfo" component={ProductInfo} options={{ headerTitle: 'Product Information' }} />
       <Stack.Screen name="Employees" component={EmployeeScreen} options={{ headerTitle: 'Employees' }} />
       <Stack.Screen name="AddEmployee" component={AddEmployeeScreen} options={{ headerTitle: 'Add Employee' }} />
+      <Stack.Screen name="EditEmployee" component={EditEmployeeScreen} options={{ headerTitle: 'Edit Employee' }} />
     </Stack.Navigator>
   );
 };

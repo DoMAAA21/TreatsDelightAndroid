@@ -8,10 +8,8 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
-import axios from 'axios';
 import { newEmployeeReset } from '../../store/reducers/employee/newEmployeeSlice';
 import { newEmployee } from '../../store/reducers/employee/newEmployeeSlice';
-import { BACKEND_URL } from '../../shared/constants';
 import { religions } from '../../shared/inputs';
 import { successMsg, errorMsg } from '../../shared/toast';
 
@@ -47,23 +45,6 @@ const AddEmployeeScreen = () => {
     const [storeDropdown, setStoreDropdown] = useState([]);
     const [loadingOptions, setLoadingOptions] = useState(false);
     useEffect(() => {
-        const fetchStores = () => {
-            axios.get(`${BACKEND_URL}/api/v1/stores`)
-                    .then((response) => {
-                        const storeData = response.data.stores;
-                        const options = storeData.map((store) => ({
-                            value: store._id,
-                            label: store.name,
-                        }));
-                        setStoreDropdown(options);
-                        setLoadingOptions(true);
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching store data:', error);
-                        setLoadingOptions(false);
-                    });
-            }
-        fetchStores();
         if (error) {
             errorMsg(error)
             dispatch(newEmployeeReset())

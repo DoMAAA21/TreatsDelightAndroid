@@ -11,33 +11,33 @@ const initialState = {
 };
 
 
-export const deleteUser = createAsyncThunk('user/deleteUser', async (id, {dispatch}) => {
+export const deleteEmployee = createAsyncThunk('employee/deleteEmployee', async (id, {dispatch}) => {
   try {
     const token = await AsyncStorage.getItem('token');
     if (!token) {
-      dispatch(deleteUserReset());
+      dispatch(deleteEmployeeReset());
     }
     const config = {
       headers: {
         Authorization: `${token}`,
       },
     };
-    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/user/${id}`,config);
-    dispatch(deleteUserSuccess(data.success));
+    const { data } = await axios.delete(`${BACKEND_URL}/api/v1/admin/employee/${id}`,config);
+    dispatch(deleteEmployeeSuccess(data.success));
     return data.success;
   } catch (error) {
-    dispatch(deleteUserFail(error.response.data.message))
+    dispatch(deleteEmployeeFail(error.response.data.message))
     throw error.response.data.message;
   }
 });
 
 
-export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userData }, {dispatch}) => {
+export const updateEmployee = createAsyncThunk('employee/updateEmployee', async ({ id, employeeData }, {dispatch}) => {
   try {
-    dispatch(updateUserRequest())
+    dispatch(updateEmployeeRequest())
     const token = await AsyncStorage.getItem('token');
     if (!token) {
-      dispatch(updateUserFail('Login First'));
+      dispatch(updateEmployeeFail('Login First'));
       throw error.response.data.message;
     }
     const config = {
@@ -48,13 +48,13 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
     };
 
    
-    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/user/${id}`, userData, config);
+    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/employee/${id}`, employeeData, config);
 
-    dispatch(updateUserSuccess(data.success));
+    dispatch(updateEmployeeSuccess(data.success));
   
     return data.success;
   } catch (error) {
-    dispatch(updateUserFail(error.response.data.message));
+    dispatch(updateEmployeeFail(error.response.data.message));
     throw error.response.data.message;
   }
 });
@@ -62,34 +62,34 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
 
   
 
-const userSlice = createSlice({
-  name: 'user',
+const employeeSlice = createSlice({
+  name: 'employee',
   initialState,
   reducers: {
-    updateUserRequest: (state) => {
+    updateEmployeeRequest: (state) => {
       state.loading = true;
     },
-    updateUserSuccess: (state, action) => {
+    updateEmployeeSuccess: (state, action) => {
       state.loading = false;
       state.isUpdated = action.payload;
     },
-    deleteUserSuccess: (state, action) => {
+    deleteEmployeeSuccess: (state, action) => {
       state.loading = false;
       state.isDeleted = action.payload;
     },
-    updateUserReset: (state) => {
+    updateEmployeeReset: (state) => {
       state.isUpdated = false;
       state.error = null;
     },
-    deleteUserReset: (state) => {
+    deleteEmployeeReset: (state) => {
       state.isDeleted = false;
       state.error = null;
     },
-    updateUserFail: (state, action) => {
+    updateEmployeeFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     }, 
-    deleteUserFail: (state, action) => {
+    deleteEmployeeFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -100,14 +100,14 @@ const userSlice = createSlice({
 });
 
 export const {
-  updateUserRequest,
-  updateUserSuccess,
-  deleteUserSuccess,
-  updateUserReset,
-  deleteUserReset,
-  updateUserFail,
-  deleteUserFail,
+  updateEmployeeRequest,
+  updateEmployeeSuccess,
+  deleteEmployeeSuccess,
+  updateEmployeeReset,
+  deleteEmployeeReset,
+  updateEmployeeFail,
+  deleteEmployeeFail,
   clearErrors,
-} = userSlice.actions;
+} = employeeSlice.actions;
 
-export default userSlice.reducer;
+export default employeeSlice.reducer;
