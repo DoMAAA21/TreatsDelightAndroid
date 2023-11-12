@@ -111,9 +111,9 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            key='ManageMenu'
+            key='Meals'
             style={styles.box}
-            onPress={() => navigation.navigate('ManageMenu')}
+            onPress={() => navigation.navigate('Meals')}
           >
             <Block middle center style={styles.content}>
               <MaterialIcons
@@ -121,7 +121,7 @@ const HomeScreen = () => {
                 size={40}
                 color='#405b43'
               />
-              <Text size={16}>Menu Today</Text>
+              <Text size={16}>Meals</Text>
             </Block>
           </TouchableOpacity>
         </View>

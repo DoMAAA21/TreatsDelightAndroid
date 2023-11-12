@@ -31,7 +31,6 @@ export const religions = [
 export const roles = ['User', 'Employee', 'Admin'];
 
 export const categories = [
-    {label: 'Full Meal',value: 'fullmeal'}, 
     {label: 'Snacks',value: 'snacks'},
     {label: 'Beverages',value: 'beverages'},
     {label: 'Desserts',value: 'desserts'},

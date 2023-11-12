@@ -1,14 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Text, Input, Block, Button} from 'galio-framework';
+import { View, StyleSheet, ScrollView, Image, Dimensions, ActivityIndicator } from 'react-native';
+import { Text, Input, Block, Button } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
 import { updateProduct, updateProductSuccess, clearErrors } from '../../store/reducers/product/productSlice';
 import { categories } from '../../shared/inputs';
@@ -21,7 +20,7 @@ const validationSchema = Yup.object({
     description: Yup.string().required('Description is required'),
     costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
-    stock: Yup.number().min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
+    stock: Yup.required.number().min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
     category: Yup.string().required('Category is required'),
     active: Yup.boolean().required('Active or Not'),
 });
@@ -50,29 +49,7 @@ const EditProductScreen = () => {
     const [thirdImage, setThirdImage] = useState(null);
     const [firstImagePreview, setFirstImagePreview] = useState(null);
     const [secondImagePreview, setSecondImagePreview] = useState(null);
-    const [thirdImagePreview, setThirdImagePreview] = useState(null);
-    const [isPortion, setIsPortion] = useState(false);
-
-    const MyStockInput = ({ field, form, ...props }) => (
-        <Input
-            {...props}
-            onChangeText={field.onChange(field.name)}
-            onBlur={field.onBlur(field.name)}
-            value={field.value}
-            style={{
-                fontSize: inputSize,
-                height: inputSize,
-                width: '100%',
-                borderWidth: isPortion ? 0.5 : 1,
-                backgroundColor: isPortion ? '#EBEBE4' : null,
-            }}
-        />
-    );
-
-    const handleCheckboxChange = () => {
-        setIsPortion(!isPortion);
-    };
-
+    const [thirdImagePreview, setThirdImagePreview] = useState(null);   
     const isActive = [
         { label: 'True', value: true },
         { label: 'False', value: false },
@@ -83,10 +60,10 @@ const EditProductScreen = () => {
             const fetchData = async () => {
                 try {
                     dispatch(getProductDetails(productId))
-                    .then(() => {
-                        setProductFetched(true);
-                      });
-                    
+                        .then(() => {
+                            setProductFetched(true);
+                        });
+
                 } catch (error) {
                     errorMsg(error);
                     dispatch(clearErrors());
@@ -118,7 +95,7 @@ const EditProductScreen = () => {
 
     useFocusEffect(
         useCallback(() => {
-            setIsPortion(product?.portion);
+
 
             if (product && product.images && product.images.length > 0 && !loading) {
                 const productImages = product.images;
@@ -194,13 +171,8 @@ const EditProductScreen = () => {
         formData.append('sellPrice', values.sellPrice);
         formData.append('category', values.category);
         formData.append('active', isActiveValue);
-        formData.append('portion', isPortion);
-
-        if (isPortion) {
-            formData.append('stock', '');
-        } else {
-            formData.append('stock', values.stock);
-        }
+        formData.append('portion', false);
+        formData.append('stock', values.stock);
 
         if (firstImage) {
             formData.append('firstImage', {
@@ -254,31 +226,7 @@ const EditProductScreen = () => {
                                 {formik.touched.sellPrice && formik.errors.sellPrice ? (
                                     <Text style={styles.errorMessage}>{formik.errors.sellPrice}</Text>
                                 ) : null}
-
-                                <View style={styles.rowContainer}>
-                                    <View style={styles.checkboxContainer}>
-                                        <TouchableOpacity onPress={handleCheckboxChange}>
-                                            <Fontisto
-                                                name={isPortion ? 'checkbox-active' : 'checkbox-passive'}
-                                                width={32}
-                                                family="MaterialCommunityIcons"
-                                                size={30}
-                                                color={isPortion ? 'green' : 'gray'}
-                                            />
-                                        </TouchableOpacity>
-                                        <Text style={styles.checkboxLabel}>By Portion</Text>
-                                    </View>
-                                    <View style={styles.stockContainer}>
-                                        <Field
-                                            name="stock"
-                                            placeholder="Stock"
-                                            keyboardType="numeric"
-                                            component={MyStockInput}
-                                            editable={!isPortion}
-                                        />
-                                    </View>
-                                </View>
-
+                                <Field name="stock" placeholder="Stock" keyboardType="numeric" component={MyInput} />
                                 {formik.touched.stock && formik.errors.stock ? (
                                     <Text style={styles.errorMessage}>{formik.errors.stock}</Text>
                                 ) : null}
@@ -416,29 +364,6 @@ const styles = StyleSheet.create({
     },
     errorMessage: {
         color: 'red'
-    },
-    rowContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '150%'
-    },
-    checkboxContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginRight: 18,
-        marginLeft: 10,
-        width: '20%'
-    },
-    stockContainer: {
-        width: '41%',
-    },
-
-    disabledField: {
-        backgroundColor: 'lightgray',
-        borderWidth: 2
-    },
-    checkboxLabel: {
-        marginLeft: 10
     },
     loadingContainer: {
         flex: 1,
