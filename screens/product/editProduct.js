@@ -20,7 +20,7 @@ const validationSchema = Yup.object({
     description: Yup.string().required('Description is required'),
     costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
-    stock: Yup.required.number().min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
+    stock: Yup.number().required('Stock is required').min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
     category: Yup.string().required('Category is required'),
     active: Yup.boolean().required('Active or Not'),
 });

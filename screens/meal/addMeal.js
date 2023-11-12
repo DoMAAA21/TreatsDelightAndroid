@@ -21,7 +21,6 @@ const validationSchema = Yup.object({
     description: Yup.string().required('Description is required'),
     costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
-    stock: Yup.number().required('Stock is Required').min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
     category: Yup.string().required('Category is required'),
     active: Yup.boolean().required('Active or Not'),
 });
@@ -37,7 +36,7 @@ const MyInput = ({ field, form, ...props }) => (
 );
 
 
-const AddProductScreen = () => {
+const AddMealScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { loading, error, success } = useSelector(state => state.newProduct);
@@ -59,7 +58,7 @@ const AddProductScreen = () => {
         }
 
         if (success) {
-            navigation.navigate('Products');
+            navigation.navigate('Meals');
             dispatch(newProductReset());
             successMsg('Product created successfully');
         }
@@ -103,7 +102,6 @@ const AddProductScreen = () => {
         description: '',
         costPrice: '',
         sellPrice: '',
-        stock: '',
         category: '',
         active: '',
     };
@@ -115,10 +113,10 @@ const AddProductScreen = () => {
         formData.append('description', values.description);
         formData.append('costPrice', values.costPrice);
         formData.append('sellPrice', values.sellPrice);
-        formData.append('category', values.category);
+        formData.append('category', 'Meal');
         formData.append('active', isActiveValue);
-        formData.append('portion', false);
-        formData.append('stock', values.stock);
+        formData.append('portion', true);
+        formData.append('stock', 0);
 
         if (firstImage) {
             formData.append('firstImage', {
@@ -156,7 +154,7 @@ const AddProductScreen = () => {
                     <View style={styles.container}>
                         <Block style={styles.formContainer}>
                             <Text h5 style={styles.formHeader}>
-                                New Product
+                                New Meal
                             </Text>
                             <Field name="name" placeholder="Name" component={MyInput} />
                             {formik.touched.name && formik.errors.name ? (
@@ -175,10 +173,7 @@ const AddProductScreen = () => {
                                 <Text style={styles.errorMessage}>{formik.errors.sellPrice}</Text>
                             ) : null}
 
-                            <Field name="stock" placeholder="Stock" keyboardType="numeric" component={MyInput}/>
-                            {formik.touched.stock && formik.errors.stock ? (
-                                <Text style={styles.errorMessage}>{formik.errors.stock}</Text>
-                            ) : null}
+
 
                             <View style={styles.inputContainer}>
                                 <Field name="category">
@@ -219,31 +214,31 @@ const AddProductScreen = () => {
 
                             <View style={styles.inputContainer}>
                                 <Text>Images (Left Most is Required)</Text>
-                                <View style={styles.imagePickerContainer}>                   
-                                        <Button
-                                            color="info"
-                                            style={styles.imagePickerButton}
-                                            onPress={() => selectImage(0)}
-                                        >
-                                            <Image source={{ uri: firstImage }} style={styles.image} />
-                                        </Button>
-                                        <Button
-                                            color="info"
-                                            style={styles.imagePickerButton}
-                                            onPress={() => selectImage(1)}
-                                        >
-                                            <Image source={{ uri: secondImage }} style={styles.image} />
-                                        </Button>
-                                        <Button
-                                            color="info"
-                                            style={styles.imagePickerButton}
-                                            onPress={() => selectImage(2)}
-                                        >
-                                            <Image source={{ uri: thirdImage }} style={styles.image} />
-                                        </Button>
-                      
+                                <View style={styles.imagePickerContainer}>
+                                    <Button
+                                        color="info"
+                                        style={styles.imagePickerButton}
+                                        onPress={() => selectImage(0)}
+                                    >
+                                        <Image source={{ uri: firstImage }} style={styles.image} />
+                                    </Button>
+                                    <Button
+                                        color="info"
+                                        style={styles.imagePickerButton}
+                                        onPress={() => selectImage(1)}
+                                    >
+                                        <Image source={{ uri: secondImage }} style={styles.image} />
+                                    </Button>
+                                    <Button
+                                        color="info"
+                                        style={styles.imagePickerButton}
+                                        onPress={() => selectImage(2)}
+                                    >
+                                        <Image source={{ uri: thirdImage }} style={styles.image} />
+                                    </Button>
+
                                 </View>
-                                
+
                             </View>
 
                             <Button
@@ -312,4 +307,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default AddProductScreen;
+export default AddMealScreen;

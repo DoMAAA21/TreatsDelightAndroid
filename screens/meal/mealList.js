@@ -4,9 +4,9 @@ import { FlatList, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, 
 import { deleteProduct } from '../../store/reducers/product/productSlice';
 import { useNavigation } from '@react-navigation/native';
 
-const { width } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
-const ProductList = ({ products }) => {
+const MealList = ({ products }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
@@ -60,6 +60,7 @@ const ProductList = ({ products }) => {
                     })}
                 keyExtractor={(product) => product._id.toString()}
                 numColumns={2}
+                showsVerticalScrollIndicator={false}
                 renderItem={({ item: product }) => (
                     <View style={styles.itemContainer}>
                         <View style={styles.card}>
@@ -75,9 +76,10 @@ const ProductList = ({ products }) => {
 };
 
 const styles = {
-    flatList:{
+    flatList: {
         paddingTop: 10,
-        paddingBottom: 80
+        paddingBottom: 80,
+      
     },
     buttonGroup: {
         flexDirection: 'row',
@@ -95,21 +97,22 @@ const styles = {
     },
     container: {
         flex: 1,
-        marginTop: 10,
+        marginTop: 10
     },
     contentList: {
         flex: 1,
     },
-
+    title: {
+        fontSize: 20,
+    },
     itemContainer: {
-        flex: 1,
+        flex: 0.5,
         paddingBottom: 5,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        
-      },
-      card: {
+    },
+    card: {
         padding: 10,
         backgroundColor: '#ffffff',
         borderRadius: 8,
@@ -118,16 +121,16 @@ const styles = {
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 2,
-        width: 190,
-        height: 200,
-      },
-      image: {
+        width: width * 0.45,
+        height: height * 0.3,
+        marginBottom: 10
+    },
+    image: {
         width: '100%',
-        height: 140,
+        height: 160,
         padding: 20,
         borderRadius: 8,
-      },
-
+    },
     name: {
         fontSize: 18,
         flex: 1,
@@ -167,4 +170,4 @@ const styles = {
     },
 };
 
-export default ProductList;
+export default MealList;

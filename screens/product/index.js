@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text } from 'galio-framework';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
 import ProductList from './productList';
 import { fetchAllProducts, clearErrors ,clearProducts } from '../../store/reducers/product/allProductsSlice';
 import { deleteProductReset, updateProductReset } from '../../store/reducers/product/productSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
 
-const { width, height } = Dimensions.get('screen');
-const buttonSize = Math.min(width * 0.15, height * 0.25);
 
 
 
@@ -115,9 +112,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    width: buttonSize,
-    height: buttonSize,
-    borderRadius: buttonSize / 2,
+    width: 66,
+    height: 66,
+    borderRadius: 33,
     backgroundColor: '#16aec1',
     alignItems: 'center',
     justifyContent: 'center',

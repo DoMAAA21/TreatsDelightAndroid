@@ -1,61 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
 import UserList from './userList';
 import { fetchAllUsers,clearErrors } from '../../store/reducers/user/allUsersSlice';
 import { deleteUserReset, updateUserReset } from '../../store/reducers/user/userSlice';
+import { successMsg, errorMsg } from '../../shared/toast';
 
-const { width , height } = Dimensions.get('screen');
-const buttonSize = Math.min(width * 0.15, height * 0.25);
-
-const successMsg = (title,message) => {
-  Toast.show({
-    text1: `${title}`,
-    text2: `${message}`,
-    type: 'success',
-    position: 'bottom',
-    visibilityTime: 4000,
-    autoHide: true,
-    topOffset: 30,
-    bottomOffset: 40,
-    customStyles: {
-      title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-      },
-      message: {
-        fontSize: 24,
-        fontWeight: 'bold',
-      },
-    },
-  });
-};
-
-const errorMsg = (message) => {
-  Toast.show({
-    text1: 'Error',
-    text2: `${message}`,
-    type: 'error',
-    position: 'bottom',
-    visibilityTime: 4000,
-    autoHide: true,
-    topOffset: 30,
-    bottomOffset: 40,
-    customStyles: {
-      title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-      },
-      message: {
-        fontSize: 24,
-        fontWeight: 'bold',
-      },
-    },
-  });
-};
 
 const UserScreen = () => {
   const dispatch = useDispatch();
@@ -150,9 +102,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    width: buttonSize,
-    height: buttonSize,
-    borderRadius: buttonSize / 2,
+    width: 66,
+    height: 66,
+    borderRadius: 33,
     backgroundColor: '#16aec1',
     alignItems: 'center',
     justifyContent: 'center',

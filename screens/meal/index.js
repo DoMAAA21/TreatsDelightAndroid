@@ -1,61 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
 import MealList from './mealList';
 import { fetchAllProducts,clearErrors } from '../../store/reducers/product/allProductsSlice';
 import { deleteProductReset, updateProductReset } from '../../store/reducers/product/productSlice';
+import { successMsg, errorMsg } from '../../shared/toast';
 
-const { width , height } = Dimensions.get('screen');
-const buttonSize = Math.min(width * 0.15, height * 0.25);
-
-const successMsg = (title,message) => {
-  Toast.show({
-    text1: `${title}`,
-    text2: `${message}`,
-    type: 'success',
-    position: 'bottom',
-    visibilityTime: 4000,
-    autoHide: true,
-    topOffset: 30,
-    bottomOffset: 40,
-    customStyles: {
-      title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-      },
-      message: {
-        fontSize: 24,
-        fontWeight: 'bold',
-      },
-    },
-  });
-};
-
-const errorMsg = (message) => {
-  Toast.show({
-    text1: 'Error',
-    text2: `${message}`,
-    type: 'error',
-    position: 'bottom',
-    visibilityTime: 4000,
-    autoHide: true,
-    topOffset: 30,
-    bottomOffset: 40,
-    customStyles: {
-      title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-      },
-      message: {
-        fontSize: 24,
-        fontWeight: 'bold',
-      },
-    },
-  });
-};
 
 const ProductScreen = () => {
   const dispatch = useDispatch();
@@ -113,7 +65,7 @@ const ProductScreen = () => {
   return (
     <View style={styles.container}>
       {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <MealList products={products} />}
-      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddProduct')}>
+      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddMeal')}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
     </View>
@@ -124,6 +76,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ebf0f7',
+    paddingRight: 15,
+    paddingLeft: 15,
   },
   card: {
     padding: 20,
@@ -149,9 +103,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    width: buttonSize,
-    height: buttonSize,
-    borderRadius: buttonSize / 2,
+    width: 66,
+    height: 66,
+    borderRadius: 33,
     backgroundColor: '#16aec1',
     alignItems: 'center',
     justifyContent: 'center',
