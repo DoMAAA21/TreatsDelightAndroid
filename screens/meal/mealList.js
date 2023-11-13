@@ -25,12 +25,9 @@ const MealList = ({ products }) => {
                 contentContainerStyle={styles.flatList}
                 data={products
                     .filter((product) => {
-                        const fullName = `${product.fname} ${product.lname}`;
                         return (
-                            fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            product.course.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            product.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            product.religion.toLowerCase().includes(searchQuery.toLowerCase())
+                            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase())
                         );
                     })}
                 keyExtractor={(product) => product._id.toString()}

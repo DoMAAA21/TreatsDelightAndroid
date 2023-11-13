@@ -56,7 +56,7 @@ const MealInfo = () => {
   };
 
   const handleEdit = (id) => {
-    navigation.navigate('EditProduct', { productId: id });
+    navigation.navigate('EditMeal', { productId: id });
   };
 
 
@@ -134,7 +134,7 @@ const MealInfo = () => {
 
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.editButton} >
+            <TouchableOpacity style={styles.editButton} onPress={() => handleEdit(product._id)}>
               <Text style={styles.buttonText}>Edit</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDelete(product._id)} >

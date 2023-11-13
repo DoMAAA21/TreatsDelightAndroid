@@ -1,66 +1,69 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Text} from 'galio-framework';
-import { useNavigation } from '@react-navigation/native';
+import { Text } from 'galio-framework';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MealList from './mealList';
-import { fetchAllProducts,clearErrors } from '../../store/reducers/product/allProductsSlice';
+import { fetchAllProducts, clearErrors } from '../../store/reducers/product/allProductsSlice';
 import { deleteProductReset, updateProductReset, updateStatusReset } from '../../store/reducers/product/productSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
 
 
-const ProductScreen = () => {
+const MealScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { error, products } = useSelector(state => state.allProducts);
   const { success } = useSelector(state => state.newProduct);
   const { isDeleted, isUpdated, isStatusUpdated, error: errorProduct } = useSelector(state => state.product)
-  const [ firstLoading, setFirstLoading] = useState(true);
+  const [firstLoading, setFirstLoading] = useState(true);
 
 
 
-  
-  useEffect(() => {
-    if (success) {
-      dispatch(fetchAllProducts());
-    } else {
-      dispatch(fetchAllProducts())
-      .then(() => {
-        setFirstLoading(false);
-      });
-    }
-    if (error) {
-      errorMsg(error)
-      dispatch(clearErrors())
-    }
-    
-
-  }, [dispatch, error, success]);
-
-  useEffect(() => {
-    if (isDeleted) {
-      successMsg('Deleted','Product Removed');
-      dispatch(deleteProductReset());
-      dispatch(fetchAllProducts());
-    }
-
-    if (isUpdated) {
-      successMsg('Updated','Product Updated');
-      dispatch(updateProductReset());
-      dispatch(fetchAllProducts());
-    }
-    if (isStatusUpdated) {
-      dispatch(fetchAllProducts());
-      dispatch(updateStatusReset());
-    }
-    if (errorProduct){      
-      errorMsg(errorProduct);
-      dispatch(deleteProductReset());
-      dispatch(fetchAllProducts());
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (success) {
+        dispatch(fetchAllProducts());
+      } else {
+        dispatch(fetchAllProducts())
+          .then(() => {
+            setFirstLoading(false);
+          });
+      }
+      if (error) {
+        errorMsg(error)
+        dispatch(clearErrors())
+      }
 
 
-  },[isDeleted, isUpdated, isStatusUpdated,errorProduct])
+    }, [dispatch, error, success])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isDeleted) {
+        successMsg('Deleted', 'Product Removed');
+        dispatch(deleteProductReset());
+        dispatch(fetchAllProducts());
+      }
+
+      if (isUpdated) {
+        successMsg('Updated', 'Product Updated');
+        dispatch(updateProductReset());
+        dispatch(fetchAllProducts());
+      }
+      if (isStatusUpdated) {
+        dispatch(fetchAllProducts());
+        dispatch(updateStatusReset());
+      }
+      if (errorProduct) {
+        errorMsg(errorProduct);
+        dispatch(deleteProductReset());
+        dispatch(fetchAllProducts());
+      }
+
+
+    }, [isDeleted, isUpdated, isStatusUpdated, errorProduct])
+  );
 
 
 
@@ -95,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#b4e373',
   },
   title: {
-    color: 'black', 
+    color: 'black',
     textAlign: 'center',
     fontSize: 25,
     marginBottom: 10,
@@ -120,9 +123,9 @@ const styles = StyleSheet.create({
   },
   loadingIndicator: {
     flex: 1,
-    justifyContent: 'center', 
-    alignItems: 'center', 
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 
-export default ProductScreen;
+export default MealScreen;

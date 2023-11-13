@@ -36,7 +36,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
 
 export const logout = createAsyncThunk('auth/logout', async (_, { dispatch }) => {
   try {
-    const { data } = await axios.get(`${BACKEND_URL}/api/v1/logout`, { withCredentials: true });
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/logout`);
     await AsyncStorage.removeItem('user');
     await AsyncStorage.removeItem('token');
   
