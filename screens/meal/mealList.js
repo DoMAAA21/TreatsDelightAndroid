@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FlatList, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, Text } from 'react-native';
-import { deleteProduct, updateProductStatus } from '../../store/reducers/product/productSlice';
+import { FlatList, Image, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Text } from 'react-native';
+import { updateProductStatus } from '../../store/reducers/product/productSlice';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -12,32 +12,6 @@ const MealList = ({ products }) => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
 
-    const confirmDelete = (id) => {
-        Alert.alert(
-            'Confirm Delete',
-            'Are you sure you want to delete this product?',
-            [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Delete',
-                    onPress: () => dispatch(deleteProduct(id)),
-                    style: 'destructive',
-                },
-            ],
-            { cancelable: false }
-        );
-    };
-
-    const navigateProduct = (id) => {
-        navigation.navigate('ProductInfo', { productId: id });
-    }
-
-    const handleEdit = (id) => {
-        navigation.navigate('EditProduct', { productId: id });
-    };
 
     return (
         <View style={styles.container}>
@@ -63,7 +37,8 @@ const MealList = ({ products }) => {
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item: product }) => (
-                    <View style={styles.itemContainer}>
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('MealInfo', { productId: product._id })}>
+                    <View style={styles.itemContainer} >
                         <View style={styles.card}>
                             <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
                             
@@ -76,6 +51,7 @@ const MealList = ({ products }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    </TouchableWithoutFeedback>
                 )}
             />
         </View>

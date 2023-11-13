@@ -64,9 +64,7 @@ export const updateProduct = createAsyncThunk('product/updateProduct', async ({ 
 
     while (!success && retryCount < maxRetries) {
       try {
-        // console.log(productData)
         const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/product/${id}`, productData, config);
-        console.log(data)
         dispatch(updateProductSuccess(data.success));
         success = true;
         return data.success;
