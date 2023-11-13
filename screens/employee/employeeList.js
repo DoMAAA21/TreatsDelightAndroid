@@ -90,6 +90,7 @@ const EmployeeList = ({ employees }) => {
 const styles = {
   flatList: {
     padding: 10,
+    paddingBottom: 70,
   },
   searchBar: {
     padding: 10,

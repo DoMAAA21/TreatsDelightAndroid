@@ -5,7 +5,7 @@ import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import MealList from './mealList';
 import { fetchAllProducts,clearErrors } from '../../store/reducers/product/allProductsSlice';
-import { deleteProductReset, updateProductReset } from '../../store/reducers/product/productSlice';
+import { deleteProductReset, updateProductReset, updateStatusReset } from '../../store/reducers/product/productSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
 
 
@@ -14,7 +14,7 @@ const ProductScreen = () => {
   const navigation = useNavigation();
   const { error, products } = useSelector(state => state.allProducts);
   const { success } = useSelector(state => state.newProduct);
-  const { isDeleted, isUpdated, error: errorProduct } = useSelector(state => state.product)
+  const { isDeleted, isUpdated, isStatusUpdated, error: errorProduct } = useSelector(state => state.product)
   const [ firstLoading, setFirstLoading] = useState(true);
 
 
@@ -49,6 +49,10 @@ const ProductScreen = () => {
       dispatch(updateProductReset());
       dispatch(fetchAllProducts());
     }
+    if (isStatusUpdated) {
+      dispatch(fetchAllProducts());
+      dispatch(updateStatusReset());
+    }
     if (errorProduct){      
       errorMsg(errorProduct);
       dispatch(deleteProductReset());
@@ -56,7 +60,7 @@ const ProductScreen = () => {
     }
 
 
-  },[isDeleted, isUpdated, errorProduct])
+  },[isDeleted, isUpdated, isStatusUpdated,errorProduct])
 
 
 
@@ -76,8 +80,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ebf0f7',
-    paddingRight: 15,
-    paddingLeft: 15,
+    paddingRight: 5,
+    paddingLeft: 5,
   },
   card: {
     padding: 20,

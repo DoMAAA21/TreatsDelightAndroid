@@ -91,6 +91,7 @@ const UserList = ({ users }) => {
 const styles = {
   flatList: {
     padding: 10,
+    paddingBottom: 70,   
   },
   buttonGroup: {
     flexDirection: 'row',

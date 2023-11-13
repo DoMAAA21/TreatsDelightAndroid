@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FlatList, Image, View, Alert, TextInput, TouchableOpacity, Dimensions, Text } from 'react-native';
-import { deleteProduct } from '../../store/reducers/product/productSlice';
+import { deleteProduct, updateProductStatus } from '../../store/reducers/product/productSlice';
 import { useNavigation } from '@react-navigation/native';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width, height } = Dimensions.get('screen');
 
@@ -65,7 +66,14 @@ const MealList = ({ products }) => {
                     <View style={styles.itemContainer}>
                         <View style={styles.card}>
                             <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
-                            <Text style={styles.title}>{product.name}</Text>
+                            
+                            <Text style={styles.title}>{product?.name}</Text>
+                            <Text style={[styles.badge,{backgroundColor: product.active? 'green' : 'red' }]}>
+                               {product.active ? 'Available' : 'Not Available'}
+                            </Text>
+                            <TouchableOpacity style={styles.switchButton} onPress={() => dispatch(updateProductStatus(product._id))}>
+                                <MaterialCommunityIcon size={25} name="rotate-3d-variant" />
+                            </TouchableOpacity>
                         </View>
                     </View>
                 )}
@@ -79,7 +87,6 @@ const styles = {
     flatList: {
         paddingTop: 10,
         paddingBottom: 80,
-      
     },
     buttonGroup: {
         flexDirection: 'row',
@@ -104,6 +111,7 @@ const styles = {
     },
     title: {
         fontSize: 20,
+        fontWeight: 'semibold'
     },
     itemContainer: {
         flex: 0.5,
@@ -121,7 +129,7 @@ const styles = {
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 2,
-        width: width * 0.45,
+        width: width * 0.48,
         height: height * 0.3,
         marginBottom: 10
     },
@@ -131,42 +139,23 @@ const styles = {
         padding: 20,
         borderRadius: 8,
     },
-    name: {
-        fontSize: 18,
-        flex: 1,
-        alignSelf: 'center',
-        color: 'black',
-        fontWeight: 'bold',
-    },
-    count: {
-        fontSize: 14,
-        flex: 1,
-        alignSelf: 'center',
-        color: 'black',
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginRight: 20
-    },
-    followButton: {
-        marginTop: 10,
-        height: 35,
-        width: 100,
+    switchButton: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        backgroundColor: '#f1f3d4',
         padding: 10,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
         borderRadius: 30,
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: '#dcdcdc',
-        marginLeft: width * 0.015,
-        marginRight: width * 0.015
     },
-    followButtonText: {
-        color: 'white',
-        fontSize: 12,
+    badge: {
+        position: 'absolute',
+        bottom: 10,
+        left: 10,
+        color: 'white', 
+        padding: 5,
+        borderRadius: 5,
+        height: 30,
+        fontSize: 16
     },
 };
 

@@ -8,6 +8,7 @@ import { createIconSetFromFontello } from 'react-native-vector-icons';
 const initialState = {
   loading: false,
   isUpdated: false,
+  isStatusUpdated: false,
   isDeleted: false,
   error: null,
 };
@@ -80,40 +81,30 @@ export const updateProduct = createAsyncThunk('product/updateProduct', async ({ 
     throw error.response.data.message; 
   }
 });
-// export const updateProduct = createAsyncThunk('product/updateProduct', async ({ id, productData }, { dispatch }) => {
-//   try {
-//     dispatch(updateProductRequest())
-//     const token = await AsyncStorage.getItem('token');
-//     const user = await AsyncStorage.getItem('user');
-//     const userCreds = JSON.parse(user);
-//     const storeId = userCreds?.store?.storeId;
-//     const storeName = userCreds?.store?.name;
-//     productData.append("storeId", storeId);
-//     productData.append("storeName", storeName);
 
-//     if (!token) {
-//       dispatch(updateProductFail('Login First'));
-//     }
-//     const config = {
-//       headers: {
-//         'Content-Type': 'multipart/form-data',
-//         Authorization: `${token}`,
-//       },
-//     };
-//     console.log(productData)
-//     const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/product/${id}`, productData, config);
-//     dispatch(updateProductSuccess(data.success))
-//     return data.success;
+export const updateProductStatus = createAsyncThunk('product/updateProductStatus', async (id, { dispatch }) => {
+  try {
+    dispatch(updateProductRequest());
+    const token = await AsyncStorage.getItem('token');
 
-//   } catch (error) {
-//     dispatch(updateProductFail(error.response.data.message))
-//     throw error.response.data.message;
-//   }
-// }
-// );
+    if (!token) {
+      dispatch(updateProductFail('Login First'));
+    }
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/product/status/${id}`, config);
+    dispatch(updateStatusSuccess(data.success))
+    return data.success;
 
-
-
+  } catch (error) {
+    dispatch(updateProductFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
+);
 
 const productSlice = createSlice({
   name: 'product',
@@ -147,6 +138,19 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    updateStatusSuccess: (state, action) => {
+      state.loading = false;
+      state.isStatusUpdated = true
+    },
+    updateStatusReset: (state) => {
+      state.isStatusUpdated = false;
+      state.error = null;
+      state.loading = false
+    },
+    updateStatusFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
     clearErrors: (state) => {
       state.error = null;
     },
@@ -161,6 +165,8 @@ export const {
   deleteProductReset,
   deleteProductFail,
   updateProductFail,
+  updateStatusSuccess,
+  updateStatusReset,
   clearErrors,
 } = productSlice.actions;
 

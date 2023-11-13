@@ -85,6 +85,7 @@ const StoreList = ({ stores }) => {
 const styles = {
   flatList: {
     padding: 10,
+    paddingBottom: 70,
   },
   searchBar: {
     padding: 10,
