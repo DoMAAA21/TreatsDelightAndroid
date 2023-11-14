@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native'
 import { useDispatch } from 'react-redux';
 import Modal from 'react-native-modal';
 import { useNavigation } from '@react-navigation/native';
@@ -62,7 +62,7 @@ export default ProfileScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}></View>
       <Image
         style={styles.avatar}
@@ -124,7 +124,7 @@ export default ProfileScreen = () => {
 
       </View>
       {logoutModal}
-    </View>
+    </ScrollView>
   )
 }
 

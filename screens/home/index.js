@@ -1,5 +1,5 @@
 import React,{useState , useEffect} from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -33,7 +33,8 @@ const HomeScreen = () => {
   return (
 
     <>
-      <View style={styles.container}>
+      <ScrollView >
+        <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Howdy! {user?.store?.name} {user.role === "Employee" ? 'Store' : null}</Text>
@@ -125,7 +126,8 @@ const HomeScreen = () => {
             </Block>
           </TouchableOpacity>
         </View>
-      </View>
+        </View>
+      </ScrollView>
     </>
   );
 };

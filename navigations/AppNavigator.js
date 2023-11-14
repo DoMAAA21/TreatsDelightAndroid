@@ -22,7 +22,7 @@ const HomeIcon = () => {
   return (
     <MaterialCommunityIcons
       name="home"
-      size={40}
+      size={35}
       color={isFocused ? activeColor : inactiveColor}
     />
   );
@@ -33,7 +33,7 @@ const ShopIcon = () => {
   return (
     <FontAwesome5Icon
       name="shopping-bag"
-      size={30}
+      size={25}
       color={isFocused ? activeColor : inactiveColor}
     />
   );
@@ -43,7 +43,7 @@ const MessageIcon = () => {
   return (
     <AntDesignIcon
       name="message1"
-      size={30}
+      size={25}
       color={isFocused ? activeColor : inactiveColor}
     />
   );
@@ -53,7 +53,7 @@ const ProfileIcon = () => {
   return (
     <Icon
       name="user"
-      size={30}
+      size={25}
       color={isFocused ? activeColor : inactiveColor}
     />
   );

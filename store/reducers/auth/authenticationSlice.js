@@ -56,6 +56,7 @@ export const verifyToken = createAsyncThunk('auth/verifyToken', async (_, { disp
     dispatch(verified(response.data))
     console.log(response.data)
   } catch (error) {
+    console.log(error)
     await AsyncStorage.removeItem('user');
     await AsyncStorage.removeItem('token');
     dispatch(logoutSuccess());
