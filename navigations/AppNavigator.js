@@ -10,6 +10,7 @@ import { verifyToken } from '../store/reducers/auth/authenticationSlice';
 import HomeStack from './HomeStack';
 import AuthStack from './AuthStack';
 import ProfileStack from './ProfileStack';
+import ShopStack from './ShopStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -98,7 +99,7 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="Shop"
-        component={ProfileStack}
+        component={ShopStack}
         options={{
           tabBarShowLabel: false,
           headerShown: false,

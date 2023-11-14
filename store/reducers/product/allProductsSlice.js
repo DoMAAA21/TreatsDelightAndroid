@@ -30,7 +30,6 @@ export const fetchAllProducts = createAsyncThunk('allProducts/fetchAllProducts',
         },
       };
       const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/store/${storeId}/products`,config);
-    //   console.log(data.products);
       dispatch(allProductsSuccess(data.products));
       return data.products;
     } catch (error) {
@@ -66,6 +65,20 @@ export const fetchAllMeals = createAsyncThunk('allProducts/fetchAllProducts', as
       throw error.response.data.message;
     }
   });
+
+export const fetchAllItems = createAsyncThunk('allProducts/fetchAllItems', async (_, { dispatch }) => {
+    try {
+      dispatch(allProductsRequest());
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/allProducts`);
+      dispatch(allProductsSuccess(data.products));
+      return data.products;
+    } catch (error) {
+      dispatch(allProductsFail(error.response.data.message))
+      throw error.response.data.message;
+    }
+});
+
+
 
 const allProductsSlice = createSlice({
   name: 'allProducts',
