@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HomeScreen from '../screens/home/index';
 import UserScreen from '../screens/user';
@@ -35,11 +34,10 @@ const HomeStack = () => {
   return (
     <Stack.Navigator screenOptions={{
       headerStyle: { backgroundColor: '#b4e373', },
-      headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()} >
-          <Ionicons name="chevron-back" style={[{ paddingLeft: 10 }]} size={25} />
-        </TouchableOpacity>
-        )}} >
+      headerBackImage: () => (
+        <Ionicons name="chevron-back" size={25} />
+      ),
+     }} >
       <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: 'Dashboard', headerLeft: () => null }} />
       <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Users' }} />
       <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
