@@ -113,7 +113,7 @@ const AddMealScreen = () => {
         formData.append('description', values.description);
         formData.append('costPrice', values.costPrice);
         formData.append('sellPrice', values.sellPrice);
-        formData.append('category', 'Meal');
+        formData.append('category', 'Meals');
         formData.append('active', isActiveValue);
         formData.append('portion', true);
         formData.append('stock', 0);

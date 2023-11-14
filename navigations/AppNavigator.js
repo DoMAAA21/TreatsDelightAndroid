@@ -1,11 +1,12 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React,{ useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { verifyToken } from '../store/reducers/auth/authenticationSlice';
 import HomeStack from './HomeStack';
 import AuthStack from './AuthStack';
 import ProfileStack from './ProfileStack';
@@ -61,7 +62,14 @@ const ProfileIcon = () => {
 
 
 const AppNavigator = () => {
+  const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
+
+  useFocusEffect(
+    useCallback(()=>{
+      dispatch(verifyToken());
+    },[])
+  );
   if (!isAuthenticated) {
     return <AuthStack />;
   }

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, ScrollView, Alert, Image, Text, ActivityIndicator, TouchableOpacity, Dimensions} from 'react-native';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { View, ScrollView, Alert, Image, Text, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRoute, useNavigation} from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
 import { deleteProduct, deleteProductReset } from '../../store/reducers/product/productSlice';
 import { categories } from '../../shared/inputs';
@@ -13,27 +13,32 @@ const MealInfo = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { product, loading, error } = useSelector(state => state.productDetails);
-  const { isDeleted, isUpdated, isStatusUpdated, error: errorProduct } = useSelector(state => state.product)
+  const { isDeleted } = useSelector(state => state.product)
   const { productId } = route.params;
   const scrollViewRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [images, setImages] = useState([]);
 
-  useEffect(() => {
-    setImages([]);
-    dispatch(getProductDetails(productId))
-      .then(() => {
-        setImages(product.images);
-        setFetchLoading(true)
-      });
-     
-    if(isDeleted){
-      navigation.navigate('Meals');
-      successMsg('Meal Deleted')
-      dispatch(deleteProductReset());
-    }
-  }, [dispatch, productId, isDeleted, error, fetchLoading]);
+  useFocusEffect(
+    useCallback(() => {
+      setImages([]);
+      dispatch(getProductDetails(productId))
+        .then(() => {
+          setImages(product.images);
+          setFetchLoading(true)
+        });
+
+      if (isDeleted) {
+        navigation.navigate('Meals');
+        successMsg('Meal Deleted')
+        dispatch(deleteProductReset());
+      }
+      return (() =>{
+        setImages([]);
+      })
+    }, [dispatch, productId, isDeleted, error, fetchLoading])
+  );
 
 
   const confirmDelete = (id) => {

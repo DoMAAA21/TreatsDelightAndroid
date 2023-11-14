@@ -39,6 +39,34 @@ export const fetchAllProducts = createAsyncThunk('allProducts/fetchAllProducts',
     }
   });
 
+export const fetchAllMeals = createAsyncThunk('allProducts/fetchAllProducts', async (_, { dispatch }) => {
+    try {
+      dispatch(allProductsRequest());
+      const token = await AsyncStorage.getItem('token');
+      const user = await AsyncStorage.getItem('user');
+      const userCreds = JSON.parse(user);
+      const storeId = userCreds.store.storeId;
+
+      if(!storeId){
+        dispatch(allProductsFail('Login First'));
+      }
+      if (!token) {
+        dispatch(allProductsFail('Login First'));
+      }
+      const config = {
+        headers: {
+          Authorization: `${token}`,
+        },
+      };
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/store/${storeId}/meals`,config);
+      dispatch(allProductsSuccess(data.products));
+      return data.products;
+    } catch (error) {
+      dispatch(allProductsFail(error.response.data.message))
+      throw error.response.data.message;
+    }
+  });
+
 const allProductsSlice = createSlice({
   name: 'allProducts',
   initialState,
