@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Text } from 'galio-framework';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ItemList from './itemList';
 import { fetchAllItems, clearErrors,clearProducts } from '../../store/reducers/product/allProductsSlice';
@@ -11,7 +10,7 @@ import { fetchAllItems, clearErrors,clearProducts } from '../../store/reducers/p
 const ShopScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { products, loading } = useSelector(state => state.allProducts);
+  const { items, loading } = useSelector(state => state.allProducts);
   const [firstLoading, setFirstLoading] = useState(true);
 
   useFocusEffect(
@@ -19,18 +18,14 @@ const ShopScreen = () => {
       dispatch(fetchAllItems())
       .then(() => {
         setFirstLoading(false);
-      });
-      return(()=>{
-        dispatch(clearProducts())
-      })
-     
+      });  
     }, [dispatch])
   );
 
 
 return (
     <View style={styles.container}>
-      {loading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ItemList products={products} />}
+      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ItemList products={items} />}
     </View>
   );
 };

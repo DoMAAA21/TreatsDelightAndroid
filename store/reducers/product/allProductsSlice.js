@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../../../shared/constants';
 
 const initialState = {
   products: [],
+  items: [],
   loading: false,
   error: null,
 };
@@ -68,12 +69,12 @@ export const fetchAllMeals = createAsyncThunk('allProducts/fetchAllProducts', as
 
 export const fetchAllItems = createAsyncThunk('allProducts/fetchAllItems', async (_, { dispatch }) => {
     try {
-      dispatch(allProductsRequest());
+      dispatch(allItemsRequest());
       const { data } = await axios.get(`${BACKEND_URL}/api/v1/allProducts`);
-      dispatch(allProductsSuccess(data.products));
+      dispatch(allItemsSuccess(data.products));
       return data.products;
     } catch (error) {
-      dispatch(allProductsFail(error.response.data.message))
+      dispatch(allItemsFail(error.response.data.message))
       throw error.response.data.message;
     }
 });
@@ -92,6 +93,17 @@ const allProductsSlice = createSlice({
       state.products = action.payload;
     },
     allProductsFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    allItemsRequest: (state) => {
+      state.loading = true;
+    },
+    allItemsSuccess: (state, action) => {
+      state.loading = false;
+      state.items = action.payload;
+    },
+    allItemsFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -122,6 +134,9 @@ export const {
   allProductsRequest,
   allProductsSuccess,
   allProductsFail,
+  allItemsRequest,
+  allItemsSuccess,
+  allItemsFail,
   clearErrors,
   clearProducts
 } = allProductsSlice.actions;

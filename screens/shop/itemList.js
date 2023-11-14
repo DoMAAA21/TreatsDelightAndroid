@@ -74,7 +74,7 @@ const ItemList = ({ products }) => {
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item: product }) => (
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('MealInfo', { productId: product._id })}>
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
                         <View style={styles.itemContainer} >
                             <View style={styles.card}>
                                 <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />

@@ -62,9 +62,6 @@ const MealScreen = () => {
         dispatch(deleteProductReset());
         dispatch(fetchAllMeals());
       }
-      return(()=>{
-        dispatch(clearProducts())
-      })
     }, [isDeleted, isUpdated, isStatusUpdated, errorProduct])
   );
 
