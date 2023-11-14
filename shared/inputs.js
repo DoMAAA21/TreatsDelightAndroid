@@ -38,3 +38,13 @@ export const categories = [
     {label: 'Breads',value: 'breads'},
     {label: 'Others',value: 'Others'},
 ];
+
+export const allCategories = [
+    {label: 'Meals',value: 'Meals'},
+    {label: 'Snacks',value: 'snacks'},
+    {label: 'Beverages',value: 'beverages'},
+    {label: 'Desserts',value: 'desserts'},
+    {label: 'Sandwiches and Wraps',value: 'sandwichesandwraps'},
+    {label: 'Breads',value: 'breads'},
+    {label: 'Others',value: 'Others'},
+];

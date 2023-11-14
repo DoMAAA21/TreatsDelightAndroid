@@ -3,14 +3,28 @@ import { useDispatch } from 'react-redux';
 import { FlatList, Image, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { allCategories } from '../../shared/inputs';
 const { width, height } = Dimensions.get('screen');
 
 const ItemList = ({ products }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
+    const handleCategoryPress = (category) => {
+        setSelectedCategory((prevCategory) =>
+            prevCategory && prevCategory.value === category.value ? null : category
+        );
+    };
+
+    const filteredProducts = products.filter((product) => {
+        return (
+            (selectedCategory ? product.category === selectedCategory.value : true) &&
+            (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+    });
 
     return (
         <View style={styles.container}>
@@ -23,17 +37,39 @@ const ItemList = ({ products }) => {
                 />
                 <TouchableOpacity style={styles.cartButton}>
                     <MaterialCommunityIcons name="cart" size={30} color="#000" />
+                    <View style={styles.badgeContainer}>
+                        <Text style={styles.badgeText}>3</Text>
+                    </View>
                 </TouchableOpacity>
+
             </View>
+            <View style={styles.categoryContainer}>
+                <FlatList
+                    style={styles.categoryList}
+                    data={allCategories}
+                    keyExtractor={(category) => category.value}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item: category }) => (
+                        <TouchableOpacity
+                            style={[
+                                styles.categoryItem,
+                                selectedCategory?.value === category.value && { backgroundColor: '#13263e' },
+                            ]}
+                            onPress={() => handleCategoryPress(category)}
+                        >
+                            <Text style={
+                                [styles.categoryText,
+                                selectedCategory?.value === category.value && { color: '#fff' },]}>
+                                {category.label}</Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+
             <FlatList
                 contentContainerStyle={styles.flatList}
-                data={products
-                    .filter((product) => {
-                        return (
-                            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase())
-                        );
-                    })}
+                data={filteredProducts}
                 keyExtractor={(product) => product._id.toString()}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
@@ -67,7 +103,6 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 10,
     },
     searchBar: {
         flex: 1,
@@ -81,6 +116,18 @@ const styles = {
         paddingRight: 15,
         paddingLeft: 12,
         borderRadius: 20
+    },
+    badgeContainer: {
+        position: 'absolute',
+        top: -4,
+        right: 8,
+        backgroundColor: 'red',
+        borderRadius: 10,
+        paddingHorizontal: 6,
+    },
+    badgeText: {
+        color: '#fff',
+        fontWeight: 'bold',
     },
     container: {
         flex: 1,
@@ -123,7 +170,27 @@ const styles = {
         height: 160,
         padding: 20,
         borderRadius: 8,
-    }
+    },
+    categoryContainer: {
+        marginBottom: 10
+    },
+    categoryList: {
+        marginTop: 10,
+        paddingLeft: 10,
+    },
+    categoryItem: {
+        marginRight: 10,
+        height: 40,
+        paddingHorizontal: 10,
+        backgroundColor: '#f0a047',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    categoryText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 };
 
 export default ItemList;

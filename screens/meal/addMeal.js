@@ -10,7 +10,6 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { newProductReset } from '../../store/reducers/product/newProductSlice';
 import { newProduct } from '../../store/reducers/product/newProductSlice';
-import { categories } from '../../shared/inputs';
 import { successMsg, errorMsg } from '../../shared/toast';
 
 const screenHeight = Dimensions.get('window').height;
@@ -174,25 +173,6 @@ const AddMealScreen = () => {
                             ) : null}
 
 
-
-                            <View style={styles.inputContainer}>
-                                <Field name="category">
-                                    {({ field }) => (
-                                        <View style={styles.inputContainer}>
-                                            <Text>Category</Text>
-                                            <Picker selectedValue={field.value} onValueChange={field.onChange('category')}>
-                                                <Picker.Item label="Choose Option" value="" />
-                                                {categories.map((category) => (
-                                                    <Picker.Item label={category.label} value={category.value} key={category.label} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    )}
-                                </Field>
-                                {formik.touched.category && formik.errors.category ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.category}</Text>
-                                ) : null}
-                            </View>
                             <View style={styles.inputContainer}>
                                 <Field name="active">
                                     {({ field }) => (

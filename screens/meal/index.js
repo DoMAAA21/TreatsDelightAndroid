@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-nat
 import { Text } from 'galio-framework';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MealList from './mealList';
-import { fetchAllMeals, clearErrors } from '../../store/reducers/product/allProductsSlice';
+import { fetchAllMeals, clearErrors, clearProducts } from '../../store/reducers/product/allProductsSlice';
 import { deleteProductReset, updateProductReset, updateStatusReset } from '../../store/reducers/product/productSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
 
@@ -33,7 +33,9 @@ const MealScreen = () => {
         errorMsg(error)
         dispatch(clearErrors())
       }
-
+      return(()=>{
+        dispatch(clearProducts())
+      })
 
     }, [dispatch, error, success])
   );
@@ -60,6 +62,9 @@ const MealScreen = () => {
         dispatch(deleteProductReset());
         dispatch(fetchAllMeals());
       }
+      return(()=>{
+        dispatch(clearProducts())
+      })
     }, [isDeleted, isUpdated, isStatusUpdated, errorProduct])
   );
 

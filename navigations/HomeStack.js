@@ -1,5 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from '../screens/home/index'; 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import HomeScreen from '../screens/home/index';
 import UserScreen from '../screens/user';
 import AddUserScreen from '../screens/user/addUser';
 import EditUserScreen from '../screens/user/editUser';
@@ -23,13 +26,21 @@ import MealInfo from '../screens/meal/mealInfo';
 
 
 
+
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
- 
+  const navigation = useNavigation();
+
   return (
-    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#b4e373', } }} >
-      <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: 'Dashboard' }} />
+    <Stack.Navigator screenOptions={{
+      headerStyle: { backgroundColor: '#b4e373', },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()} >
+          <Ionicons name="chevron-back" style={[{ paddingLeft: 10 }]} size={25} />
+        </TouchableOpacity>
+        )}} >
+      <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: 'Dashboard', headerLeft: () => null }} />
       <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Users' }} />
       <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
       <Stack.Screen name="EditUser" component={EditUserScreen} options={{ headerTitle: 'Edit User' }} />

@@ -4,14 +4,14 @@ import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-nat
 import { Text } from 'galio-framework';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ItemList from './itemList';
-import { fetchAllItems, clearErrors } from '../../store/reducers/product/allProductsSlice';
+import { fetchAllItems, clearErrors,clearProducts } from '../../store/reducers/product/allProductsSlice';
 
 
 
 const ShopScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { products } = useSelector(state => state.allProducts);
+  const { products, loading } = useSelector(state => state.allProducts);
   const [firstLoading, setFirstLoading] = useState(true);
 
   useFocusEffect(
@@ -20,6 +20,9 @@ const ShopScreen = () => {
       .then(() => {
         setFirstLoading(false);
       });
+      return(()=>{
+        dispatch(clearProducts())
+      })
      
     }, [dispatch])
   );
@@ -27,7 +30,7 @@ const ShopScreen = () => {
 
 return (
     <View style={styles.container}>
-      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ItemList products={products} />}
+      {loading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ItemList products={products} />}
     </View>
   );
 };
