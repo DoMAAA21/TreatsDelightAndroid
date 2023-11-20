@@ -1,9 +1,31 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { BACKEND_URL } from '../../../shared/constants';
+
 
 const initialState = { 
      cartItems: [],
      shippingInfo: {} 
 };
+
+export const addItemToCart = createAsyncThunk('cart/addItemToCart',async ({ id, quantity }, { dispatch }) => {
+    try {
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/product/${id}`);
+      const cartItem = {
+        product: data.product._id,
+        name: data.product.name,
+        price: data.product.price,
+        image: data.product.images[0].url,
+        stock: data.product.stock,
+        quantity,
+      };
+      dispatch(addToCart(cartItem));
+      return cartItem; 
+    } catch (error) {
+      throw error.response.message; 
+    }
+  }
+);
 
 
 

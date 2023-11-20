@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { FlatList, Image, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,6 +11,8 @@ const ItemList = ({ products }) => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const { cartItems, loading } = useSelector(state => state.cart);
+    console.log(cartItems)
 
     const handleCategoryPress = (category) => {
         setSelectedCategory((prevCategory) =>
@@ -40,7 +42,7 @@ const ItemList = ({ products }) => {
                 <TouchableOpacity style={styles.cartButton}>
                     <MaterialCommunityIcons name="cart" size={30} color="#000" />
                     <View style={styles.badgeContainer}>
-                        <Text style={styles.badgeText}>3</Text>
+                        <Text style={styles.badgeText}>{cartItems.length}</Text>
                     </View>
                 </TouchableOpacity>
 
