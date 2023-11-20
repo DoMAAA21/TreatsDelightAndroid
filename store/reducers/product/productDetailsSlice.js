@@ -56,6 +56,9 @@ const productDetailsSlice = createSlice({
       state.error = null;
       state.product = {};
     },
+    clearProductDetails: (state) => {
+      state.product = {};
+    }
   },
 });
 
@@ -64,7 +67,8 @@ export const {
   productDetailsSuccess,
   productDetailsFail,
   clearErrors,
-  productUpdated
+  productUpdated,
+  clearProductDetails
 } = productDetailsSlice.actions;
 
 export default productDetailsSlice.reducer;

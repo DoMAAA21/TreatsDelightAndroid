@@ -17,7 +17,7 @@ const inputSize = screenHeight * 0.07;
 
 const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
-    description: Yup.string().required('Description is required'),
+    description: Yup.string().required('Description is required').min(1, 'Minimum of 1').max(100, 'Maximum of 100 characters'),
     costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     category: Yup.string().required('Category is required'),

@@ -22,7 +22,9 @@ const ItemList = ({ products }) => {
         return (
             (selectedCategory ? product.category === selectedCategory.value : true) &&
             (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()))
+                product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+                product.store.name.toLowerCase().includes(searchQuery.toLowerCase())
+                )
         );
     });
 
@@ -79,6 +81,7 @@ const ItemList = ({ products }) => {
                             <View style={styles.card}>
                                 <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
                                 <Text style={styles.title}>{product?.name}</Text>
+                                <Text style={styles.subtitle}>{product?.store?.name}</Text>
                                 <Text style={styles.price}>₱{product?.sellPrice}</Text>
                             </View>
                         </View>
@@ -139,6 +142,10 @@ const styles = {
     title: {
         fontSize: 20,
         fontWeight: 'bold'
+    },
+    subtitle: {
+        fontSize: 16,
+        
     },
     itemContainer: {
         flex: 0.5,
