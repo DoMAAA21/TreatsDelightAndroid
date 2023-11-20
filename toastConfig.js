@@ -27,7 +27,7 @@ export const toastConfig = {
       }}
     />
   ),
-  tomatoToast: ({text1 }) => (
+  MessageSuccess: ({text1 }) => (
     <View style={{
       height: 60,
       width: '92%',
@@ -42,6 +42,23 @@ export const toastConfig = {
     }}>
       <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{text1}</Text>
       <Ionicons name="checkmark-circle-sharp" size={45} color="white" style={{ marginLeft: 'auto' }} />
+    </View>
+  ),
+  MessageError: ({text1 }) => (
+    <View style={{
+      height: 60,
+      width: '92%',
+      backgroundColor: '#f3112a',
+      borderRadius: 10,
+      paddingHorizontal: 20,
+      marginTop: 30,
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      flexDirection: 'row',
+      elevation: 5, 
+    }}>
+      <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{text1}</Text>
+      <Ionicons name="alert-circle" size={45} color="white" style={{ marginLeft: 'auto' }} />
     </View>
   )
 };

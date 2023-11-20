@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Ima
 import Carousel from 'react-native-reanimated-carousel';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
 import { addItemToCart } from '../../store/reducers/cart/cartSlice';
-import { topSuccessMsg } from '../../shared/toast';
+import { topSuccessMsg} from '../../shared/toast';
 
 const { width, height } = Dimensions.get('window');
 

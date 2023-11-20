@@ -1,9 +1,8 @@
 import Toast from 'react-native-toast-message';
 export const successMsg = (message) => {
     Toast.show({
-        text1: 'Success',
-        text2: `${message}`,
-        type: 'success',
+        text1: `${message}`,
+        type: 'MessageSuccess',
         position: 'bottom',
         visibilityTime: 4000,
         autoHide: true,
@@ -25,7 +24,7 @@ export const successMsg = (message) => {
 export const topSuccessMsg = (message) => {
     Toast.show({
         text1: `${message}`,
-        type: 'tomatoToast',
+        type: 'MessageSuccess',
         position: 'top',
         visibilityTime: 4000,
         autoHide: true,
@@ -46,9 +45,8 @@ export const topSuccessMsg = (message) => {
 
 export const errorMsg = (message) => {
     Toast.show({
-        text1: 'Error',
-        text2: `${message}`,
-        type: 'error',
+        text1: `${message}`,
+        type: 'MessageError',
         position: 'bottom',
         visibilityTime: 4000,
         autoHide: true,
