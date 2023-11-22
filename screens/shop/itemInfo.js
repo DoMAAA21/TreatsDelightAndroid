@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Ima
 import Carousel from 'react-native-reanimated-carousel';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
 import { addItemToCart } from '../../store/reducers/cart/cartSlice';
-import { topSuccessMsg} from '../../shared/toast';
+import { topSuccessMsg } from '../../shared/toast';
 
 const { width, height } = Dimensions.get('window');
 
@@ -76,14 +76,11 @@ const ItemInfo = () => {
         setFetchLoading(true)
       });
 
-    if (error) {
-      console.log(error);
-    }
-  }, [dispatch, productId, error, fetchLoading]);
+  }, [productId, error, fetchLoading]);
 
   const addToCart = () => {
 
-    dispatch(addItemToCart({id:productId , quantity: 1})).then(() => {
+    dispatch(addItemToCart({ id: productId, quantity: 1 })).then(() => {
       topSuccessMsg('Added to Cart')
     });
   }
@@ -93,12 +90,10 @@ const ItemInfo = () => {
       <View style={styles.container}>
         <FlipCard
           frontContent={!fetchLoading ? (<ActivityIndicator color="black" size="large" style={styles.loadingIndicator} />) :
-
             <Carousel
               loop
               pressSwipe
               width={width}
-              // height={width / 1.5}
               autoPlay={true}
               data={images}
               scrollAnimationDuration={1000}
@@ -133,7 +128,6 @@ const ItemInfo = () => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center',

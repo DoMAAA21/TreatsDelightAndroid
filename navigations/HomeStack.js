@@ -35,7 +35,7 @@ const HomeStack = () => {
     <Stack.Navigator screenOptions={{
       headerStyle: { backgroundColor: '#b4e373', },
       headerBackImage: () => (
-        <Ionicons name="chevron-back" size={25} />
+        <Ionicons name="chevron-back" size={25} style={[{ paddingStart: 5}]} />
       ),
      }} >
       <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: 'Dashboard', headerLeft: () => null }} />

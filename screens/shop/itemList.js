@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector} from 'react-redux';
+import { useSelector} from 'react-redux';
 import { FlatList, Image, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,13 +7,10 @@ import { allCategories } from '../../shared/inputs';
 const { width, height } = Dimensions.get('screen');
 
 const ItemList = ({ products }) => {
-    const dispatch = useDispatch();
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const { cartItems, loading } = useSelector(state => state.cart);
-    console.log(cartItems)
-
+    const { cartItems } = useSelector(state => state.cart);
     const handleCategoryPress = (category) => {
         setSelectedCategory((prevCategory) =>
             prevCategory && prevCategory.value === category.value ? null : category
@@ -39,7 +36,7 @@ const ItemList = ({ products }) => {
                     onChangeText={(text) => setSearchQuery(text)}
                     value={searchQuery}
                 />
-                <TouchableOpacity style={styles.cartButton}>
+                <TouchableOpacity style={styles.cartButton} onPress={()=>navigation.navigate('Cart')}>
                     <MaterialCommunityIcons name="cart" size={30} color="#000" />
                     <View style={styles.badgeContainer}>
                         <Text style={styles.badgeText}>{cartItems.length}</Text>
@@ -192,7 +189,7 @@ const styles = {
         height: 40,
         paddingHorizontal: 10,
         backgroundColor: '#f0a047',
-        borderRadius: 20,
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },

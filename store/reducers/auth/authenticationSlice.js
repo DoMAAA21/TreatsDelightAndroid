@@ -78,7 +78,7 @@ export const registerUser = createAsyncThunk('auth/register', async (userData, {
     };
     const response = await axios.post(`${BACKEND_URL}/api/v1/register`, userData, config);
     const data = response.data;
-    await AsyncStorage.setItem('user', data.user);
+    await AsyncStorage.setItem('user',JSON.stringify(data.user));
     await AsyncStorage.setItem('token', data.token);
     dispatch(registerUserSuccess(data.user))
     return data.user;
