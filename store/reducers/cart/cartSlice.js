@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';4
+import { useNavigation } from '@react-navigation/native';
 import { BACKEND_URL } from '../../../shared/constants';
 
 
 const initialState = {
   cartItems: [],
-  shippingInfo: {},
+  receipt: [],
   success: false,
-  loading: false
+  loading: false,
 };
 
 export const addItemToCart = createAsyncThunk('cart/addItemToCart', async ({ id, quantity }, { dispatch }) => {
@@ -57,7 +58,8 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
       },
     };
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order, { config });
-    dispatch(checkoutSuccess(data.success))
+    dispatch(checkoutSuccess(data.success));
+    dispatch(showReceipt(data.order));
     dispatch(clearCart());
     return data;
   } catch (error) {
@@ -107,10 +109,13 @@ const cartSlice = createSlice({
       state.success = action.payload
       state.loading = false;
     },
+    showReceipt: (state, action) => {
+      state.receipt = action.payload
+    },
   },
 });
 
 export const { clearCart, saveShippingInfo, removeItemFromCart, addToCart, increaseItemQuantity,
-  decreaseItemQuantity, checkoutRequest, checkoutSuccess } = cartSlice.actions;
+  decreaseItemQuantity, checkoutRequest, checkoutSuccess, showReceipt } = cartSlice.actions;
 
 export default cartSlice.reducer;

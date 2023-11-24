@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Button, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 import { removeItemFromCart, increaseItemQuantity, decreaseItemQuantity, checkoutCart } from '../../store/reducers/cart/cartSlice';
+import { topErrorMsg } from '../../shared/toast';
 
 
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const { cartItems } = useSelector(state => state.cart);
 
   const increaseQuantity = (id) => {
@@ -21,9 +24,14 @@ const Cart = () => {
     dispatch(removeItemFromCart(id))
   }
   const onSubmit = async () => {
+    if (cartItems.length === 0) {
+      topErrorMsg('Empty Cart')
+      return;
+    }
     const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-    dispatch(checkoutCart({cartItems,totalPrice})) 
-  }
+    dispatch(checkoutCart({cartItems, totalPrice}));
+    navigation.navigate('Receipt');
+};
 
   return (
     <>
@@ -146,7 +154,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   checkoutButton: {
-    backgroundColor: 'green',
+    backgroundColor: '#ff7f50',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -154,6 +162,7 @@ const styles = StyleSheet.create({
   checkoutButtonText: {
     color: 'white',
     fontSize: 16,
+    fontWeight: '500'
   },
   emptyCartContainer: {
     flex: 1,

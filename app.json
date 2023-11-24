@@ -15,13 +15,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "For Saving Receipt"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/capstone_logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["WRITE_EXTERNAL_STORAGE"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

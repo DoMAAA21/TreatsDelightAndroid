@@ -40,7 +40,7 @@ const MealList = ({ products }) => {
                             <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
                             
                             <Text style={styles.title}>{product?.name}</Text>
-                            <Text style={[styles.badge,{backgroundColor: product.active? 'green' : 'red' }]}>
+                            <Text style={[styles.badge,{backgroundColor: product.active? '#47c07f' : '#e18489' }]}>
                                {product.active ? 'Available' : 'Not Available'}
                             </Text>
                             <TouchableOpacity style={styles.switchButton} onPress={() => dispatch(updateProductStatus(product._id))}>
@@ -65,9 +65,7 @@ const styles = {
         flexDirection: 'row',
     },
     searchBar: {
-        padding: 10,
-        marginRight: 40,
-        marginLeft: 40,
+        padding: 12,
         marginTop: 10,
         marginBottom: 10,
         backgroundColor: '#fff',
@@ -103,12 +101,12 @@ const styles = {
         shadowOpacity: 0.3,
         shadowRadius: 2,
         width: width * 0.48,
-        height: height * 0.3,
+        height: height * 0.25,
         marginBottom: 10
     },
     image: {
         width: '100%',
-        height: 160,
+        height: 120,
         padding: 20,
         borderRadius: 8,
     },
@@ -126,9 +124,9 @@ const styles = {
         left: 10,
         color: 'white', 
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 20,
         height: 30,
-        fontSize: 16
+        fontSize: 16,
     },
 };
 
