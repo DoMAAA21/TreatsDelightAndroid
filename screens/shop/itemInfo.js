@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Ima
 import Carousel from 'react-native-reanimated-carousel';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
 import { addItemToCart } from '../../store/reducers/cart/cartSlice';
-import { topErrorMsg, topSuccessMsg } from '../../shared/toast';
+import { topSuccessMsg } from '../../shared/toast';
 
 const { width, height } = Dimensions.get('window');
 
@@ -64,7 +64,7 @@ const ItemInfo = () => {
 
   const route = useRoute();
   const dispatch = useDispatch();
-  const { product, error } = useSelector(state => state.productDetails);
+  const { product } = useSelector(state => state.productDetails);
   const { productId } = route.params;
   const [fetchLoading, setFetchLoading] = useState(false);
   const [images, setImages] = useState([]);
@@ -74,7 +74,7 @@ const ItemInfo = () => {
       .then(() => {
         setImages(product.images);
         setFetchLoading(true)
-       
+
       });
   }, [productId, fetchLoading]);
 
@@ -108,7 +108,19 @@ const ItemInfo = () => {
               )}
             />
           }
-          backContent={<Text style={styles.cardText}>Back of card</Text>}
+          backContent={
+            <View>
+              <Text style={styles.cardTitle}>Nutrional Values</Text>
+              <View style={styles.nutritionContainer}>
+                <Text style={styles.nutritionLabel}>Calories: 200 kcal</Text>
+                <Text style={styles.nutritionLabel}>Protein: 20 g</Text>
+                <Text style={styles.nutritionLabel}>Carbohydrates: 20 g</Text>
+                <Text style={styles.nutritionLabel}>Fat: 20g</Text>
+                <Text style={styles.nutritionLabel}>Fiber: 20g</Text>
+                <Text style={styles.nutritionLabel}>Sugar: 20g</Text>
+              </View>
+            </View>
+          }
         />
       </View>
       <View style={styles.buttonContainer}>
@@ -117,11 +129,11 @@ const ItemInfo = () => {
         <Text style={styles.shopName}>{product?.store?.name}'s Store</Text>
         <Text style={styles.price}>Price: ₱{product?.sellPrice}</Text>
         <TouchableOpacity
-          style={[styles.addToCartButton, { opacity: product.active ? 1 : 0.5}]}
+          style={[styles.addToCartButton, { opacity: product.active ? 1 : 0.5 }]}
           onPress={product.active ? addToCart : null}
           disabled={!product.active}
         >
-          <Text style={styles.addToCartButtonText}>{product.active ?  'Add to Cart' :  'Not Available'}</Text>
+          <Text style={styles.addToCartButtonText}>{product.active ? 'Add to Cart' : 'Not Available'}</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -190,7 +202,17 @@ const styles = StyleSheet.create({
   },
   cardBack: {
     transform: [{ rotateY: '180deg' }],
-    backgroundColor: '#FF4500'
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   cardText: {
     fontSize: 24,
@@ -237,6 +259,18 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  nutritionContainer: {
+    marginTop: 5,
+  },
+  nutritionLabel: {
+    fontSize: 16,
+    marginBottom: 5,
   },
 });
 
