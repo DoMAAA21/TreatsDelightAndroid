@@ -1,15 +1,17 @@
-import React, { useRef,useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import React, { useRef, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import ViewShot from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { topSuccessMsg, topErrorMsg } from '../../shared/toast';
 import { ScrollView } from 'react-native-gesture-handler';
+import _ from 'lodash';
 
 export default ReceiptScreen = () => {
     const viewShot = useRef(null);
     const { receipt } = useSelector(state => state.cart);
     const datePart = receipt?.paidAt ? new Date(receipt.paidAt).toISOString().split('T')[0] : '';
+    const groupedItems = _.groupBy(receipt?.orderItems, 'storeId');
 
     const onCapture = useCallback(async () => {
         try {
@@ -30,76 +32,96 @@ export default ReceiptScreen = () => {
 
     return (
         <>
-        <ScrollView style={styles.container}>
-        <ViewShot  ref={viewShot}  style={styles.receiptContainer}>
-            
-                <View style={styles.header}>
-                    <Text style={styles.title}>Invoice</Text>
-                </View>
-                <View style={styles.invoiceInfoContainer}>
-                    <View style={styles.invoiceInfo}>
-                        <Text style={styles.label}>Receipt ID:</Text>
-                        <Text style={styles.text}>{receipt?._id}</Text>
-                        </View>
-                    <View style={styles.invoiceInfo}>
-                        <Text style={styles.label}>Date:</Text>
-                        <Text style={styles.text}>{datePart}</Text>
+            <ScrollView style={styles.container}>
+                <ViewShot ref={viewShot} style={styles.receiptContainer}>
+
+                    <View style={styles.header}>
+                        <Image
+                            source={require('../../assets/capstone_logo.png')}
+                            style={styles.logo}
+                        />
+                        <Text style={styles.title}>Receipt</Text>
                     </View>
-                </View>
-                <View style={styles.divider} />
-                <View style={styles.customerInfoContainer}>
-                    <Text style={styles.subtitle}>Customer Information</Text>
-                    <View style={styles.customerInfo}>
-                        <Text style={styles.label}>Name:</Text>
-                        <Text style={styles.text}>{receipt?.user?.name}</Text>
-                    </View>
-                </View>
-                <View style={styles.divider} />
-                <View style={styles.itemsContainer}>
-                    <Text style={styles.subtitle}>Invoice Items</Text>
-                    {receipt?.orderItems?.map((item) => (
-                        <View style={styles.item} key={item._id}>
-                            <Text style={styles.itemName}>{item.name}</Text>
-                            <Text style={styles.itemDetails}>
-                                {item.quantity} x ${item.price}
-                            </Text>
-                            <Text style={styles.itemTotal}>${item.quantity * item.price}</Text>
+                    <View style={styles.invoiceInfoContainer}>
+                        <View style={styles.invoiceInfo}>
+                            <Text style={styles.label}>Receipt ID:</Text>
+                            <Text style={styles.text}>{receipt?._id}</Text>
                         </View>
-                    ))}
-                </View>
-                <View style={styles.divider} />
-                <View style={styles.totalContainer}>
-                    <Text style={styles.label}>Total:</Text>
-                    <Text style={styles.total}>${receipt.totalPrice}</Text>
-                </View>
-           
-           
-        </ViewShot>
-        </ScrollView>
-         <TouchableOpacity onPress={onCapture}>
-         <Text>Save as Image</Text>
-     </TouchableOpacity>
-     </>
+                        <View style={styles.invoiceInfo}>
+                            <Text style={styles.label}>Date:</Text>
+                            <Text style={styles.text}>{datePart}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.divider} />
+                    <View style={styles.customerInfoContainer}>
+                        <Text style={styles.subtitle}>Customer Information</Text>
+                        <View style={styles.customerInfo}>
+                            <Text style={styles.label}>Name:</Text>
+                            <Text style={styles.text}>{receipt?.user?.name}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.divider} />
+                    <View>
+                        <Text style={styles.subtitle}>Items</Text>
+                        {Object.keys(groupedItems).map(storeId => (
+                            <View key={storeId}>
+                                <Text style={styles.storeName}>Store: {groupedItems[storeId][0].storeName}</Text>
+                                <View style={styles.storeDivider} />
+                                {groupedItems[storeId].map(item => (
+                                    <View style={styles.item} key={item._id}>
+                                        <Text style={styles.itemName}>{item.name}</Text>
+                                        <Text style={styles.itemDetails}>
+                                            {item.quantity} x ₱{item.price}
+                                        </Text>
+                                        <Text style={styles.itemTotal}>₱{item.quantity * item.price}</Text>
+                                    </View>
+                                ))}
+                                <View style={styles.subtotalContainer}>
+                                    <Text style={styles.subtotalLabel}>Subtotal:</Text>
+                                    <Text style={styles.subtotalValue}>
+                                        ₱{_.sumBy(groupedItems[storeId], item => item.quantity * item.price)}
+                                    </Text>
+                                </View>
+                            </View>
+                        ))}
+                    </View>
+                    <View style={styles.divider} />
+                    <View style={styles.totalContainer}>
+                        <Text style={styles.label}>Total:</Text>
+                        <Text style={styles.total}>₱{receipt.totalPrice}</Text>
+                    </View>
+                </ViewShot>
+            </ScrollView>
+            <TouchableOpacity style={styles.button} onPress={onCapture}>
+                <Text style={styles.buttonText} >Save as Image</Text>
+            </TouchableOpacity>
+        </>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        // marginTop: 80,
-        marginBottom: 30,
-        
+        marginBottom: 10,
+        backgroundColor: '#ebf0f7'
     },
     receiptContainer: {
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: 'black',
-        borderRadius: 10,
+        borderRadius: 0,
         padding: 20,
         marginBottom: 80,
         backgroundColor: 'white'
     },
     header: {
+        flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 20,
+    },
+    logo: {
+        width: 60,
+        height: 60,
+        borderRadius: 30
     },
     title: {
         fontSize: 24,
@@ -117,8 +139,15 @@ const styles = StyleSheet.create({
     text: {
         marginLeft: 5,
     },
-    divider: {
+    storeDivider: {
         borderBottomColor: '#ccc',
+        borderBottomWidth: 1,
+        marginVertical: 5,
+        marginEnd: 10,
+        marginStart: 10
+    },
+    divider: {
+        borderBottomColor: 'black',
         borderBottomWidth: 1,
         marginVertical: 20,
     },
@@ -134,8 +163,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    itemsContainer: {
-        marginTop: 20,
+    storeName: {
+        fontSize: 16,
+        fontWeight: '500',
+        fontStyle: 'italic',
     },
     item: {
         flexDirection: 'row',
@@ -143,10 +174,14 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     itemName: {
+        flex: 2,
         fontSize: 16,
     },
-    itemDetails: {},
+    itemDetails: {
+        flex: 1,
+    },
     itemTotal: {
+        flex: 0.6,
         fontWeight: 'bold',
     },
     totalContainer: {
@@ -156,6 +191,33 @@ const styles = StyleSheet.create({
     },
     total: {
         fontSize: 18,
+        fontWeight: 'bold',
+    },
+    subtotalContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 10,
+    },
+    subtotalLabel: {
+        fontWeight: 'bold',
+        marginRight: 5,
+        width: 60,
+    },
+    subtotalValue: {
+        fontWeight: 'bold',
+        width: 52,
+    },
+    button: {
+        backgroundColor: '#3498db',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+        margin: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
         fontWeight: 'bold',
     },
 });

@@ -20,8 +20,8 @@ export const addItemToCart = createAsyncThunk('cart/addItemToCart', async ({ id,
       name: data.product.name,
       price: data.product.sellPrice,
       image: data.product.images[0].url,
-      stock: data.product.stock,
-      store: data.product.store.name,
+      storeId: data.product.store.storeId,
+      storeName: data.product.store.name,
       quantity,
     };
     dispatch(addToCart(cartItem));
@@ -40,6 +40,7 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
     const userCreds = JSON.parse(user);
     const userId = userCreds?._id;
     const userName = `${userCreds?.fname} ${userCreds?.lname}`;
+  
     const order = {
       orderItems: cartItems,
       user: {
@@ -58,8 +59,8 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
       },
     };
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order, { config });
-    dispatch(checkoutSuccess(data.success));
     dispatch(showReceipt(data.order));
+    dispatch(checkoutSuccess(data.success));
     dispatch(clearCart());
     return data;
   } catch (error) {

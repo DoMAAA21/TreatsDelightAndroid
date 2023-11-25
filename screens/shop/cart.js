@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Button, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
@@ -11,7 +11,8 @@ import { topErrorMsg } from '../../shared/toast';
 const Cart = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { cartItems } = useSelector(state => state.cart);
+  const { cartItems, loading } = useSelector(state => state.cart);
+ 
 
   const increaseQuantity = (id) => {
     dispatch(increaseItemQuantity(id))
@@ -29,9 +30,11 @@ const Cart = () => {
       return;
     }
     const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-    dispatch(checkoutCart({cartItems, totalPrice}));
-    navigation.navigate('Receipt');
-};
+    await dispatch(checkoutCart({ cartItems, totalPrice })).then(() => {
+      navigation.navigate('Receipt');
+    })
+
+  };
 
   return (
     <>
@@ -65,8 +68,16 @@ const Cart = () => {
       </ScrollView>
       <View style={styles.bottomSection}>
         <Text style={styles.totalPrice}>Total: ₱{cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2)}</Text>
-        <TouchableOpacity style={styles.checkoutButton} onPress={onSubmit}>
-          <Text style={styles.checkoutButtonText}>Checkout</Text>
+        <TouchableOpacity
+          style={[styles.checkoutButton, loading && { opacity: 0.5 }]}
+          onPress={onSubmit}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="black" />
+          ) : (
+            <Text style={styles.checkoutButtonText}>Checkout</Text>
+          )}
         </TouchableOpacity>
       </View>
     </>
@@ -144,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderTopRightRadius:20,
+    borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     height: 100
   },
@@ -158,6 +169,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
+    width: 108
   },
   checkoutButtonText: {
     color: 'white',
