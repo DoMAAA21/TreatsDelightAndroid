@@ -3,24 +3,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ItemList from './itemList';
-import { fetchAllItems, clearErrors,clearProducts } from '../../store/reducers/product/allProductsSlice';
-
-
+import { fetchAllItems } from '../../store/reducers/product/allProductsSlice';
 
 const ShopScreen = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const { items, loading } = useSelector(state => state.allProducts);
+  const { items } = useSelector(state => state.allProducts);
   const [firstLoading, setFirstLoading] = useState(true);
-
+  
   useFocusEffect(
     useCallback(() => {
-      dispatch(fetchAllItems())
-      .then(() => {
+      const fetchData = async () => {
+        await dispatch(fetchAllItems());
         setFirstLoading(false);
-      });  
-    }, [dispatch])
+      };
+      if (firstLoading) {
+        fetchData();
+      }
+    }, [firstLoading])
   );
+
 
 
 return (

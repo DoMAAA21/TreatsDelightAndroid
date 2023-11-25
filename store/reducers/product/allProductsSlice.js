@@ -70,7 +70,7 @@ export const fetchAllMeals = createAsyncThunk('allProducts/fetchAllProducts', as
 export const fetchAllItems = createAsyncThunk('allProducts/fetchAllItems', async (_, { dispatch }) => {
     try {
       dispatch(allItemsRequest());
-      const { data } = await axios.get(`${BACKEND_URL}/api/v1/allProducts`);
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/allItems`);
       dispatch(allItemsSuccess(data.products));
       return data.products;
     } catch (error) {

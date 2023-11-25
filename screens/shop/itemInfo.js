@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Ima
 import Carousel from 'react-native-reanimated-carousel';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
 import { addItemToCart } from '../../store/reducers/cart/cartSlice';
-import { topSuccessMsg } from '../../shared/toast';
+import { topErrorMsg, topSuccessMsg } from '../../shared/toast';
 
 const { width, height } = Dimensions.get('window');
 
@@ -74,17 +74,15 @@ const ItemInfo = () => {
       .then(() => {
         setImages(product.images);
         setFetchLoading(true)
+       
       });
-
-  }, [productId, error, fetchLoading]);
+  }, [productId, fetchLoading]);
 
   const addToCart = () => {
-
     dispatch(addItemToCart({ id: productId, quantity: 1 })).then(() => {
       topSuccessMsg('Added to Cart')
     });
   }
-
   return (
     <>
       <View style={styles.container}>
@@ -118,8 +116,12 @@ const ItemInfo = () => {
         <Text style={styles.description}>{product?.description}</Text>
         <Text style={styles.shopName}>{product?.store?.name}'s Store</Text>
         <Text style={styles.price}>Price: ₱{product?.sellPrice}</Text>
-        <TouchableOpacity style={styles.addToCartButton} onPress={addToCart}>
-          <Text style={styles.addToCartButtonText}>Add to Cart</Text>
+        <TouchableOpacity
+          style={[styles.addToCartButton, { opacity: product.active ? 1 : 0.5}]}
+          onPress={product.active ? addToCart : null}
+          disabled={!product.active}
+        >
+          <Text style={styles.addToCartButtonText}>{product.active ?  'Add to Cart' :  'Not Available'}</Text>
         </TouchableOpacity>
       </View>
     </>
