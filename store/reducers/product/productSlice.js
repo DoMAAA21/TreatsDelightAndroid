@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 
 const initialState = {
@@ -95,6 +94,30 @@ export const updateProductStatus = createAsyncThunk('product/updateProductStatus
     };
     const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/product/status/${id}`, config);
     dispatch(updateStatusSuccess(data.success))
+    return data.success;
+
+  } catch (error) {
+    dispatch(updateProductFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
+);
+
+export const updateProductStocks = createAsyncThunk('product/updateProductStocks', async (updatedStocks, { dispatch }) => {
+  try {
+    dispatch(updateProductRequest());
+    const token = await AsyncStorage.getItem('token');
+
+    if (!token) {
+      dispatch(updateProductFail('Login First'));
+    }
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/product/update-stocks`, updatedStocks ,config);
+    dispatch(updateProductSuccess(data.success))
     return data.success;
 
   } catch (error) {

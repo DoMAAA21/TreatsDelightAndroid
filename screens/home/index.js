@@ -125,6 +125,21 @@ const HomeScreen = () => {
               <Text size={16}>Meals</Text>
             </Block>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            key='Stocks'
+            style={styles.box}
+            onPress={() => navigation.navigate('Stocks')}
+          >
+            <Block middle center style={styles.content}>
+              <FontAwesome5Icon
+                name='warehouse'
+                size={40}
+                color='#405b43'
+              />
+              <Text size={16}>Stocks</Text>
+            </Block>
+          </TouchableOpacity>
         </View>
         </View>
       </ScrollView>
