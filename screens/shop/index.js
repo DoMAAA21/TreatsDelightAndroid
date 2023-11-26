@@ -19,7 +19,10 @@ const ShopScreen = () => {
       if (firstLoading) {
         fetchData();
       }
-    }, [firstLoading])
+      // dispatch(fetchAllItems()).then(()=>{
+      //   setFirstLoading(false);
+      // });
+    }, [])
   );
 
 

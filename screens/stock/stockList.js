@@ -1,39 +1,59 @@
-import React, { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { FlatList, Image, View, TextInput, Text, TouchableOpacity } from 'react-native';
-import { updateProductStocks } from '../../store/reducers/product/productSlice';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FlatList, Image, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { updateProductStocks, isChanged, noChanges } from '../../store/reducers/product/productSlice';
+
 
 const StockList = ({ products }) => {
     const dispatch = useDispatch();
+    const { isEdited } = useSelector(state => state.product);
     const [searchQuery, setSearchQuery] = useState('');
     const [localProducts, setLocalProducts] = useState(products);
 
+    const confirmUpdate = (action) => {
+        Alert.alert(
+            'Confirm Changes',
+            'Are You sure you want to save changes?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Update',
+                    onPress: () => action().then(() => dispatch(noChanges())),
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
     const updateLocalStock = (productId, newStock) => {
+        dispatch(isChanged());
         setLocalProducts((prevProducts) =>
             prevProducts.map((product) =>
                 product._id === productId ? { ...product, stock: newStock } : product
             )
         );
     };
-
     const incrementStock = (productId) => {
         const productToUpdate = localProducts.find((product) => product._id === productId);
-
         if (productToUpdate && productToUpdate.stock < 999) {
             updateLocalStock(productId, productToUpdate.stock + 1);
         }
     };
     const decrementStock = (productId) => {
         const productToUpdate = localProducts.find((product) => product._id === productId);
-
         if (productToUpdate && productToUpdate.stock > 0) {
             updateLocalStock(productId, productToUpdate.stock - 1);
         }
     };
-
-    const onSubmit = async () =>{
-        const filteredStock = localProducts.map(({ _id, stock }) => ({ _id, stock }));
-        dispatch(updateProductStocks({updatedStocks:filteredStock}));
+    const onSubmit = async () => {
+        if (isEdited) {
+            const filteredStock = localProducts.map(({ _id, stock }) => ({ _id, stock }));
+            confirmUpdate(() => dispatch(updateProductStocks({ updatedStocks: filteredStock })));
+        }
     }
     return (
         <View style={styles.container}>

@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import StockList from './stockList';
 import { fetchAllProducts, clearErrors, clearProducts } from '../../store/reducers/product/allProductsSlice';
-import { updateProductReset } from '../../store/reducers/product/productSlice';
+import { noChanges, updateProductReset } from '../../store/reducers/product/productSlice';
 import { topSuccessMsg, topErrorMsg } from '../../shared/toast';
 import { useCallback } from 'react';
 
 
 const StockScreen = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const { products, error } = useSelector(state => state.allProducts);
-  const { isUpdated, error: errorProduct } = useSelector(state => state.product)
+  const { isUpdated, error: errorProduct, isEdited } = useSelector(state => state.product);
   const [firstLoading, setFirstLoading] = useState(true);
 
   useFocusEffect(
@@ -22,9 +23,31 @@ const StockScreen = () => {
           setFirstLoading(false);
         });
         return () => {
-            dispatch(clearProducts());
+          dispatch(noChanges());
+          dispatch(clearProducts());
         }
     }, [dispatch, error])
+  );
+  useEffect(() =>
+      navigation.addListener('beforeRemove', (e) => {
+        if (!isEdited) {
+          return;
+        }
+        e.preventDefault();
+        Alert.alert(
+          'Discard changes?',
+          'You have unsaved changes. Are you sure you want to leave the screen?',
+          [
+            { text: "Don't leave", style: 'cancel', onPress: () => {} },
+            {
+              text: 'Discard',
+              style: 'destructive',
+              onPress: () => navigation.dispatch(e.data.action),
+            },
+          ]
+        );
+      }),
+    [navigation, isEdited]
   );
 
   useEffect(() => {

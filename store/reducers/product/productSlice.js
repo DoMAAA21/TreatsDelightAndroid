@@ -3,13 +3,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
 
-
 const initialState = {
   loading: false,
   isUpdated: false,
   isStatusUpdated: false,
   isDeleted: false,
   error: null,
+  isEdited: false,
 };
 const maxRetries = 3;
 
@@ -75,7 +75,7 @@ export const updateProduct = createAsyncThunk('product/updateProduct', async ({ 
     dispatch(updateProductFail('Server is Busy'))
   } catch (error) {
     dispatch(updateProductFail(error.response.data.message))
-    throw error.response.data.message; 
+    throw error.response.data.message;
   }
 });
 
@@ -116,7 +116,7 @@ export const updateProductStocks = createAsyncThunk('product/updateProductStocks
         Authorization: `${token}`,
       },
     };
-    const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/product/update-stocks`, updatedStocks ,config);
+    const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/product/update-stocks`, updatedStocks, config);
     dispatch(updateProductSuccess(data.success))
     return data.success;
 
@@ -172,6 +172,12 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    isChanged: (state) => {
+      state.isEdited = true;
+    },
+    noChanges: (state) => {
+      state.isEdited = false;
+    },
     clearErrors: (state) => {
       state.error = null;
     },
@@ -189,6 +195,8 @@ export const {
   updateStatusSuccess,
   updateStatusReset,
   clearErrors,
+  isChanged,
+  noChanges
 } = productSlice.actions;
 
 export default productSlice.reducer;

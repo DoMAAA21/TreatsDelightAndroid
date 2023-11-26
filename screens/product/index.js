@@ -7,6 +7,7 @@ import ProductList from './productList';
 import { fetchAllProducts, clearErrors ,clearProducts } from '../../store/reducers/product/allProductsSlice';
 import { deleteProductReset, updateProductReset } from '../../store/reducers/product/productSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
+import { useEffect } from 'react';
 
 
 
@@ -48,17 +49,14 @@ const ProductScreen = () => {
     }, [dispatch, success, error, newProductError])
   );
 
-  useFocusEffect(
-    
-    useCallback(() => {
-
+    useEffect(() => {
     if (isDeleted) {
-      successMsg('Deleted', 'Product Removed');
+      successMsg('Product Removed');
       dispatch(deleteProductReset());
       dispatch(fetchAllProducts());
     }
     if (isUpdated) {
-      successMsg('Updated', 'Product Updated');
+      successMsg('Product Updated');
       dispatch(updateProductReset());
       dispatch(fetchAllProducts());
     }
@@ -67,9 +65,7 @@ const ProductScreen = () => {
       dispatch(deleteProductReset());
       dispatch(fetchAllProducts());
     }
-  }, [isDeleted, isUpdated, errorProduct])
-
-  );
+  }, [isDeleted, isUpdated, errorProduct]);
 
 
 
