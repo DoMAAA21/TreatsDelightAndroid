@@ -5,6 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { removeItemFromCart, increaseItemQuantity, decreaseItemQuantity, checkoutCart } from '../../store/reducers/cart/cartSlice';
 import { topErrorMsg } from '../../shared/toast';
+import EmptyCart from '../../assets/svg/EmptyCart'
 
 
 
@@ -12,7 +13,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { cartItems, loading } = useSelector(state => state.cart);
- 
+
 
   const increaseQuantity = (id) => {
     dispatch(increaseItemQuantity(id))
@@ -61,9 +62,11 @@ const Cart = () => {
             ))}
           </View>
         ) : (
-          <View style={styles.emptyCartContainer}>
-            <Text style={styles.emptyCartText}>There's no item in the cart.</Text>
+          <View style={styles.container}>
+            <EmptyCart width={300} height={500} />
           </View>
+
+
         )}
       </ScrollView>
       <View style={styles.bottomSection}>

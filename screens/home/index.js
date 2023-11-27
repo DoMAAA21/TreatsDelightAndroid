@@ -7,6 +7,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Block, Text } from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserGroup from '../../assets/svg/UserGroup';
+import Store from '../../assets/svg/Store';
+import Burger from '../../assets/svg/Burger';
+import UserSquare from '../../assets/svg/UserSquare';
+import Dish from '../../assets/svg/Dish';
+import Package from '../../assets/svg/Package';
+import Chart from '../../assets/svg/Chart';
+
 
 const screenHeight = Dimensions.get('window').height;
 const HomeScreen = () => {
@@ -57,26 +65,19 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate('Users')}
           >
             <Block middle center style={styles.content}>
-              <FontAwesomeIcon
-                name='users'
-                size={40}
-                color='#405b43'
-              />
+              <UserGroup height={40} width={40}/>
               <Text size={16}>Users</Text>
             </Block>
+            
           </TouchableOpacity>
-
+        
           <TouchableOpacity
             key='Stores'
             style={styles.box}
             onPress={() => navigation.navigate('Stores')}
           >
             <Block middle center style={styles.content}>
-              <MaterialCommunityIcons
-                name='store'
-                size={40}
-                color='#405b43'
-              />
+              <Store height={40} width={40}/>
               <Text size={16}>Stores</Text>
             </Block>
           </TouchableOpacity>
@@ -87,11 +88,7 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate('Products')}
           >
             <Block middle center style={styles.content}>
-              <MaterialCommunityIcons
-                name='food'
-                size={40}
-                color='#405b43'
-              />
+            <Burger height={40} width={40}/>
               <Text size={16}>Products</Text>
             </Block>
           </TouchableOpacity>
@@ -102,11 +99,7 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate('Employees')}
           >
             <Block middle center style={styles.content}>
-              <FontAwesome5Icon
-                name='users-cog'
-                size={40}
-                color='#405b43'
-              />
+            <UserSquare height={40} width={40}/>
               <Text size={16}>Employees</Text>
             </Block>
           </TouchableOpacity>
@@ -117,11 +110,7 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate('Meals')}
           >
             <Block middle center style={styles.content}>
-              <MaterialIcons
-                name='restaurant-menu'
-                size={40}
-                color='#405b43'
-              />
+            <Dish height={40} width={40}/>
               <Text size={16}>Meals</Text>
             </Block>
           </TouchableOpacity>
@@ -132,12 +121,19 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate('Stocks')}
           >
             <Block middle center style={styles.content}>
-              <FontAwesome5Icon
-                name='warehouse'
-                size={40}
-                color='#405b43'
-              />
+            <Package height={40} width={40}/>
               <Text size={16}>Stocks</Text>
+            </Block>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            key='Charts'
+            style={styles.box}
+            onPress={() => navigation.navigate('Charts')}
+          >
+            <Block middle center style={styles.content}>
+            <Chart height={40} width={40}/>
+              <Text size={16}>Charts</Text>
             </Block>
           </TouchableOpacity>
         </View>

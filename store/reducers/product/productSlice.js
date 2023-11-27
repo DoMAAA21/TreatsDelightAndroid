@@ -89,7 +89,7 @@ export const updateProductStatus = createAsyncThunk('product/updateProductStatus
     }
     const config = {
       headers: {
-        Authorization: `${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
     const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/product/status/${id}`, config);

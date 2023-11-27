@@ -11,7 +11,7 @@ const initialState = {
 };
 
 export const newProduct = createAsyncThunk('newProduct/newProduct', async (productData, { dispatch }) => {
-  
+    console.log(productData)
     try {
       dispatch(newProductRequest())
       const token = await AsyncStorage.getItem('token');

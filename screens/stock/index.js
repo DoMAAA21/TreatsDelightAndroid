@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -6,7 +6,6 @@ import StockList from './stockList';
 import { fetchAllProducts, clearErrors, clearProducts } from '../../store/reducers/product/allProductsSlice';
 import { noChanges, updateProductReset } from '../../store/reducers/product/productSlice';
 import { topSuccessMsg, topErrorMsg } from '../../shared/toast';
-import { useCallback } from 'react';
 
 
 const StockScreen = () => {
@@ -38,9 +37,9 @@ const StockScreen = () => {
           'Discard changes?',
           'You have unsaved changes. Are you sure you want to leave the screen?',
           [
-            { text: "Don't leave", style: 'cancel', onPress: () => {} },
+            { text: "Stay", style: 'cancel'},
             {
-              text: 'Discard',
+              text: 'Leave',
               style: 'destructive',
               onPress: () => navigation.dispatch(e.data.action),
             },

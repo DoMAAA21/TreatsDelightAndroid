@@ -23,6 +23,7 @@ import AddMealScreen from '../screens/meal/addMeal';
 import EditMealScreen from '../screens/meal/editMeal';
 import MealInfo from '../screens/meal/mealInfo';
 import StockScreen from  '../screens/stock/index';
+import ChartSreen from '../screens/chart/index';
 
 
 
@@ -61,6 +62,7 @@ const HomeStack = () => {
       <Stack.Screen name="EditMeal" component={EditMealScreen} options={{ headerTitle: 'Edit Meal' }} />
       <Stack.Screen name="MealInfo" component={MealInfo} options={{ headerTitle: 'Meal Information' }} />
       <Stack.Screen name="Stocks" component={StockScreen} options={{ headerTitle: 'Manage Stocks' }} />
+      <Stack.Screen name="Charts" component={ChartSreen} options={{ headerTitle: 'Charts' }} />
     </Stack.Navigator>
   );
 };

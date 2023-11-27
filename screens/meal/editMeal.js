@@ -19,7 +19,6 @@ const validationSchema = Yup.object({
     description: Yup.string().required('Description is required').min(1, 'Minimum of 1').max(100, 'Maximum of 100 characters'),
     costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
-    category: Yup.string().required('Category is required'),
     active: Yup.boolean().required('Active or Not'),
 });
 
@@ -155,7 +154,6 @@ const EditMealScreen = () => {
         description: product?.description || '',
         costPrice: (product?.costPrice || 0).toString(),
         sellPrice: (product?.sellPrice || 0).toString(),
-        category: product?.category || '',
         active: product?.active === true ? 'True' : 'False'
     };
 
