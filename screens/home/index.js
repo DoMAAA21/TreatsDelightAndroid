@@ -1,9 +1,5 @@
 import React,{useState , useEffect} from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Block, Text } from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';

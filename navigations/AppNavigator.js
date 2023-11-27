@@ -2,61 +2,51 @@ import React,{ useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { verifyToken } from '../store/reducers/auth/authenticationSlice';
 import HomeStack from './HomeStack';
 import AuthStack from './AuthStack';
 import ProfileStack from './ProfileStack';
 import ShopStack from './ShopStack';
+import HomeDark from '../assets/svg/HomeDark';
+import HomeWhite from '../assets/svg/HomeWhite';
+import BagDark from '../assets/svg/BagDark';
+import BagWhite from '../assets/svg/BagWhite';
+import MessageDark from '../assets/svg/MessageDark';
+import MessageWhite from '../assets/svg/MessageWhite';
+import ProfileDark from '../assets/svg/ProfileDark';
+import ProfileWhite from '../assets/svg/ProfileWhite';
+
+
 
 const Tab = createBottomTabNavigator();
-
-
 const activeColor = 'black';
 const inactiveColor = 'gray';
 
 const HomeIcon = () => {
   const isFocused = useIsFocused();
   return (
-    <MaterialCommunityIcons
-      name="home"
-      size={35}
-      color={isFocused ? activeColor : inactiveColor}
-    />
+    isFocused ?  <HomeDark height={30} width={30} /> : <HomeWhite height={30} width={30}/>
   );
 };
 
 const ShopIcon = () => {
   const isFocused = useIsFocused();
   return (
-    <FontAwesome5Icon
-      name="shopping-bag"
-      size={25}
-      color={isFocused ? activeColor : inactiveColor}
-    />
+    isFocused ?  <BagDark height={30} width={30} /> : <BagWhite height={30} width={30}/>
   );
 };
 const MessageIcon = () => {
   const isFocused = useIsFocused();
   return (
-    <AntDesignIcon
-      name="message1"
-      size={25}
-      color={isFocused ? activeColor : inactiveColor}
-    />
+    isFocused ?  <MessageDark height={30} width={30} /> : <MessageWhite height={30} width={30}/>
   );
 };
 const ProfileIcon = () => {
   const isFocused = useIsFocused();
   return (
-    <Icon
-      name="user"
-      size={25}
-      color={isFocused ? activeColor : inactiveColor}
-    />
+    isFocused ?  <ProfileDark height={30} width={30} /> : <ProfileWhite height={30} width={30}/>
   );
 };
 
