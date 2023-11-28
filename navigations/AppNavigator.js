@@ -1,8 +1,6 @@
 import React,{ useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { verifyToken } from '../store/reducers/auth/authenticationSlice';
 import HomeStack from './HomeStack';
@@ -18,11 +16,8 @@ import MessageWhite from '../assets/svg/MessageWhite';
 import ProfileDark from '../assets/svg/ProfileDark';
 import ProfileWhite from '../assets/svg/ProfileWhite';
 
-
-
 const Tab = createBottomTabNavigator();
-const activeColor = 'black';
-const inactiveColor = 'gray';
+
 
 const HomeIcon = () => {
   const isFocused = useIsFocused();

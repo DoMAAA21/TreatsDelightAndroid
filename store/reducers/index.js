@@ -17,6 +17,7 @@ import newEmployeeReducer from './employee/newEmployeeSlice';
 import employeeDetailsReducer from './employee/employeeDetailsSlice';
 import employeeReducer from './employee/employeeSlice';
 import cartReducer from './cart/cartSlice';
+import allOrdersReducer from './chart/allOrdersSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -36,7 +37,8 @@ const rootReducer = combineReducers({
   newEmployee : newEmployeeReducer,
   employeeDetails : employeeDetailsReducer,
   employee : employeeReducer,
-  cart : cartReducer
+  cart : cartReducer,
+  allOrders : allOrdersReducer
 });
 
 export default rootReducer

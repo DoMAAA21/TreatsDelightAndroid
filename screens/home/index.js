@@ -123,13 +123,13 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            key='Charts'
+            key='Analytics'
             style={styles.box}
-            onPress={() => navigation.navigate('Charts')}
+            onPress={() => navigation.navigate('Analytics')}
           >
             <Block middle center style={styles.content}>
             <Chart height={40} width={40}/>
-              <Text size={16}>Charts</Text>
+              <Text size={16}>Analytics</Text>
             </Block>
           </TouchableOpacity>
         </View>
