@@ -39,8 +39,8 @@ const allSoldSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    allSoldRequest: (state, action) => {
-      state.loading = action.payload;
+    allSoldRequest: (state) => {
+      state.loading = true;
     },
     allSoldFail: (state, action) => {
       state.error = action.payload;

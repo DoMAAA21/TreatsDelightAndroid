@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
+import { truncate } from 'lodash';
 
 const initialState = {
   orders: [],
@@ -39,8 +40,8 @@ const allOrdersSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    allOrdersRequest: (state, action) => {
-      state.loading = action.payload;
+    allOrdersRequest: (state) => {
+      state.loading = true;
     },
     allOrdersFail: (state, action) => {
       state.error = action.payload;

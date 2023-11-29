@@ -2,30 +2,34 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, Dimensions, ActivityIndicator, StyleSheet, ScrollView } from "react-native";
-import { BarChart, LineChart as LineChart1 } from "react-native-gifted-charts";
 import OrdersPerMonth from './chart/ordersPerMonth';
 import ProductsSold from './chart/productsSold';
+import SalesPerMonth from './chart/salesPerMonth';
 import { fetchAllOrders, clearAllOrders } from '../../store/reducers/chart/allOrdersSlice';
 import { fetchAllSold, clearAllSold } from '../../store/reducers/chart/productsSoldSlice';
+import { fetchAllSales, clearAllSales } from '../../store/reducers/chart/allSalesSlice';
 import Card from './card';
 import Food from '../../assets/svg/Food';
 import Order from '../../assets/svg/Order';
 import Peso from '../../assets/svg/Peso';
 
-const { height, width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }];
 
 const ChartScreen = () => {
     const dispatch = useDispatch();
     const { orders } = useSelector(state => state.allOrders);
-    const { sold } = useSelector(state => state.allSold);
+    const { sold, loading: soldLoading } = useSelector(state => state.allSold);
+    const { sales, loading: salesLoading } = useSelector(state => state.allSales);
     const [loading, setLoading] = useState(true);
     const fetchAllOrdersAction = useMemo(() => fetchAllOrders(), []);
     const clearAllOrdersAction = useMemo(() => clearAllOrders(), []);
     const fetchAllSoldAction = useMemo(() => fetchAllSold(), []);
     const clearAllSoldAction = useMemo(() => clearAllSold(), []);
+    const fetchAllSalesAction = useMemo(() => fetchAllSales(), []);
+    const clearAllSalesAction = useMemo(() => clearAllSales(), []);
     const totalOrder = orders && orders.reduce((sum, { totalOrderItems }) => sum + totalOrderItems, 0);
-
+    const totalSales = sales && sales.reduce((sum, { totalSales }) => sum + totalSales, 0);
 
     useFocusEffect(
         useCallback(() => {
@@ -33,11 +37,13 @@ const ChartScreen = () => {
                 setLoading(false);
             });
             dispatch(fetchAllSoldAction);
+            dispatch(fetchAllSalesAction);
             return () => {
                 dispatch(clearAllOrdersAction);
                 dispatch(clearAllSoldAction);
+                dispatch(clearAllSalesAction);
             }
-        }, [fetchAllOrdersAction, fetchAllSoldAction])
+        }, [fetchAllOrdersAction, fetchAllSoldAction, fetchAllSalesAction])
     );
 
     if (loading) {
@@ -58,48 +64,22 @@ const ChartScreen = () => {
                 <View style={styles.row}>
                     <Card title="Total Employees" value={30} icon={<Food height={40} width={40} />} />
 
-                    <Card title="Total Sales" value={30} icon={<Peso height={40} width={40} />} />
+                    <Card title="Total Sales" value={`₱${totalSales}`} icon={<Peso height={40} width={40} />} />
                 </View>
             </View>
             <View style={styles.bottomContainer}>
                 <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
                     <View>
+                        <Text style={styles.title}>Sales Per Month</Text>
+                        {salesLoading ? <ActivityIndicator /> : <SalesPerMonth data={sales} />}
+                    </View>
+                    <View>
                         <Text style={styles.title}>Orders Per Month</Text>
                         <OrdersPerMonth data={orders} />
                     </View>
                     <View>
-                        <ProductsSold data={sold} />
+                        {soldLoading ? <ActivityIndicator /> : <ProductsSold data={sold} />}
                     </View>
-                    <BarChart data={data}
-                        showFractionalValue
-                        showYAxisIndices
-                        hideRules
-                        noOfSections={4}
-                        maxValue={400}
-                        barWidth={40}
-                        sideWidth={15}
-                        isThreeD
-                        backgroundColor={'#FECF9E'}
-                        width={400}
-                        side="right"
-                    />
-
-                    <LineChart1
-
-                        initialSpacing={0}
-                        spacing={100}
-                        // hideDataPoints
-                        thickness={3}
-                        // hideRules
-                        // hideYAxisText
-                        yAxisColor="#0BA5A4"
-                        // showVerticalLines
-                        verticalLinesColor="rgba(14,164,164,0.5)"
-                        xAxisColor="#0BA5A4"
-                        color="#0BA5A4"
-                        width={400}
-                        data={data} />
-
 
                 </ScrollView>
             </View>
@@ -121,7 +101,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'black'
+        color: 'black',
+        alignSelf: 'center',
     },
     bottomContainer: {
         justifyContent: 'center',

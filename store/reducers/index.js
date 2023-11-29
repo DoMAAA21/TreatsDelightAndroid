@@ -19,6 +19,7 @@ import employeeReducer from './employee/employeeSlice';
 import cartReducer from './cart/cartSlice';
 import allOrdersReducer from './chart/allOrdersSlice';
 import productsSoldReducer from './chart/productsSoldSlice';
+import allSalesReducer from './chart/allSalesSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -40,7 +41,8 @@ const rootReducer = combineReducers({
   employee : employeeReducer,
   cart : cartReducer,
   allOrders : allOrdersReducer,
-  allSold : productsSoldReducer
+  allSold : productsSoldReducer,
+  allSales : allSalesReducer
 
 });
 

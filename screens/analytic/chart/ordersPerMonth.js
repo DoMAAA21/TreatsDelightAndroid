@@ -3,14 +3,15 @@ import { LineChart } from "react-native-chart-kit";
 
 const {width} = Dimensions.get('window');
 
-const OrdersPerMonth = ({ data }) => {
-    const getMonthName = (monthNumber) => {
+const getMonthName = (monthNumber) => {
         const months = [
             'January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
         return months[monthNumber - 1];
     };
+const OrdersPerMonth = ({ data }) => {
+    
 
     return (
         <>
