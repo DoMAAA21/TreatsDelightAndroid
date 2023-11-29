@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, Dimensions, ActivityIndicator, StyleSheet, ScrollView } from "react-native";
-import { BarChart, LineChart as LineChart1, PieChart } from "react-native-gifted-charts";
+import { BarChart, LineChart as LineChart1 } from "react-native-gifted-charts";
 import OrdersPerMonth from './chart/ordersPerMonth';
+import ProductsSold from './chart/productsSold';
 import { fetchAllOrders, clearAllOrders } from '../../store/reducers/chart/allOrdersSlice';
+import { fetchAllSold, clearAllSold } from '../../store/reducers/chart/productsSoldSlice';
 import Card from './card';
 import Food from '../../assets/svg/Food';
 import Order from '../../assets/svg/Order';
@@ -16,18 +18,26 @@ const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }];
 const ChartScreen = () => {
     const dispatch = useDispatch();
     const { orders } = useSelector(state => state.allOrders);
-    const [salesData, setSalesData] = useState([]);
+    const { sold } = useSelector(state => state.allSold);
     const [loading, setLoading] = useState(true);
+    const fetchAllOrdersAction = useMemo(() => fetchAllOrders(), []);
+    const clearAllOrdersAction = useMemo(() => clearAllOrders(), []);
+    const fetchAllSoldAction = useMemo(() => fetchAllSold(), []);
+    const clearAllSoldAction = useMemo(() => clearAllSold(), []);
+    const totalOrder = orders && orders.reduce((sum, { totalOrderItems }) => sum + totalOrderItems, 0);
+
+
     useFocusEffect(
         useCallback(() => {
-            dispatch(fetchAllOrders()).then(() => {
+            dispatch(fetchAllOrdersAction).then(() => {
                 setLoading(false);
-            })
-
+            });
+            dispatch(fetchAllSoldAction);
             return () => {
-                dispatch(clearAllOrders());
+                dispatch(clearAllOrdersAction);
+                dispatch(clearAllSoldAction);
             }
-        }, [])
+        }, [fetchAllOrdersAction, fetchAllSoldAction])
     );
 
     if (loading) {
@@ -43,7 +53,7 @@ const ChartScreen = () => {
                 <View style={styles.row}>
                     <Card title="Total Products" value={30} icon={<Food height={40} width={40} />} />
 
-                    <Card title="Total Orders" value={30} icon={<Order height={40} width={40} />} />
+                    <Card title="Total Orders" value={totalOrder} icon={<Order height={40} width={40} />} />
                 </View>
                 <View style={styles.row}>
                     <Card title="Total Employees" value={30} icon={<Food height={40} width={40} />} />
@@ -53,8 +63,13 @@ const ChartScreen = () => {
             </View>
             <View style={styles.bottomContainer}>
                 <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-                    <Text style={styles.title}>Orders Per Month</Text>
-                    <OrdersPerMonth data={orders} />
+                    <View>
+                        <Text style={styles.title}>Orders Per Month</Text>
+                        <OrdersPerMonth data={orders} />
+                    </View>
+                    <View>
+                        <ProductsSold data={sold} />
+                    </View>
                     <BarChart data={data}
                         showFractionalValue
                         showYAxisIndices
@@ -68,6 +83,7 @@ const ChartScreen = () => {
                         width={400}
                         side="right"
                     />
+
                     <LineChart1
 
                         initialSpacing={0}
@@ -83,21 +99,7 @@ const ChartScreen = () => {
                         color="#0BA5A4"
                         width={400}
                         data={data} />
-                    <PieChart
-                        donut
-                        isThreeD
-                        showText
-                        innerCircleBorderWidth={6}
-                        innerCircleBorderColor="lightgray"
-                        shiftInnerCenterX={-10}
-                        shiftInnerCenterY={-15}
-                        textColor="black"
-                        radius={170}
-                        textSize={20}
-                        showTextBackground
-                        textBackgroundRadius={26}
-                        // data={pieData}
-                        data={data} />
+
 
                 </ScrollView>
             </View>
@@ -132,9 +134,10 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 30,
         alignItems: 'justify',
         backgroundColor: 'white',
-        padding: 20,
+        paddingTop: 20,
+        paddingHorizontal: 10
     },
-    scrollView:{
+    scrollView: {
         alignItems: 'center',
         justifyContent: 'center',
     }
