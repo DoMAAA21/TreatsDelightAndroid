@@ -19,6 +19,9 @@ const SalesPerMonth = ({ data }) => {
 
     return (
         <BarChart
+            yAxisLabelWidth={50}
+            yAxisLabelPrefix='P'
+            yAxisTextStyle={{fontStyle: 'italic'}}
             noOfSections={3}
             barBorderRadius={4}
             frontColor="#4ADDBA"
@@ -42,7 +45,7 @@ const SalesPerMonth = ({ data }) => {
                       paddingVertical: 4,
                       borderRadius: 4,
                     }}>
-                    <Text>{item.value}</Text>
+                    <Text>₱{item.value}</Text>
                   </View>
                 );
               }}
