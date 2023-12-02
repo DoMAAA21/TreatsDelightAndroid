@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { View, StyleSheet, ImageBackground } from 'react-native';
+import { View, StyleSheet, ImageBackground, Image } from 'react-native';
 import { Card, Text, Input, Button } from 'galio-framework';
-import { Formik, Field } from 'formik';
+import { Formik} from 'formik';
 import * as Yup from 'yup';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Toast from 'react-native-toast-message';
 import { login, clearErrors } from '../../store/reducers/auth/authenticationSlice';
+import { topErrorMsg } from '../../shared/toast';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Email is required'),
@@ -24,35 +23,12 @@ const LoginScreen = () => {
   useEffect(() => {
     if (error) {
       dispatch(clearErrors());
-      errorMsg(error);
+      topErrorMsg(error);
     }
   }, [dispatch, error]);  // AppNavigator is the one who handles isAuthenticated so no need to navigate
 
   const onSubmit = (values) => {
     dispatch(login({ email: values.email, password: values.password }));
-  };
-
-  const errorMsg = (message) => {
-    Toast.show({
-      text1: 'Error',
-      text2: `${message}`,
-      type: 'error',
-      position: 'top',
-      visibilityTime: 4000,
-      autoHide: true,
-      topOffset: 50,
-      bottomOffset: 40,
-      customStyles: {
-        title: {
-          fontSize: 30,
-          fontWeight: 'bold',
-        },
-        message: {
-          fontSize: 24,
-          fontWeight: 'bold',
-        },
-      },
-    });
   };
 
   return (
@@ -66,53 +42,54 @@ const LoginScreen = () => {
         onSubmit={onSubmit}
       >
         {(formik) => (
-           <View style={styles.container}>
-           <Card style={styles.card}>
-             <Text style={styles.cardTitle}>Welcome back!</Text>
-             <Input
-               placeholder="Email"
-               rounded
-               style={styles.input}
-               onChangeText={formik.handleChange('email')}
-               onBlur={formik.handleBlur('email')}
-               value={formik.values.email}
-             />
-             {formik.touched.email && formik.errors.email ? (
-               <Text style={styles.errorMessage}>{formik.errors.email}</Text>
-             ) : null}
-             <Input
-               placeholder="Password"
-               rounded
-               password
-               style={styles.input}
-               onChangeText={formik.handleChange('password')}
-               onBlur={formik.handleBlur('password')}
-               value={formik.values.password}
-             />
-             {formik.touched.password && formik.errors.password ? (
-               <Text style={styles.errorMessage}>{formik.errors.password}</Text>
-             ) : null}
-             <Button
-               color="primary"
-               style={[styles.loginButton, { opacity: !loading ? 1 : 0.5 }]}
-               onPress={formik.handleSubmit}    
-               disabled={loading}
-             >
-               Log In
-             </Button>
-             <Button
-               color="google"
-               style={styles.socialButton}
-             >
-               <Icon name="google" size={20} color="white" style={styles.socialIcon} />
-             </Button>
-             <Text style={styles.dontHaveAccount}>Don't have an account? 
-                 <Text  onPress={() => navigation.navigate('Register')} style={styles.registerLink}> Register</Text>
-               </Text>
-           
-           </Card>
-           
-         </View>
+          <View style={styles.container}>
+            <Card style={styles.card}>
+              <View style={styles.header}>
+                <Image
+                  source={require('../../assets/capstone_logo.png')}
+                  style={styles.logo}
+                />
+                <Text style={styles.cardTitle}>Welcome back!</Text>
+
+              </View>
+              <Input
+                placeholder="Email"
+                rounded
+                style={styles.input}
+                onChangeText={formik.handleChange('email')}
+                onBlur={formik.handleBlur('email')}
+                value={formik.values.email}
+              />
+              {formik.touched.email && formik.errors.email ? (
+                <Text style={styles.errorMessage}>{formik.errors.email}</Text>
+              ) : null}
+              <Input
+                placeholder="Password"
+                rounded
+                password
+                style={styles.input}
+                onChangeText={formik.handleChange('password')}
+                onBlur={formik.handleBlur('password')}
+                value={formik.values.password}
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <Text style={styles.errorMessage}>{formik.errors.password}</Text>
+              ) : null}
+              <Button
+                color="primary"
+                style={[styles.loginButton, { opacity: !loading ? 1 : 0.5 }]}
+                onPress={formik.handleSubmit}
+                disabled={loading}
+              >
+                Log In
+              </Button>
+              <Text style={styles.dontHaveAccount}>Don't have an account?
+                <Text onPress={() => navigation.navigate('Register')} style={styles.registerLink}> Register</Text>
+              </Text>
+
+            </Card>
+
+          </View>
         )}
       </Formik>
     </ImageBackground>
@@ -135,6 +112,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    borderRadius: 30
   },
   cardTitle: {
     fontSize: 24,
@@ -168,7 +155,7 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
-    fontSize: 16, 
+    fontSize: 16,
   },
   dontHaveAccount: {
     marginTop: 10,
