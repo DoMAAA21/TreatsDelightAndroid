@@ -73,6 +73,33 @@ export const updateStore = createAsyncThunk('store/updateStore', async (payload,
   }
 });
 
+export const updateStoreStatus = createAsyncThunk('store/updateStoreStatus', async (id, { dispatch }) => {
+  try {
+    dispatch(updateStoreRequest());
+    const token = await AsyncStorage.getItem('token');
+
+    if (!token) {
+      dispatch(updateStoreFail('Login First'));
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/store/status/${id}`, config);
+    dispatch(updateStatusSuccess(data.success))
+    return data.success;
+
+  } catch (error) {
+    dispatch(updateStoreFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
+);
+
+
+
+
 
 const storeSlice = createSlice({
   name: 'store',
@@ -104,6 +131,10 @@ const storeSlice = createSlice({
     updateStoreFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    },
+    updateStatusSuccess:(state, action) => {
+      state.loading = false;
+      state.isUpdated = action.payload;
     },
     clearErrors: (state) => {
       state.error = null;
