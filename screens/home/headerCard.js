@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Switch } from 'react-native';
 import { updateStoreStatus } from '../../store/reducers/store/storeSlice';
 import { useDispatch } from 'react-redux';
+import { topSuccessMsg } from '../../shared/toast';
 
 const HeaderCard = ({ user, date, store }) => {
     const dispatch = useDispatch();
@@ -9,14 +10,23 @@ const HeaderCard = ({ user, date, store }) => {
     const toggleSwitch = async () => {
         dispatch(updateStoreStatus(store?._id)).then(() => {
             setIsEnabled(!isEnabled);
+
         });
     };
 
+    useEffect(() => {
+        if (isEnabled && (user.role === 'Employee' || user.role === 'Owner')) {
+            topSuccessMsg('Store is Open')
+        } else if (!isEnabled && (user.role === 'Employee' || user.role === 'Owner')) {
+            topSuccessMsg('Store is Closed')
+        }
+
+    }, [isEnabled])
+
+
     if (user.role === 'Employee' || user.role === 'Owner') {
         return (
-
             <>
-
                 <View style={[styles.card, { backgroundColor: isEnabled ? '#86CD82' : 'grey' }]}>
                     <View style={styles.header}>
                         <Text style={styles.headerTitle}>Howdy! {user?.store?.name} {user?.role === "Employee" ? 'Store' : null}</Text>
