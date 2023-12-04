@@ -50,7 +50,6 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
 
    
     const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/user/${id}`, userData, config);
-
     dispatch(updateUserSuccess(data.success));
   
     return data.success;
@@ -78,7 +77,7 @@ export const updateProfile = createAsyncThunk('user/updateUser', async ({ id, us
 
    
     const { data } = await axios.put(`${BACKEND_URL}/api/v1/edit-profile/${id}`, userData, config);
-
+    await AsyncStorage.setItem('user', JSON.stringify(data.user));
     dispatch(updateUserSuccess(data.success));
   
     return data.success;

@@ -64,10 +64,6 @@ export const verifyToken = createAsyncThunk('auth/verifyToken', async (_, { disp
   }
 });
 
-
-
-
-
 export const registerUser = createAsyncThunk('auth/register', async (userData, { dispatch }) => {
   try {
     dispatch(registerUserRequest())
@@ -88,6 +84,8 @@ export const registerUser = createAsyncThunk('auth/register', async (userData, {
   }
 }
 );
+
+
 
 
 
