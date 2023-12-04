@@ -21,7 +21,7 @@ const HeaderCard = ({ user, date, store }) => {
             topSuccessMsg('Store is Closed')
         }
 
-    }, [isEnabled])
+    }, [setIsEnabled])
 
 
     if (user.role === 'Employee' || user.role === 'Owner') {

@@ -52,7 +52,6 @@ const EmployeeList = ({ employees }) => {
             const fullName = `${employee.fname} ${employee.lname}`;
             return (
               fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              employee.course.toLowerCase().includes(searchQuery.toLowerCase()) ||
               employee.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
               employee.religion.toLowerCase().includes(searchQuery.toLowerCase())
             );

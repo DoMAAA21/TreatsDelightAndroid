@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { View, StyleSheet, ImageBackground, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, ImageBackground, Dimensions, ScrollView, Image } from 'react-native';
 import { Card, Text, Input, Button } from 'galio-framework';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import { Picker } from '@react-native-picker/picker';
 import { registerUser, clearErrors } from '../../store/reducers/auth/authenticationSlice';
@@ -95,8 +94,16 @@ const RegisterScreen = () => {
                     {(formik) => (
                         <View style={styles.container}>
                             <Card style={styles.card}>
+                                <View style={styles.header}>
+                                    <Image
+                                        source={require('../../assets/capstone_logo.png')}
+                                        style={styles.logo}
+                                    />
+                                    <Text style={styles.cardTitle}>Register</Text>
 
-                                <Text style={styles.cardTitle}>Register</Text>
+                                </View>
+
+
                                 <Input
                                     placeholder="First Name"
                                     rounded
@@ -192,12 +199,6 @@ const RegisterScreen = () => {
                                 >
                                     Register
                                 </Button>
-                                <Button
-                                    color="google"
-                                    style={styles.socialButton}
-                                >
-                                    <Icon name="google" size={20} color="white" style={styles.socialIcon} />
-                                </Button>
                                 <Text style={styles.dontHaveAccount}>Already have an account?
                                     <Text onPress={() => navigation.navigate('Login')} style={styles.registerLink}> Login</Text>
                                 </Text>
@@ -231,6 +232,16 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         marginTop: 30,
         marginBottom: 30
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    logo: {
+        width: 60,
+        height: 60,
+        borderRadius: 30
     },
     cardTitle: {
         fontSize: 24,

@@ -12,6 +12,7 @@ import Card from './card';
 import Food from '../../assets/svg/Food';
 import Order from '../../assets/svg/Order';
 import Peso from '../../assets/svg/Peso';
+import Employees from '../../assets/svg/Employees'
 
 const { height } = Dimensions.get('window');
 const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }];
@@ -62,7 +63,7 @@ const ChartScreen = () => {
                     <Card title="Total Orders" value={totalOrder} icon={<Order height={40} width={40} />} />
                 </View>
                 <View style={styles.row}>
-                    <Card title="Total Employees" value={30} icon={<Food height={40} width={40} />} />
+                    <Card title="Total Employees" value={2} icon={<Employees height={40} width={40} />} />
 
                     <Card title="Total Sales" value={`₱${totalSales}`} icon={<Peso height={40} width={40} />} />
                 </View>
