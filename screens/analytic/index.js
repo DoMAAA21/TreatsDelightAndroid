@@ -8,6 +8,7 @@ import SalesPerMonth from './chart/salesPerMonth';
 import { fetchAllOrders, clearAllOrders } from '../../store/reducers/chart/allOrdersSlice';
 import { fetchAllSold, clearAllSold } from '../../store/reducers/chart/productsSoldSlice';
 import { fetchAllSales, clearAllSales } from '../../store/reducers/chart/allSalesSlice';
+import { fetchAllItems } from '../../store/reducers/product/allProductsSlice';
 import Card from './card';
 import Food from '../../assets/svg/Food';
 import Order from '../../assets/svg/Order';
@@ -22,6 +23,7 @@ const ChartScreen = () => {
     const { orders } = useSelector(state => state.allOrders);
     const { sold, loading: soldLoading } = useSelector(state => state.allSold);
     const { sales, loading: salesLoading } = useSelector(state => state.allSales);
+    const { items } = useSelector(state => state.allProducts);
     const [loading, setLoading] = useState(true);
     const fetchAllOrdersAction = useMemo(() => fetchAllOrders(), []);
     const clearAllOrdersAction = useMemo(() => clearAllOrders(), []);
@@ -29,8 +31,12 @@ const ChartScreen = () => {
     const clearAllSoldAction = useMemo(() => clearAllSold(), []);
     const fetchAllSalesAction = useMemo(() => fetchAllSales(), []);
     const clearAllSalesAction = useMemo(() => clearAllSales(), []);
+    const fetchAllItemsAction = useMemo(() => fetchAllItems(), []);
     const totalOrder = orders && orders.reduce((sum, { totalOrderItems }) => sum + totalOrderItems, 0);
     const totalSales = sales && sales.reduce((sum, { totalSales }) => sum + totalSales, 0);
+    const totalItems = items.length;
+
+
 
     useFocusEffect(
         useCallback(() => {
@@ -39,6 +45,7 @@ const ChartScreen = () => {
             });
             dispatch(fetchAllSoldAction);
             dispatch(fetchAllSalesAction);
+            dispatch(fetchAllItemsAction);
             return () => {
                 dispatch(clearAllOrdersAction);
                 dispatch(clearAllSoldAction);
@@ -58,7 +65,7 @@ const ChartScreen = () => {
         <>
             <View style={styles.container}>
                 <View style={styles.row}>
-                    <Card title="Total Products" value={30} icon={<Food height={40} width={40} />} />
+                    <Card title="Total Products" value={totalItems} icon={<Food height={40} width={40} />} />
 
                     <Card title="Total Orders" value={totalOrder} icon={<Order height={40} width={40} />} />
                 </View>

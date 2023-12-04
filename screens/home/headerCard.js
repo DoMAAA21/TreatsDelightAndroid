@@ -9,8 +9,7 @@ const HeaderCard = ({ user, date, store }) => {
     const [isEnabled, setIsEnabled] = useState(store.active);
     const toggleSwitch = async () => {
         dispatch(updateStoreStatus(store?._id)).then(() => {
-            setIsEnabled(!isEnabled);
-
+                setIsEnabled(!isEnabled);
         });
     };
 

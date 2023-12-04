@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/capstone_logo.png",
+        "foregroundImage": "./assets/capstone_icon.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": ["WRITE_EXTERNAL_STORAGE"]
