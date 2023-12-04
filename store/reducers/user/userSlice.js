@@ -3,6 +3,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
 
+
 const initialState = {
   loading: false,
   isUpdated: false,
@@ -54,6 +55,35 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
   
     return data.success;
   } catch (error) {
+    dispatch(updateUserFail(error.response.data.message));
+    throw error.response.data.message;
+  }
+});
+
+
+export const updateProfile = createAsyncThunk('user/updateUser', async ({ id, userData }, {dispatch}) => {
+  try {
+    dispatch(updateUserRequest())
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      dispatch(updateUserFail('Login First'));
+      throw error.response.data.message;
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `${token}`,
+      },
+    };
+
+   
+    const { data } = await axios.put(`${BACKEND_URL}/api/v1/edit-profile/${id}`, userData, config);
+
+    dispatch(updateUserSuccess(data.success));
+  
+    return data.success;
+  } catch (error) {
+    console.log(error);
     dispatch(updateUserFail(error.response.data.message));
     throw error.response.data.message;
   }

@@ -9,7 +9,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { getUserDetails } from '../../store/reducers/user/userDetailsSlice';
-import { updateUser, clearErrors, updateUserReset } from '../../store/reducers/user/userSlice';
+import { updateProfile, clearErrors, updateUserReset } from '../../store/reducers/user/userSlice';
 import { courses, religions} from '../../shared/inputs';
 import { errorMsg } from '../../shared/toast';
 const screenHeight = Dimensions.get('window').height;
@@ -130,7 +130,7 @@ const EditProfileScreen = () => {
                 name: "avatar.jpg",
             });
         } 
-        dispatch(updateUser({ id: userId, userData: formData }));
+        dispatch(updateProfile({ id: userId, userData: formData }));
     };
 
 
