@@ -26,11 +26,8 @@ const ChartScreen = () => {
     const { items } = useSelector(state => state.allProducts);
     const [loading, setLoading] = useState(true);
     const fetchAllOrdersAction = useMemo(() => fetchAllOrders(), []);
-    const clearAllOrdersAction = useMemo(() => clearAllOrders(), []);
     const fetchAllSoldAction = useMemo(() => fetchAllSold(), []);
-    const clearAllSoldAction = useMemo(() => clearAllSold(), []);
     const fetchAllSalesAction = useMemo(() => fetchAllSales(), []);
-    const clearAllSalesAction = useMemo(() => clearAllSales(), []);
     const fetchAllItemsAction = useMemo(() => fetchAllItems(), []);
     const totalOrder = orders && orders.reduce((sum, { totalOrderItems }) => sum + totalOrderItems, 0);
     const totalSales = sales && sales.reduce((sum, { totalSales }) => sum + totalSales, 0);
@@ -47,9 +44,9 @@ const ChartScreen = () => {
             dispatch(fetchAllSalesAction);
             dispatch(fetchAllItemsAction);
             return () => {
-                dispatch(clearAllOrdersAction);
-                dispatch(clearAllSoldAction);
-                dispatch(clearAllSalesAction);
+                dispatch(clearAllOrders());
+                dispatch(clearAllSold());
+                dispatch(clearAllSales());
             }
         }, [fetchAllOrdersAction, fetchAllSoldAction, fetchAllSalesAction])
     );
