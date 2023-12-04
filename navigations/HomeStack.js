@@ -40,7 +40,7 @@ const HomeStack = () => {
         <Ionicons name="chevron-back" size={25} style={[{ paddingStart: 5}]} />
       ),
      }} >
-      <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: 'Dashboard', headerLeft: () => null }} />
+      <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: ''}} />
       <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Users' }} />
       <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
       <Stack.Screen name="EditUser" component={EditUserScreen} options={{ headerTitle: 'Edit User' }} />
