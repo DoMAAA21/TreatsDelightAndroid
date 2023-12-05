@@ -22,7 +22,7 @@ const ShopScreen = () => {
       // dispatch(fetchAllItems()).then(()=>{
       //   setFirstLoading(false);
       // });
-    }, [])
+    }, [firstLoading])
   );
 
 

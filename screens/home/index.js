@@ -128,7 +128,7 @@ const HomeScreen = () => {
                 </>
 
 
-              ) :
+              ) : user.role === "Admin" ?
 
               <>
 
@@ -156,7 +156,7 @@ const HomeScreen = () => {
                   </Block>
                 </TouchableOpacity>
               </>
-
+            : null
             }
 
 

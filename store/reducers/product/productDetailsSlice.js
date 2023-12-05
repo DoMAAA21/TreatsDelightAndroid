@@ -34,6 +34,31 @@ export const getProductDetails = createAsyncThunk('productDetails/getProductDeta
 }
 );
 
+export const getItemDetails = createAsyncThunk('itemDetails/getItemDetails', async (id, { dispatch }) => {
+  try {
+    dispatch(productDetailsRequest());
+    const token = await AsyncStorage.getItem('token');
+
+    if (!token) {
+      dispatch(productDetailsFail('Login First'));
+    }
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `${token}`
+        
+      },
+    };
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/product/${id}`, config);
+    dispatch(productDetailsSuccess(data.product));
+    return data.product;
+  } catch (error) {
+    dispatch(productDetailsFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
+);
+
 const productDetailsSlice = createSlice({
   name: 'productDetails',
   initialState,

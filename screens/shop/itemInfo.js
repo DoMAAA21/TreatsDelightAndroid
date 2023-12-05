@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Image, Animated, Dimensions, ActivityIndicator } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
-import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
+import { getItemDetails } from '../../store/reducers/product/productDetailsSlice';
 import { addItemToCart } from '../../store/reducers/cart/cartSlice';
 import { topSuccessMsg } from '../../shared/toast';
 
@@ -70,7 +70,7 @@ const ItemInfo = () => {
   const [images, setImages] = useState([]);
   useEffect(() => {
     setImages([]);
-    dispatch(getProductDetails(productId))
+    dispatch(getItemDetails(productId))
       .then(() => {
         setImages(product.images);
         setFetchLoading(true)
