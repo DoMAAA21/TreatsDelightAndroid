@@ -49,12 +49,13 @@ const UserList = ({ users }) => {
       <FlatList
         data={users
           .filter((user) => {
-            const fullName = `${user.fname} ${user.lname}`;
+           
             return (
-              fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.course.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.religion.toLowerCase().includes(searchQuery.toLowerCase())
+              user?.fname?.toLowerCase().includes(searchQuery.toLowerCase())  ||
+              user?.lname?.toLowerCase().includes(searchQuery.toLowerCase())  ||
+              user?.email?.toLowerCase().includes(searchQuery.toLowerCase())  ||
+              user?.course?.toLowerCase().includes(searchQuery.toLowerCase())  ||
+              user?.religion?.toLowerCase().includes(searchQuery.toLowerCase())
             );
           })}
         contentContainerStyle={styles.flatList}

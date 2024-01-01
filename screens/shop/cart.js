@@ -36,7 +36,7 @@ const Cart = () => {
     })
 
   };
-
+ 
   return (
     <>
       <ScrollView>
@@ -47,7 +47,7 @@ const Cart = () => {
                 <Image source={{ uri: item.image }} style={styles.image} />
                 <View style={styles.infoContainer}>
                   <Text style={styles.name}>{item.name}</Text>
-                  <Text style={styles.store}>{item.store}'s Store</Text>
+                  <Text style={styles.store}>{item.storeName}'s Store</Text>
                   <Text style={styles.price}>₱{item.price}</Text>
                 </View>
                 <View style={styles.quantityContainer}>
