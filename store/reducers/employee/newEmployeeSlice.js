@@ -20,6 +20,7 @@ export const newEmployee = createAsyncThunk('newEmployee/newEmployee', async (em
     const storeName = userCreds?.store?.name;
     employeeData.append("storeId", storeId);
     employeeData.append("storeName", storeName);
+    console.log(employeeData)
     
     if (!token) {
       dispatch(newEmployeeFail('Login First'));

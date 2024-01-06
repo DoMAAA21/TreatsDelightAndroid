@@ -7,7 +7,7 @@ const initialState = {
   loading: false,
   success: false,
   error: null,
-  products: [], // Initialize products with your desired initial value
+  products: [], 
 };
 
 export const newProduct = createAsyncThunk('newProduct/newProduct', async (productData, { dispatch }) => {

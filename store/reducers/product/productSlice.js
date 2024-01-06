@@ -40,12 +40,6 @@ export const updateProduct = createAsyncThunk('product/updateProduct', async ({ 
   try {
     dispatch(updateProductRequest());
     const token = await AsyncStorage.getItem('token');
-    const user = await AsyncStorage.getItem('user');
-    const userCreds = JSON.parse(user);
-    const storeId = userCreds?.store?.storeId;
-    const storeName = userCreds?.store?.name;
-    productData.append("storeId", storeId);
-    productData.append("storeName", storeName);
 
     if (!token) {
       dispatch(updateProductFail('Login First'));

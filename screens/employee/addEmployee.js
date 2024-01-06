@@ -41,9 +41,7 @@ const AddEmployeeScreen = () => {
     const { loading, error, success } = useSelector(state => state.newEmployee);
     const [avatar, setAvatar] = useState('');
     const [avatarPreview, setAvatarPreview] = useState(null);
-    const [selectedRole, setSelectedRole] = useState('');
-    const [storeDropdown, setStoreDropdown] = useState([]);
-    const [loadingOptions, setLoadingOptions] = useState(false);
+
     useEffect(() => {
         if (error) {
             errorMsg(error)

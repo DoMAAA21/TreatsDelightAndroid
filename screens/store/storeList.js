@@ -48,8 +48,8 @@ const StoreList = ({ stores }) => {
       />
       <FlatList
         data={stores.filter((store) =>
-          store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          store.slogan.toLowerCase().includes(searchQuery.toLowerCase())
+          store?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          store?.slogan?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
         contentContainerStyle={styles.flatList}
         keyExtractor={(store) => store._id.toString()}
