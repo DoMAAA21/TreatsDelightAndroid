@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { View, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
-import { Text, Input, Block, Button, Icon, } from 'galio-framework';
+import { Text, Input, Block, Button } from 'galio-framework';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import { newProductReset } from '../../store/reducers/product/newProductSlice';
 import { newProduct } from '../../store/reducers/product/newProductSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
+import {OPEN_AI_KEY } from '@env';
 
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;

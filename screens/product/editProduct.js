@@ -8,8 +8,9 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
+import NutritionForm from './nutritionForm';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
-import { updateProduct, updateProductSuccess, clearErrors } from '../../store/reducers/product/productSlice';
+import { updateProduct, clearErrors } from '../../store/reducers/product/productSlice';
 import { categories } from '../../shared/inputs';
 import { errorMsg } from '../../shared/toast';
 const screenHeight = Dimensions.get('window').height;
@@ -159,7 +160,14 @@ const EditProductScreen = () => {
         sellPrice: (product?.sellPrice || 0).toString(),
         stock: (product?.stock || 0).toString() || '',
         category: product?.category || '',
-        active: product?.active === true ? 'True' : 'False'
+        active: product?.active === true ? 'True' : 'False',
+        calories: (product?.nutrition?.calories || 0).toString(),
+        protein: (product?.nutrition?.protein || 0).toString(),
+        carbs: (product?.nutrition?.carbs || 0).toString(),
+        fat: (product?.nutrition?.fat || 0).toString(),
+        fiber: (product?.nutrition?.fiber || 0).toString(),
+        sugar: (product?.nutrition?.sugar || 0).toString(),
+        sodium: (product?.nutrition?.sodium || 0).toString(),
     };
 
     const onSubmit = (values) => {
@@ -173,6 +181,14 @@ const EditProductScreen = () => {
         formData.append('active', isActiveValue);
         formData.append('portion', false);
         formData.append('stock', values.stock);
+        formData.append('calories', values.calories);
+        formData.append('protein', values.protein);
+        formData.append('carbs', values.carbs);
+        formData.append('fat', values.fat);
+        formData.append('fiber', values.fiber);
+        formData.append('sugar', values.sugar);
+        formData.append('sodium', values.sodium);
+
 
         if (firstImage) {
             formData.append('firstImage', {
@@ -267,6 +283,8 @@ const EditProductScreen = () => {
                                         <Text style={styles.errorMessage}>{formik.errors.active}</Text>
                                     ) : null}
                                 </View>
+
+                                <NutritionForm formik={formik}/>
 
                                 <View style={styles.inputContainer}>
                                     <Text>Images (Left Most is Required)</Text>
