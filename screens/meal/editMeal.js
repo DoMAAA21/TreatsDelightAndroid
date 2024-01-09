@@ -8,9 +8,12 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
+import NutritionForm from './nutritionForm';
 import { getProductDetails } from '../../store/reducers/product/productDetailsSlice';
 import { updateProduct, clearErrors } from '../../store/reducers/product/productSlice';
 import { errorMsg } from '../../shared/toast';
+
+
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
 
@@ -20,6 +23,13 @@ const validationSchema = Yup.object({
     costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     active: Yup.boolean().required('Active or Not'),
+    calories: Yup.number().required('Calorie is required').min(0, 'Minimum of 0'),
+    protein: Yup.number().required('Protein is required').min(0, 'Minimum of 0'),
+    carbs: Yup.number().required('Carbs is required').min(0, 'Minimum of 0'),
+    fat: Yup.number().required('Fat is required').min(0, 'Minimum of 0'),
+    fiber: Yup.number().required('Fiber is required').min(0, 'Minimum of 0'),
+    sugar: Yup.number().required('Sugar is required').min(0, 'Minimum of 0'),
+    sodium: Yup.number().required('Sodium is required').min(0, 'Minimum of 0'),
 });
 
 const MyInput = ({ field, form, ...props }) => (
@@ -154,7 +164,14 @@ const EditMealScreen = () => {
         description: product?.description || '',
         costPrice: (product?.costPrice || 0).toString(),
         sellPrice: (product?.sellPrice || 0).toString(),
-        active: product?.active === true ? 'True' : 'False'
+        active: product?.active === true ? 'True' : 'False',
+        calories: (product?.nutrition?.calories || 0).toString(),
+        protein: (product?.nutrition?.protein || 0).toString(),
+        carbs: (product?.nutrition?.carbs || 0).toString(),
+        fat: (product?.nutrition?.fat || 0).toString(),
+        fiber: (product?.nutrition?.fiber || 0).toString(),
+        sugar: (product?.nutrition?.sugar || 0).toString(),
+        sodium: (product?.nutrition?.sodium || 0).toString(),
     };
 
     const onSubmit = (values) => {
@@ -167,6 +184,14 @@ const EditMealScreen = () => {
         formData.append('category', 'Meals');
         formData.append('active', isActiveValue);
         formData.append('portion', true);
+        formData.append('stock', 0);
+        formData.append('calories', values.calories);
+        formData.append('protein', values.protein);
+        formData.append('carbs', values.carbs);
+        formData.append('fat', values.fat);
+        formData.append('fiber', values.fiber);
+        formData.append('sugar', values.sugar);
+        formData.append('sodium', values.sodium);
 
         if (firstImage) {
             formData.append('firstImage', {
@@ -239,6 +264,8 @@ const EditMealScreen = () => {
                                         <Text style={styles.errorMessage}>{formik.errors.active}</Text>
                                     ) : null}
                                 </View>
+
+                                <NutritionForm formik={formik} />
 
                                 <View style={styles.inputContainer}>
                                     <Text>Images (Left Most is Required)</Text>

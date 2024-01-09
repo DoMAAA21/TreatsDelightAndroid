@@ -40,8 +40,7 @@ const useFetchNutritionFacts = ({ formik }, item) => {
             );
 
             const response = result.data.choices[0].message.content;
-
-
+        
             try {
                 const parsedNutrition = JSON.parse(response);
                 if (

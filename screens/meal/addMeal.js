@@ -7,11 +7,12 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
+import NutritionForm from './nutritionForm';
 import * as Yup from 'yup';
 import { newProductReset } from '../../store/reducers/product/newProductSlice';
 import { newProduct } from '../../store/reducers/product/newProductSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
-import {OPEN_AI_KEY } from '@env';
+
 
 const screenHeight = Dimensions.get('window').height;
 const inputSize = screenHeight * 0.07;
@@ -19,9 +20,16 @@ const inputSize = screenHeight * 0.07;
 const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required').min(1, 'Minimum of 1').max(100, 'Maximum of 100 characters'),
-    costPrice: Yup.number().required('Cost Price is Required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
+    costPrice: Yup.number().required('Cost Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
     sellPrice: Yup.number().required('Sell Price is required').min(1, 'Minimum of 1').max(999, 'Maximum of 999'),
-    active: Yup.boolean().required('Active or Not'),
+    active: Yup.boolean().required('Active or not'),
+    calories: Yup.number().required('Calorie is required').min(0, 'Minimum of 0'),
+    protein: Yup.number().required('Protein is required').min(0, 'Minimum of 0'),
+    carbs: Yup.number().required('Carbs is required').min(0, 'Minimum of 0'),
+    fat: Yup.number().required('Fat is required').min(0, 'Minimum of 0'),
+    fiber: Yup.number().required('Fiber is required').min(0, 'Minimum of 0'),
+    sugar: Yup.number().required('Sugar is required').min(0, 'Minimum of 0'),
+    sodium: Yup.number().required('Sodium is required').min(0, 'Minimum of 0'),
 });
 
 const MyInput = ({ field, form, ...props }) => (
@@ -115,6 +123,13 @@ const AddMealScreen = () => {
         formData.append('active', isActiveValue);
         formData.append('portion', true);
         formData.append('stock', 0);
+        formData.append('calories', values.calories);
+        formData.append('protein', values.protein);
+        formData.append('carbs', values.carbs);
+        formData.append('fat', values.fat);
+        formData.append('fiber', values.fiber);
+        formData.append('sugar', values.sugar);
+        formData.append('sodium', values.sodium);
 
         if (firstImage) {
             formData.append('firstImage', {
@@ -190,6 +205,8 @@ const AddMealScreen = () => {
                                     <Text style={styles.errorMessage}>{formik.errors.active}</Text>
                                 ) : null}
                             </View>
+
+                            <NutritionForm formik={formik} />
 
                             <View style={styles.inputContainer}>
                                 <Text>Images (Left Most is Required)</Text>

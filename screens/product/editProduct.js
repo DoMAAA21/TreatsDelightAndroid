@@ -24,6 +24,13 @@ const validationSchema = Yup.object({
     stock: Yup.number().required('Stock is required').min(0, 'Minimum of 0').max(999, 'Maximum of 999').integer('Stock cannot be decimal'),
     category: Yup.string().required('Category is required'),
     active: Yup.boolean().required('Active or Not'),
+    calories: Yup.number().required('Calorie is required').min(0, 'Minimum of 0'),
+    protein: Yup.number().required('Protein is required').min(0, 'Minimum of 0'),
+    carbs: Yup.number().required('Carbs is required').min(0, 'Minimum of 0'),
+    fat: Yup.number().required('Fat is required').min(0, 'Minimum of 0'),
+    fiber: Yup.number().required('Fiber is required').min(0, 'Minimum of 0'),
+    sugar: Yup.number().required('Sugar is required').min(0, 'Minimum of 0'),
+    sodium: Yup.number().required('Sodium is required').min(0, 'Minimum of 0'),
 });
 
 const MyInput = ({ field, form, ...props }) => (
