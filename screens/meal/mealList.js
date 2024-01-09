@@ -41,7 +41,7 @@ const MealList = ({ products }) => {
                             
                             <Text style={styles.title}>{product?.name}</Text>
                             <Text style={[styles.badge,{backgroundColor: product.active? '#47c07f' : '#e18489' }]}>
-                               {product.active ? 'Available' : 'Not Available'}
+                               {product.active ? 'Available' : 'Unavailable'}
                             </Text>
                             <TouchableOpacity style={styles.switchButton} onPress={() => dispatch(updateProductStatus(product._id))}>
                                 <MaterialCommunityIcon size={25} name="rotate-3d-variant" />
