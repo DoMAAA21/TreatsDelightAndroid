@@ -112,12 +112,14 @@ const ItemInfo = () => {
             <View>
               <Text style={styles.cardTitle}>Nutrional Values</Text>
               <View style={styles.nutritionContainer}>
-                <Text style={styles.nutritionLabel}>Calories: 200 kcal</Text>
-                <Text style={styles.nutritionLabel}>Protein: 20 g</Text>
-                <Text style={styles.nutritionLabel}>Carbohydrates: 20 g</Text>
-                <Text style={styles.nutritionLabel}>Fat: 20g</Text>
-                <Text style={styles.nutritionLabel}>Fiber: 20g</Text>
-                <Text style={styles.nutritionLabel}>Sugar: 20g</Text>
+                <Text style={styles.nutritionLabel}>{`Calories: ${product?.nutrition?.calories || 0} kcal`}</Text>
+                <Text style={styles.nutritionLabel}>{`Protein: ${product?.nutrition?.protein || 0} g`}</Text>
+                <Text style={styles.nutritionLabel}>{`Carbohydrates: ${product?.nutrition?.carbs || 0} g`}</Text>
+                <Text style={styles.nutritionLabel}>{`Fat: ${product?.nutrition?.fat || 0} g`}</Text>
+                <Text style={styles.nutritionLabel}>{`Fiber: ${product?.nutrition?.fiber || 0} g`}</Text>
+                <Text style={styles.nutritionLabel}>{`Sugar: ${product?.nutrition?.sugar || 0} g`}</Text>
+                <Text style={styles.nutritionLabel}>{`Cholesterol: ${product?.nutrition?.cholesterol || 0} mg`}</Text>
+
               </View>
             </View>
           }

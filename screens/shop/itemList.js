@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react'
 import { useSelector} from 'react-redux';
-import { FlatList, Image, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Text } from 'react-native';
+import { FlatList, Image, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Text, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { allCategories } from '../../shared/inputs';
 const { width, height } = Dimensions.get('screen');
 
-const ItemList = ({ products }) => {
+const ItemList = ({ products , onRefresh, refreshing }) => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -51,6 +51,7 @@ const ItemList = ({ products }) => {
                     keyExtractor={(category) => category.value}
                     horizontal
                     showsHorizontalScrollIndicator={false}
+                    
                     renderItem={({ item: category }) => (
                         <TouchableOpacity
                             style={[
@@ -74,6 +75,12 @@ const ItemList = ({ products }) => {
                 keyExtractor={(product) => product._id.toString()}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                 renderItem={({ item: product }) => (
                     <TouchableWithoutFeedback onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
                         <View style={styles.itemContainer} >

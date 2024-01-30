@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ItemList from './itemList';
 import { fetchAllItems } from '../../store/reducers/product/allProductsSlice';
@@ -9,7 +9,9 @@ const ShopScreen = () => {
   const dispatch = useDispatch();
   const { items } = useSelector(state => state.allProducts);
   const [firstLoading, setFirstLoading] = useState(true);
-  
+  const [refreshed, setRefreshed] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
@@ -19,17 +21,23 @@ const ShopScreen = () => {
       if (firstLoading) {
         fetchData();
       }
-      // dispatch(fetchAllItems()).then(()=>{
-      //   setFirstLoading(false);
-      // });
-    }, [firstLoading])
+      if(refreshed){
+        setRefreshing(true)
+        fetchData();
+        setRefreshing(false)
+        setRefreshed(false);
+      }
+
+    }, [firstLoading, refreshed])
   );
 
+  const onRefresh = () => {
+    setRefreshed(true)
+  };
 
-
-return (
+  return (
     <View style={styles.container}>
-      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ItemList products={items} />}
+      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ItemList products={items} onRefresh={onRefresh} refreshing={refreshing} />}
     </View>
   );
 };
