@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Image, Animated, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Image, Animated, Dimensions, ActivityIndicator, Alert } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { getItemDetails } from '../../store/reducers/product/productDetailsSlice';
 import { addItemToCart } from '../../store/reducers/cart/cartSlice';
@@ -79,10 +79,36 @@ const ItemInfo = () => {
   }, [productId, fetchLoading]);
 
   const addToCart = () => {
-    dispatch(addItemToCart({ id: productId, quantity: 1 })).then(() => {
-      topSuccessMsg('Added to Cart')
-    });
-  }
+    // Check if product cholesterol is higher than or equal to 50
+    if (product?.nutrition?.cholesterol >= 50) {
+      // Show alert to the user
+      Alert.alert(
+        'High Cholesterol Content',
+        'This product has high cholesterol content. Are you sure you want to add it to your cart?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Add to Cart',
+            onPress: () => {
+              // Dispatch action to add item to cart
+              dispatch(addItemToCart({ id: productId, quantity: 1 })).then(() => {
+                topSuccessMsg('Added to Cart');
+              });
+            },
+          },
+        ],
+        { cancelable: false } // Prevent user from dismissing the alert by tapping outside
+      );
+    } else {
+      // If cholesterol is not high, directly add item to cart
+      dispatch(addItemToCart({ id: productId, quantity: 1 })).then(() => {
+        topSuccessMsg('Added to Cart');
+      });
+    }
+  };
   return (
     <>
       <View style={styles.container}>
