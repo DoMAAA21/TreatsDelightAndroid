@@ -44,6 +44,7 @@ const HomeStack = () => {
       ),
      }} >
       <Stack.Screen name="Dashboard" component={HomeScreen}  options={{
+          headerTitle:'',
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.navigate('Scanner')}>
               <Ionicons name="qr-code" size={25} style={{ paddingEnd: 15 }} />

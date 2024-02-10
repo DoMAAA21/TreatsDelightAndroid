@@ -13,6 +13,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { cartItems, loading } = useSelector(state => state.cart);
+  const { isAuthenticated } = useSelector(state => state.auth);
 
 
   const increaseQuantity = (id) => {
@@ -25,18 +26,33 @@ const Cart = () => {
   const removeItem = (id) => {
     dispatch(removeItemFromCart(id))
   }
-  const onSubmit = async () => {
+  const onCheckout = async () => {
+    const isReserve = false;
     if (cartItems.length === 0) {
       topErrorMsg('Empty Cart')
       return;
     }
     const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-    await dispatch(checkoutCart({ cartItems, totalPrice })).then(() => {
+    await dispatch(checkoutCart({ cartItems, totalPrice, isReserve })).then(() => {
       navigation.navigate('Receipt');
     })
 
   };
- 
+
+  const onReserve = async () => {
+
+    const isReserve = true;
+    if (cartItems.length === 0) {
+      topErrorMsg('Empty Cart')
+      return;
+    }
+    const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
+    await dispatch(checkoutCart({ cartItems, totalPrice, isReserve })).then(() => {
+      navigation.navigate('Receipt');
+    })
+
+  };
+
   return (
     <>
       <ScrollView>
@@ -71,9 +87,22 @@ const Cart = () => {
       </ScrollView>
       <View style={styles.bottomSection}>
         <Text style={styles.totalPrice}>Total: ₱{cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2)}</Text>
+        {isAuthenticated &&
+          <TouchableOpacity
+            style={[styles.reserveButton, loading && { opacity: 0.5 }]}
+            onPress={onReserve}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="black" />
+            ) : (
+              <Text style={styles.reserveButtonText}>Reserve</Text>
+            )}
+          </TouchableOpacity>
+        }
         <TouchableOpacity
           style={[styles.checkoutButton, loading && { opacity: 0.5 }]}
-          onPress={onSubmit}
+          onPress={onCheckout}
           disabled={loading}
         >
           {loading ? (
@@ -175,6 +204,18 @@ const styles = StyleSheet.create({
     width: 108
   },
   checkoutButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500'
+  },
+  reserveButton: {
+    backgroundColor: '#6366F1',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    width: 108
+  },
+  reserveButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '500'

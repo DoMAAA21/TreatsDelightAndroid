@@ -10,6 +10,7 @@ const initialState = {
   receipt: [],
   success: false,
   loading: false,
+  qrCode: null
 };
 
 export const addItemToCart = createAsyncThunk('cart/addItemToCart', async ({ id, quantity }, { dispatch }) => {
@@ -32,8 +33,9 @@ export const addItemToCart = createAsyncThunk('cart/addItemToCart', async ({ id,
 }
 );
 
-export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartItems, totalPrice }, { dispatch }) => {
+export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartItems, totalPrice, isReserve }, { dispatch }) => {
   try {
+
     dispatch(checkoutRequest());
     const token = await AsyncStorage.getItem('token');
     const user = await AsyncStorage.getItem('user');
@@ -47,7 +49,9 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
         id: userId,
         name: userName
       },
-      totalPrice
+      totalPrice,
+      isReserve
+    
     }
     if (!token) {
       dispatch(newProductFail('Login First'));
@@ -59,8 +63,11 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
       },
     };
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order, { config });
+
+   
     dispatch(showReceipt(data.order));
     dispatch(checkoutSuccess(data.success));
+    dispatch(setQrCode(data.qrCodeURL));
     dispatch(clearCart());
     return data;
   } catch (error) {
@@ -113,10 +120,13 @@ const cartSlice = createSlice({
     showReceipt: (state, action) => {
       state.receipt = action.payload
     },
+    setQrCode: (state, action) => {
+      state.qrCode = action.payload
+    },
   },
 });
 
 export const { clearCart, saveShippingInfo, removeItemFromCart, addToCart, increaseItemQuantity,
-  decreaseItemQuantity, checkoutRequest, checkoutSuccess, showReceipt } = cartSlice.actions;
+  decreaseItemQuantity, checkoutRequest, checkoutSuccess, setQrCode, showReceipt } = cartSlice.actions;
 
 export default cartSlice.reducer;

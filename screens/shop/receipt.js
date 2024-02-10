@@ -6,10 +6,12 @@ import * as MediaLibrary from 'expo-media-library';
 import { topSuccessMsg, topErrorMsg } from '../../shared/toast';
 import { ScrollView } from 'react-native-gesture-handler';
 import _ from 'lodash';
+import QRCode from 'react-native-qrcode-svg';
 
 export default ReceiptScreen = () => {
     const viewShot = useRef(null);
-    const { receipt } = useSelector(state => state.cart);
+    const { receipt, qrCode } = useSelector(state => state.cart);
+    console.log(qrCode);
     const datePart = receipt?.paidAt ? new Date(receipt.paidAt).toISOString().split('T')[0] : '';
     const groupedItems = _.groupBy(receipt?.orderItems, 'storeId');
 
@@ -90,11 +92,22 @@ export default ReceiptScreen = () => {
                         <Text style={styles.label}>Total:</Text>
                         <Text style={styles.total}>₱{receipt.totalPrice}</Text>
                     </View>
+                    {qrCode &&
+                    <View style={styles.qrCode}>
+                        <QRCode
+                            value={qrCode}
+                            size={200}
+                            color="black"
+                            backgroundColor="white"
+                        />
+                    </View>
+                    }
                 </ViewShot>
             </ScrollView>
             <TouchableOpacity style={styles.button} onPress={onCapture}>
                 <Text style={styles.buttonText} >Save as Image</Text>
             </TouchableOpacity>
+
         </>
     );
 };
@@ -220,4 +233,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    qrCode: {
+        marginVertical: 20,
+        justifyContent: 'center', 
+        alignItems: 'center', 
+      },
 });
