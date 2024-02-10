@@ -1,3 +1,4 @@
+import { TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +25,7 @@ import EditMealScreen from '../screens/meal/editMeal';
 import MealInfo from '../screens/meal/mealInfo';
 import StockScreen from  '../screens/stock/index';
 import ChartSreen from '../screens/analytic/index';
+import ScannerScreen from '../screens/scanner/index';
 
 
 
@@ -36,11 +38,18 @@ const HomeStack = () => {
   return (
     <Stack.Navigator screenOptions={{
       headerStyle: { backgroundColor: '#b4e373', },
+      
       headerBackImage: () => (
         <Ionicons name="chevron-back" size={25} style={[{ paddingStart: 5}]} />
       ),
      }} >
-      <Stack.Screen name="Dashboard" component={HomeScreen} options={{ headerTitle: ''}} />
+      <Stack.Screen name="Dashboard" component={HomeScreen}  options={{
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Scanner')}>
+              <Ionicons name="qr-code" size={25} style={{ paddingEnd: 15 }} />
+            </TouchableOpacity>
+          ),
+        }}/>
       <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Users' }} />
       <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
       <Stack.Screen name="EditUser" component={EditUserScreen} options={{ headerTitle: 'Edit User' }} />
@@ -63,6 +72,7 @@ const HomeStack = () => {
       <Stack.Screen name="MealInfo" component={MealInfo} options={{ headerTitle: 'Meal Information' }} />
       <Stack.Screen name="Stocks" component={StockScreen} options={{ headerTitle: 'Manage Stocks' }} />
       <Stack.Screen name="Analytics" component={ChartSreen} options={{ headerTitle: 'Analytics' }} />
+      <Stack.Screen name="Scanner" component={ScannerScreen} />
     </Stack.Navigator>
   );
 };
