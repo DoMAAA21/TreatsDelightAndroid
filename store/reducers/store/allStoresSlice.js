@@ -1,4 +1,4 @@
-import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
@@ -11,26 +11,48 @@ const initialState = {
 };
 
 export const fetchAllStores = createAsyncThunk('allStores/fetchAllStores', async (_, { dispatch }) => {
-    try {
-      dispatch(allStoresRequest());
-      const token = await AsyncStorage.getItem('token');
-      
-      if (!token) {
-        dispatch(allStoresFail('Login First'));
-      }
-      const config = {
-        headers: {
-          Authorization: `${token}`,
-        },
-      };
-      const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/stores`,config);
-      dispatch(allStoresSuccess(data.stores));
-      return data.stores;
-    } catch (error) {
-      dispatch(allStoresFail(error.response.data.message))
-      throw error.response.data.message;
+  try {
+    dispatch(allStoresRequest());
+    const token = await AsyncStorage.getItem('token');
+
+    if (!token) {
+      dispatch(allStoresFail('Login First'));
     }
-  });
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/stores`, config);
+    dispatch(allStoresSuccess(data.stores));
+    return data.stores;
+  } catch (error) {
+    dispatch(allStoresFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+});
+
+export const fetchStores = createAsyncThunk('allStores/fetchAllStores', async (_, { dispatch }) => {
+  try {
+    dispatch(allStoresRequest());
+    const token = await AsyncStorage.getItem('token');
+
+    if (!token) {
+      dispatch(allStoresFail('Login First'));
+    }
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/stores`, config);
+    dispatch(allStoresSuccess(data.stores));
+    return data.stores;
+  } catch (error) {
+    dispatch(allStoresFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+});
 
 const allStoresSlice = createSlice({
   name: 'allStores',

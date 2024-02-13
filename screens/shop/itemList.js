@@ -1,29 +1,50 @@
-import React, {useState} from 'react'
-import { useSelector} from 'react-redux';
-import { FlatList, Image, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Text, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { FlatList, Image, View, TextInput, TouchableOpacity, Dimensions, Text, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { allCategories } from '../../shared/inputs';
+import { fetchAllStores } from '../../store/reducers/store/allStoresSlice';
+
 const { width, height } = Dimensions.get('screen');
 
-const ItemList = ({ products , onRefresh, refreshing }) => {
+const ItemList = ({ products, onRefresh, refreshing }) => {
     const navigation = useNavigation();
+    const dispatch = useDispatch();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedStore, setSelectedStore] = useState(null);
     const { cartItems } = useSelector(state => state.cart);
+    const { stores } = useSelector(state => state.allStores);
+
+    useEffect(() => {
+        dispatch(fetchAllStores());
+    }, [dispatch]);
+    
+
+
     const handleCategoryPress = (category) => {
         setSelectedCategory((prevCategory) =>
             prevCategory && prevCategory.value === category.value ? null : category
         );
     };
 
+    const handleStorePress = (store) => {
+
+        setSelectedStore((prevStore) =>
+            prevStore && prevStore.name === store.name ? null : store
+        );
+    };
+
     const filteredProducts = products.filter((product) => {
         return (
             (selectedCategory ? product.category === selectedCategory.value : true) &&
+            (selectedStore ? product.store.name === selectedStore.name : true) &&
             (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
                 product.store.name.toLowerCase().includes(searchQuery.toLowerCase())
-                )
+              
+            )
         );
     });
 
@@ -36,13 +57,12 @@ const ItemList = ({ products , onRefresh, refreshing }) => {
                     onChangeText={(text) => setSearchQuery(text)}
                     value={searchQuery}
                 />
-                <TouchableOpacity style={styles.cartButton} onPress={()=>navigation.navigate('Cart')}>
+                <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('Cart')}>
                     <MaterialCommunityIcons name="cart" size={30} color="#000" />
                     <View style={styles.badgeContainer}>
                         <Text style={styles.badgeText}>{cartItems.length}</Text>
                     </View>
                 </TouchableOpacity>
-
             </View>
             <View style={styles.categoryContainer}>
                 <FlatList
@@ -51,7 +71,6 @@ const ItemList = ({ products , onRefresh, refreshing }) => {
                     keyExtractor={(category) => category.value}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    
                     renderItem={({ item: category }) => (
                         <TouchableOpacity
                             style={[
@@ -60,15 +79,35 @@ const ItemList = ({ products , onRefresh, refreshing }) => {
                             ]}
                             onPress={() => handleCategoryPress(category)}
                         >
-                            <Text style={
-                                [styles.categoryText,
-                                selectedCategory?.value === category.value && { color: '#fff' },]}>
-                                {category.label}</Text>
+                            <Text style={[styles.categoryText, selectedCategory?.value === category.value && { color: '#fff' }]}>
+                                {category.label}
+                            </Text>
                         </TouchableOpacity>
                     )}
                 />
             </View>
-
+            <View style={styles.categoryContainer}>
+                <FlatList
+                    style={styles.categoryList}
+                    data={stores}
+                    keyExtractor={(store) => store._id}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item: store }) => (
+                        <TouchableOpacity
+                            style={[
+                                styles.storeItem,
+                                selectedStore?._id === store._id && { backgroundColor: '#13263e' },
+                            ]}
+                            onPress={() => handleStorePress(store)}
+                        >
+                            <Text style={[styles.categoryText, selectedStore?.name === store.name && { color: '#fff' }]}>
+                                {store.name}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
             <FlatList
                 contentContainerStyle={styles.flatList}
                 data={filteredProducts}
@@ -77,13 +116,13 @@ const ItemList = ({ products , onRefresh, refreshing }) => {
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
                     />
-                  }
+                }
                 renderItem={({ item: product }) => (
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
-                        <View style={styles.itemContainer} >
+                    <TouchableOpacity onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
+                        <View style={styles.itemContainer}>
                             <View style={styles.card}>
                                 <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
                                 <Text style={styles.title}>{product?.name}</Text>
@@ -91,12 +130,11 @@ const ItemList = ({ products , onRefresh, refreshing }) => {
                                 <Text style={styles.price}>₱{product?.sellPrice}</Text>
                             </View>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 )}
             />
         </View>
     );
-
 };
 
 const styles = {
@@ -151,7 +189,7 @@ const styles = {
     },
     subtitle: {
         fontSize: 16,
-        
+
     },
     itemContainer: {
         flex: 0.5,
@@ -196,6 +234,15 @@ const styles = {
         height: 40,
         paddingHorizontal: 10,
         backgroundColor: '#f0a047',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    storeItem: {
+        marginRight: 10,
+        height: 40,
+        paddingHorizontal: 10,
+        backgroundColor: '#7a8fda',
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
