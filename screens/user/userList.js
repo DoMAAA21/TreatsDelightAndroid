@@ -66,7 +66,7 @@ const UserList = ({ users }) => {
               <Image style={styles.image} source={{ uri: user?.avatar?.url }} />
               <View style={styles.cardContent}>
                 <Text style={styles.name}>{user?.fname} {user?.lname}</Text>
-                <Text style={styles.count}>{user?.email}</Text>
+                <Text style={styles.count}>{user?.store?.name}</Text>
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
                     style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25 }]}

@@ -51,7 +51,7 @@ const HomeStack = () => {
             </TouchableOpacity>
           ),
         }}/>
-      <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Users' }} />
+      <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Owners' }} />
       <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
       <Stack.Screen name="EditUser" component={EditUserScreen} options={{ headerTitle: 'Edit User' }} />
       <Stack.Screen name="UserInfo" component={UserInfo} options={{ headerTitle: 'User Information' }} />
