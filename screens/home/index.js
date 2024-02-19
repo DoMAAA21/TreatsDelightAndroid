@@ -139,9 +139,8 @@ const HomeScreen = () => {
                 >
                   <Block middle center style={styles.content}>
                     <UserGroup height={40} width={40} />
-                    <Text size={16}>Users</Text>
+                    <Text size={16}>Owners</Text>
                   </Block>
-
                 </TouchableOpacity>
 
 

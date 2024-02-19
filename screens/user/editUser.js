@@ -23,8 +23,6 @@ const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     religion: Yup.string().required('Religion is required'),
-    course: Yup.string().required('Course is required'),
-    role: Yup.string().required('Role is required'),
 });
 
 const MyInput = ({ field, form, ...props }) => (
@@ -99,8 +97,6 @@ const EditUserScreen = () => {
         lname: user?.lname || '',
         email: user?.email || '',
         password: '',
-        role: user?.role || '',
-        course: user?.course || '',
         religion: user?.religion || '',
         store: user.store ? `${user.store.storeId}-${user.store.name}` : '',
     };
@@ -142,14 +138,16 @@ const EditUserScreen = () => {
 
 
     const onSubmit = (values) => {
+        const selectedStoreValue = values.store.split('-');
+        const storeId = selectedStoreValue[0];
+        const storeName = selectedStoreValue[1];
         const formData = new FormData();
         formData.append("fname", values.fname);
         formData.append("lname", values.lname);
         formData.append("email", values.email);
         formData.append("password", values.password);
-        formData.append("course", values.course);
         formData.append("religion", values.religion);
-        formData.append("role", values.role);
+        formData.append("role", "Owner");
         formData.append("avatar", avatar);
         if (avatar) {
             formData.append("avatar", {
@@ -158,13 +156,8 @@ const EditUserScreen = () => {
                 name: "avatar.jpg",
             });
         }
-        if (values.role === "Employee" && values.store) {
-            const selectedStoreValue = values.store.split('-');
-            const storeId = selectedStoreValue[0];
-            const storeName = selectedStoreValue[1];
-            formData.append("storeId", storeId);
-            formData.append("storeName", storeName);
-        }
+        formData.append("storeId", storeId);
+        formData.append("storeName", storeName);
         dispatch(updateUser({ id: userId, userData: formData }));
     };
 
@@ -215,28 +208,7 @@ const EditUserScreen = () => {
                                 {formik.touched.password && formik.errors.password ? (
                                     <Text style={styles.errorMessage}>{formik.errors.password}</Text>
                                 ) : null}
-                                <View style={styles.inputContainer}>
-                                    <Field name="course">
-                                        {({ field }) => (
-                                            <View style={styles.inputContainer}>
-                                                <Text>Course</Text>
-                                                <Picker
-                                                    selectedValue={field.value}
-                                                    onValueChange={field.onChange('course')}
-                                                >
-                                                    <Picker.Item label="Choose Option" value="" />
 
-                                                    {courses.map((courseOption) => (
-                                                        <Picker.Item label={courseOption.label} value={courseOption.value} key={courseOption.value} />
-                                                    ))}
-                                                </Picker>
-                                            </View>
-                                        )}
-                                    </Field>
-                                    {formik.touched.course && formik.errors.course ? (
-                                        <Text style={styles.errorMessage}>{formik.errors.course}</Text>
-                                    ) : null}
-                                </View>
 
                                 <View style={styles.inputContainer}>
                                     <Field name="religion">
@@ -260,32 +232,7 @@ const EditUserScreen = () => {
                                     ) : null}
                                 </View>
 
-                                <View style={styles.inputContainer}>
-                                    <Field name="role">
-                                        {({ field }) => (
-                                            <View style={styles.inputContainer}>
-                                                <Text>Role</Text>
-                                                <Picker
-                                                    selectedValue={field.value}
-                                                    onValueChange={(itemValue) => {
-                                                        field.onChange('role')(itemValue);
-                                                        setSelectedRole(itemValue);
-                                                    }}
-                                                >
-                                                    <Picker.Item label="Choose Option" value="" />
-                                                    {roles.map((roleOption) => (
-                                                        <Picker.Item label={roleOption} value={roleOption} key={roleOption} />
-                                                    ))}
-                                                </Picker>
-                                            </View>
-                                        )}
-                                    </Field>
-                                    {formik.touched.role && formik.errors.role ? (
-                                        <Text style={styles.errorMessage}>{formik.errors.role}</Text>
-                                    ) : null}
-                                </View>
-
-                                {selectedRole === 'Employee' && loadingOptions ? (
+                                {loadingOptions ? (
                                     <View style={styles.inputContainer}>
                                         <Field name="store">
                                             {({ field }) => (

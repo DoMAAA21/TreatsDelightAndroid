@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-nat
 import { Text} from 'galio-framework';
 import { useNavigation } from '@react-navigation/native';
 import UserList from './userList';
-import { fetchAllUsers,clearErrors } from '../../store/reducers/user/allUsersSlice';
+import { fetchAllOwners ,clearErrors } from '../../store/reducers/user/allUsersSlice';
 import { deleteUserReset, updateUserReset } from '../../store/reducers/user/userSlice';
 import { successMsg, errorMsg } from '../../shared/toast';
 
@@ -16,15 +16,11 @@ const UserScreen = () => {
   const { success } = useSelector(state => state.newUser);
   const { isDeleted, isUpdated, error: errorUser } = useSelector(state => state.user)
   const [ firstLoading, setFirstLoading] = useState(true);
-
-
-
-  
   useEffect(() => {
     if (success) {
-      dispatch(fetchAllUsers());
+      dispatch(fetchAllOwners());
     } else {
-      dispatch(fetchAllUsers())
+      dispatch(fetchAllOwners())
       .then(() => {
         setFirstLoading(false);
       });
@@ -41,18 +37,18 @@ const UserScreen = () => {
     if (isDeleted) {
       successMsg('Deleted','User Removed');
       dispatch(deleteUserReset());
-      dispatch(fetchAllUsers());
+      dispatch(fetchAllOwners());
     }
 
     if (isUpdated) {
       successMsg('Updated','User Updated');
       dispatch(updateUserReset());
-      dispatch(fetchAllUsers());
+      dispatch(fetchAllOwners());
     }
     if (errorUser){      
       errorMsg(errorUser);
       dispatch(deleteUserReset());
-      dispatch(fetchAllUsers());
+      dispatch(fetchAllOwners());
     }
 
 

@@ -33,6 +33,29 @@ export const fetchAllUsers = createAsyncThunk('allUsers/fetchAllUsers',async (_,
   }
 );
 
+
+export const fetchAllOwners = createAsyncThunk('allUsers/fetchAllOwners',async (_, {dispatch}) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    
+    if (!token) {
+      dispatch(allUsersFail('Login First'));
+    }
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/owners`,config);
+    dispatch(allUsersSuccess(data.owners));
+    return data.owners;
+  } catch (error) {
+    dispatch(allUsersFail(error.response.data.message))
+    throw error.response.data.message; 
+  }
+}
+);
+
 const allUsersSlice = createSlice({
   name: 'allUsers',
   initialState,
