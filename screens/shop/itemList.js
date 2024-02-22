@@ -4,7 +4,7 @@ import { FlatList, Image, View, TextInput, TouchableOpacity, Dimensions, Text, R
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { allCategories } from '../../shared/inputs';
-import { fetchAllStores } from '../../store/reducers/store/allStoresSlice';
+import { fetchStores } from '../../store/reducers/store/allStoresSlice';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -18,9 +18,9 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
     const { stores } = useSelector(state => state.allStores);
 
     useEffect(() => {
-        dispatch(fetchAllStores());
+        dispatch(fetchStores());
     }, [dispatch]);
-    
+
 
 
     const handleCategoryPress = (category) => {
@@ -43,7 +43,7 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
             (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
                 product.store.name.toLowerCase().includes(searchQuery.toLowerCase())
-              
+
             )
         );
     });
@@ -86,28 +86,30 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
                     )}
                 />
             </View>
-            <View style={styles.categoryContainer}>
-                <FlatList
-                    style={styles.categoryList}
-                    data={stores}
-                    keyExtractor={(store) => store._id}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item: store }) => (
-                        <TouchableOpacity
-                            style={[
-                                styles.storeItem,
-                                selectedStore?._id === store._id && { backgroundColor: '#13263e' },
-                            ]}
-                            onPress={() => handleStorePress(store)}
-                        >
-                            <Text style={[styles.categoryText, selectedStore?.name === store.name && { color: '#fff' }]}>
-                                {store.name}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                />
-            </View>
+            {stores && stores.length > 0 && (
+                <View style={styles.categoryContainer}>
+                    <FlatList
+                        style={styles.categoryList}
+                        data={stores}
+                        keyExtractor={(store) => store._id}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item: store }) => (
+                            <TouchableOpacity
+                                style={[
+                                    styles.storeItem,
+                                    selectedStore?._id === store._id && { backgroundColor: '#13263e' },
+                                ]}
+                                onPress={() => handleStorePress(store)}
+                            >
+                                <Text style={[styles.categoryText, selectedStore?.name === store.name && { color: '#fff' }]}>
+                                    {store.name}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+            )}
             <FlatList
                 contentContainerStyle={styles.flatList}
                 data={filteredProducts}
