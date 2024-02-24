@@ -7,8 +7,8 @@ const StoreList = ({ stores }) => {
     const [searchQuery, setSearchQuery] = useState('');
 
 
-    const navigateWater = (id) => {
-        navigation.navigate('WaterTransactions', { id });
+    const navigateElectricity = (id) => {
+        navigation.navigate('ElectricityTransactions', { id });
     };
 
     return (
@@ -28,13 +28,13 @@ const StoreList = ({ stores }) => {
                 keyExtractor={(store) => store._id.toString()}
                 renderItem={({ item: store }) => (
                     <View key={store._id} style={styles.container}>
-                        <TouchableOpacity style={styles.card} onPress={() => navigateWater(store._id)}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigateElectricity(store._id)}>
                             <Image style={styles.image} source={{ uri: store?.logo?.url }} />
                             <View style={styles.cardContent}>
                                 <Text style={styles.name}>{store?.name}</Text>
-                                <Text style={[styles.name, store?.water < 0 ? { color: 'red' } : { color: 'green' }]}>
-                                    {store?.water < 0 ? '-₱' : '₱'}
-                                    {Math.abs(store?.water || 0)}
+                                <Text style={[styles.name, store?.electricity < 0 ? { color: 'red' } : { color: 'green' }]}>
+                                    {store?.electricity < 0 ? '-₱' : '₱'}
+                                    {Math.abs(store?.electricity || 0)}
                                 </Text>
 
                             </View>

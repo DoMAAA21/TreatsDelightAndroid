@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { FlatList, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { FlatList, Image, View, TextInput, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const StoreList = ({ stores }) => {
-    const dispatch = useDispatch();
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
 
