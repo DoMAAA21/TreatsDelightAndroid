@@ -13,7 +13,10 @@ import UserSquare from '../../assets/svg/UserSquare';
 import Dish from '../../assets/svg/Dish';
 import Package from '../../assets/svg/Package';
 import Chart from '../../assets/svg/Chart';
-
+import Rent from '../../assets/svg/Rent';
+import Faucet from '../../assets/svg/Faucet';
+import Electricity from '../../assets/svg/Electricity';
+import Wrench from '../../assets/svg/Wrench';
 
 const screenHeight = Dimensions.get('window').height;
 const HomeScreen = () => {
@@ -158,7 +161,7 @@ const HomeScreen = () => {
                     onPress={() => navigation.navigate('Rent')}
                   >
                     <Block middle center style={styles.content}>
-                      <Store height={40} width={40} />
+                      <Rent height={40} width={40} />
                       <Text size={16}>Rent</Text>
                     </Block>
                   </TouchableOpacity>
@@ -169,7 +172,7 @@ const HomeScreen = () => {
                     onPress={() => navigation.navigate('Water')}
                   >
                     <Block middle center style={styles.content}>
-                      <Store height={40} width={40} />
+                      <Faucet height={40} width={40} />
                       <Text size={16}>Water</Text>
                     </Block>
                   </TouchableOpacity>
@@ -180,7 +183,7 @@ const HomeScreen = () => {
                     onPress={() => navigation.navigate('Electricity')}
                   >
                     <Block middle center style={styles.content}>
-                      <Store height={40} width={40} />
+                      <Electricity height={40} width={40} />
                       <Text size={16}>Electricity</Text>
                     </Block>
                   </TouchableOpacity>
@@ -191,7 +194,7 @@ const HomeScreen = () => {
                     onPress={() => navigation.navigate('Maintenance')}
                   >
                     <Block middle center style={styles.content}>
-                      <Store height={40} width={40} />
+                      <Wrench height={40} width={40} />
                       <Text size={16}>Maintenance</Text>
                     </Block>
                   </TouchableOpacity>
