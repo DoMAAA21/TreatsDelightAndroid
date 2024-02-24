@@ -44,8 +44,6 @@ const TransactionList = ({ waters }) => {
                     water?.type?.toLowerCase().includes(searchQuery.toLowerCase())
                 )
                 }
-
-
                 contentContainerStyle={styles.flatList}
                 keyExtractor={(water) => water._id.toString()}
                 renderItem={({ item: water }) => (
