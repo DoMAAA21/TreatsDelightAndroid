@@ -28,6 +28,7 @@ import ChartSreen from '../screens/analytic/index';
 import ScannerScreen from '../screens/scanner/index';
 import RentScreen from '../screens/rent/index';
 import RentTransactionScreen from '../screens/rent/rentTransactions';
+import AddRentScreen from '../screens/rent/addRent';
 
 
 
@@ -78,6 +79,7 @@ const HomeStack = () => {
       <Stack.Screen name="Scanner" component={ScannerScreen} />
       <Stack.Screen name="Rent" component={RentScreen} options={{ headerTitle: 'Rent' }} />
       <Stack.Screen name="RentTransactions" component={RentTransactionScreen} options={{ headerTitle: 'Rent Transactions' }} />
+      <Stack.Screen name="AddRent" component={AddRentScreen} options={{ headerTitle: 'Add Rent' }} />
     </Stack.Navigator>
   );
 };

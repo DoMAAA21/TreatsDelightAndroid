@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { FlatList, Image, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+const { width } = Dimensions.get('screen');
+
 const TransactionList = ({ rents }) => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
@@ -33,11 +35,23 @@ const TransactionList = ({ rents }) => {
                 keyExtractor={(rent) => rent._id.toString()}
                 renderItem={({ item: rent }) => (
                     <View key={rent._id} style={styles.container}>
-                        <TouchableOpacity style={styles.card} onPress={() => navigateRent(rent._id)}>
+                        <View style={styles.card} onPress={() => navigateRent(rent._id)}>
                             <View style={styles.cardContent}>
-                            <Text style={[styles.name, rent.amount < 0 ? {color: 'red'} : {color: 'green'}]}>{rent?.amount}</Text>
+                                <Text style={[styles.name, rent.amount < 0 ? { color: 'red' } : { color: 'green' }]}>
+                                    {rent.amount >= 0 ? 'Paid ' : 'To Pay '}{rent?.amount < 0 && "-"}
+                                    ₱{Math.abs(rent?.amount)}
+                                </Text>
+                                <Text style={styles.count}>Issued At: {new Date(rent.issuedAt).toISOString().slice(0, 10)}</Text>
+                                <Text style={styles.count}>Paid At: {rent?.paidAt ? new Date(rent.paidAt).toISOString().slice(0, 10) : 'Not paid yet'}</Text>
                             </View>
-                        </TouchableOpacity>
+                            <View style={styles.buttonContainer}>
+                                <TouchableOpacity
+                                    style={[styles.followButton, { backgroundColor: '#ff2752' }]}
+                                    onPress={() => confirmDelete(store._id)}>
+                                    <Text style={styles.followButtonText}>Delete</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
                 )}
 
@@ -87,9 +101,10 @@ const styles = {
         backgroundColor: 'white',
         padding: 10,
         flexDirection: 'row',
+        alignItems: 'center'
     },
     name: {
-        fontSize: 18,
+        fontSize: 16,
         flex: 1,
         alignSelf: 'center',
         color: 'black',
@@ -100,6 +115,30 @@ const styles = {
         flex: 1,
         alignSelf: 'center',
         color: 'black',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginRight: 20,
+    },
+    followButton: {
+        marginTop: 10,
+        height: 35,
+        width: 80,
+        padding: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 30,
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#dcdcdc',
+        marginLeft: width * 0.015,
+        marginRight: width * 0.015,
+    },
+    followButtonText: {
+        color: 'white',
+        fontSize: 12,
     },
 
 };

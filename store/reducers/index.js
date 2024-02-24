@@ -21,6 +21,7 @@ import allOrdersReducer from './chart/allOrdersSlice';
 import productsSoldReducer from './chart/productsSoldSlice';
 import allSalesReducer from './chart/allSalesSlice';
 import allRentsReducer from './rent/allRentsSlice';
+import newRentReducer from './rent/newRentSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   allSold : productsSoldReducer,
   allSales : allSalesReducer,
   allRent : allRentsReducer,
+  newRent : newRentReducer
 
 });
 

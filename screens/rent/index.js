@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import {  useFocusEffect } from '@react-navigation/native';
 import StoreList from './storeList';
 import { fetchAllStores, clearErrors, clearStores } from '../../store/reducers/store/allStoresSlice';
@@ -8,11 +8,14 @@ import { errorMsg } from '../../shared/toast';
 
 const RentScreen = () => {
     const dispatch = useDispatch();
-    const { error, stores } = useSelector(state => state.allStores);
-   
+    const { error, stores} = useSelector(state => state.allStores);
+    const [ firstLoading, setFirstLoading] = useState(true);
     useFocusEffect(
         useCallback(() => {
-            dispatch(fetchAllStores());
+            dispatch(fetchAllStores())
+            .then(() => {
+                setFirstLoading(false);
+              });
             if (error) {
                 errorMsg(error)
                 dispatch(clearErrors())
@@ -24,7 +27,8 @@ const RentScreen = () => {
     );
     return (
         <View style={styles.container}>
-            <StoreList stores={stores} />
+            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <StoreList stores={stores} />}
+            
         </View>
     );
 };
