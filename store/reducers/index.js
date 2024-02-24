@@ -20,6 +20,7 @@ import cartReducer from './cart/cartSlice';
 import allOrdersReducer from './chart/allOrdersSlice';
 import productsSoldReducer from './chart/productsSoldSlice';
 import allSalesReducer from './chart/allSalesSlice';
+import allRentsReducer from './rent/allRentsSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -42,7 +43,8 @@ const rootReducer = combineReducers({
   cart : cartReducer,
   allOrders : allOrdersReducer,
   allSold : productsSoldReducer,
-  allSales : allSalesReducer
+  allSales : allSalesReducer,
+  allRent : allRentsReducer,
 
 });
 

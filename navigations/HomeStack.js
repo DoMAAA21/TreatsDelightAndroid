@@ -26,6 +26,8 @@ import MealInfo from '../screens/meal/mealInfo';
 import StockScreen from  '../screens/stock/index';
 import ChartSreen from '../screens/analytic/index';
 import ScannerScreen from '../screens/scanner/index';
+import RentScreen from '../screens/rent/index';
+import RentTransactionScreen from '../screens/rent/rentTransactions';
 
 
 
@@ -74,6 +76,8 @@ const HomeStack = () => {
       <Stack.Screen name="Stocks" component={StockScreen} options={{ headerTitle: 'Manage Stocks' }} />
       <Stack.Screen name="Analytics" component={ChartSreen} options={{ headerTitle: 'Analytics' }} />
       <Stack.Screen name="Scanner" component={ScannerScreen} />
+      <Stack.Screen name="Rent" component={RentScreen} options={{ headerTitle: 'Rent' }} />
+      <Stack.Screen name="RentTransactions" component={RentTransactionScreen} options={{ headerTitle: 'Rent Transactions' }} />
     </Stack.Navigator>
   );
 };
