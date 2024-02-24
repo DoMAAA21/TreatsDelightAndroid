@@ -40,7 +40,7 @@ const TransactionList = ({ waters }) => {
             />
             <FlatList
                 data={waters.filter((water) =>
-                    water?.amount?.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    water?.total?.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
                     water?.type?.toLowerCase().includes(searchQuery.toLowerCase())
                 )
                 }
