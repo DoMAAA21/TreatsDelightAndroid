@@ -27,7 +27,6 @@ export const newRent = createAsyncThunk('newRent/newRent', async (rentData, { di
     };
 
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/rent/new`, rentData, config);
-    console.log(data);
     dispatch(newRentSuccess(data))
     return data;
   } catch (error) {

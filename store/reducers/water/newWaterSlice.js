@@ -27,7 +27,6 @@ export const newWater = createAsyncThunk('newWater/newWater', async (waterData, 
     };
 
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/water/new`, waterData, config);
-    console.log(data);
     dispatch(newWaterSuccess(data))
     return data;
   } catch (error) {
