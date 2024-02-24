@@ -176,6 +176,17 @@ const HomeScreen = () => {
                     <Text size={16}>Water</Text>
                   </Block>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                  key='Electricity'
+                  style={styles.box}
+                  onPress={() => navigation.navigate('Electricity')}
+                >
+                  <Block middle center style={styles.content}>
+                    <Store height={40} width={40} />
+                    <Text size={16}>Electricity</Text>
+                  </Block>
+                </TouchableOpacity>
               </>
             : null
             }

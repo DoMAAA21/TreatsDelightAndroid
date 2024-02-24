@@ -6,8 +6,8 @@ import { Text, Input, Block, Button } from 'galio-framework';
 import { Picker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { newWaterReset } from '../../store/reducers/water/newWaterSlice';
-import { newWater } from '../../store/reducers/water/newWaterSlice';
+import { newElectricityReset } from '../../store/reducers/electricity/newElectricitySlice';
+import { newElectricity } from '../../store/reducers/electricity/newElectricitySlice';
 import { successMsg, errorMsg } from '../../shared/toast';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -31,14 +31,14 @@ const MyInput = ({ field, form, ...props }) => (
     />
 );
 
-const AddWaterScreen = () => {
+const AddElectricityScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const route = useRoute();
     const { id } = route.params;
     const [issuedAt, setIssuedAt] = useState(new Date().toISOString().split('T')[0]);
     const [paidAt, setPaidAt] = useState(new Date().toISOString().split('T')[0]);
-    const { loading, error, success } = useSelector(state => state.newWater);
+    const { loading, error, success } = useSelector(state => state.newElectricity);
     const [issuedAtPickerVisible, setIssuedAtPickerVisible] = useState(false);
     const [paidAtPickerVisible, setPaidAtPickerVisible] = useState(false);
 
@@ -50,13 +50,13 @@ const AddWaterScreen = () => {
     useEffect(() => {
         if (error) {
             errorMsg(error)
-            dispatch(newWaterReset())
+            dispatch(newElectricityReset())
         }
 
         if (success) {
-            navigation.navigate('WaterTransactions', { id });
-            dispatch(newWaterReset())
-            successMsg('New Water Added');
+            navigation.navigate('ElectricityTransactions', { id });
+            dispatch(newElectricityReset())
+            successMsg('New Electricity Added');
         }
     }, [dispatch, error, success, navigation])
 
@@ -69,7 +69,7 @@ const AddWaterScreen = () => {
     };
 
     const onSubmit = (values) => {
-        const waterData = {
+        const electricityData = {
             consumed: parseFloat(values.consumed),
             price: parseFloat(values.price),
             additionals: parseFloat(values.additionals),
@@ -79,7 +79,7 @@ const AddWaterScreen = () => {
             paidAt,
             storeId: id,
         }
-        dispatch(newWater(waterData));
+        dispatch(newElectricity(electricityData));
     };
 
     return (
@@ -90,59 +90,58 @@ const AddWaterScreen = () => {
                 onSubmit={onSubmit}
             >
                 {(formik) => (
-
                     <View style={styles.container}>
                         <Block style={styles.formContainer}>
                             <Text h5 style={styles.formHeader}>
-                                New Water
+                                New Electricity
                             </Text>
                             <View style={styles.formContainer}>
-                            <Text>Consumed</Text>
-                            <Field
-                                name="consumed"
-                                component={MyInput}
-                                keyboardType="numeric"
-                            />
-                            {formik.touched.consumed && formik.errors.consumed ? (
-                                <Text style={styles.errorMessage}>{formik.errors.consumed}</Text>
-                            ) : null}
+                                <Text>Consumed</Text>
+                                <Field
+                                    name="consumed"
+                                    component={MyInput}
+                                    keyboardType="numeric"
+                                />
+                                {formik.touched.consumed && formik.errors.consumed ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.consumed}</Text>
+                                ) : null}
                             </View>
 
 
                             <View style={styles.formContainer}>
-                            <Text>Price per m³</Text>
-                            <Field
-                                name="price"
-                                placeholder="Price per m³"
-                                component={MyInput}
-                                keyboardType="numeric"
-                            />
-                            {formik.touched.price && formik.errors.price ? (
-                                <Text style={styles.errorMessage}>{formik.errors.price}</Text>
-                            ) : null}
+                                <Text>Price per watts</Text>
+                                <Field
+                                    name="price"
+                                    placeholder="Price per watts"
+                                    component={MyInput}
+                                    keyboardType="numeric"
+                                />
+                                {formik.touched.price && formik.errors.price ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.price}</Text>
+                                ) : null}
                             </View>
 
                             <View style={styles.formContainer}>
-                            <Text>Additionals / Deductions</Text>
-                            <Field
-                                name="additionals"
-                                component={MyInput}
-                                keyboardType="numeric"
-                            />
-                            {formik.touched.additionals && formik.errors.additionals ? (
-                                <Text style={styles.errorMessage}>{formik.errors.additionals}</Text>
-                            ) : null}
+                                <Text>Additionals / Deductions</Text>
+                                <Field
+                                    name="additionals"
+                                    component={MyInput}
+                                    keyboardType="numeric"
+                                />
+                                {formik.touched.additionals && formik.errors.additionals ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.additionals}</Text>
+                                ) : null}
                             </View>
 
 
                             <View style={styles.formContainer}>
-                            <Text>Total</Text>
-                            <Input
-                                name="total"
-                                value={((formik.values.consumed && formik.values.price) ? ((formik.values.consumed * formik.values.price) + parseFloat(formik.values.additionals)).toString() : '0')}
-                                style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
-                                editable={false}
-                            />
+                                <Text>Total</Text>
+                                <Input
+                                    name="total"
+                                    value={((formik.values.consumed && formik.values.price) ? ((formik.values.consumed * formik.values.price) + parseFloat(formik.values.additionals)).toString() : '0')}
+                                    style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
+                                    editable={false}
+                                />
                             </View>
 
 
@@ -293,4 +292,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddWaterScreen;
+export default AddElectricityScreen;

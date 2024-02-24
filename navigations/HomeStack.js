@@ -34,7 +34,10 @@ import WaterScreen from '../screens/water';
 import WaterTransactionScreen from '../screens/water/waterTransactions';
 import AddWaterScreen from '../screens/water/addWater';
 import WaterArchiveScreen from '../screens/water/archives';
-
+import ElectricityScreen from '../screens/electricity';
+import ElectricityTransactionScreen from '../screens/electricity/electricityTransactions';
+import AddElectricityScreen from '../screens/electricity/addElectricity';
+import ElectricityArchiveScreen from '../screens/electricity/archives';
 
 
 
@@ -91,6 +94,10 @@ const HomeStack = () => {
       <Stack.Screen name="WaterTransactions" component={WaterTransactionScreen} options={{ headerTitle: 'Water Transactions' }} />
       <Stack.Screen name="AddWater" component={AddWaterScreen} options={{ headerTitle: 'Add Water' }} />
       <Stack.Screen name="WaterArchives" component={WaterArchiveScreen} options={{ headerTitle: 'Water Archives' }} />
+      <Stack.Screen name="Electricity" component={ElectricityScreen} options={{ headerTitle: 'Electricity' }} />
+      <Stack.Screen name="ElectricityTransactions" component={ElectricityTransactionScreen} options={{ headerTitle: 'Electricity Archives' }} />
+      <Stack.Screen name="AddElectricity" component={AddElectricityScreen} options={{ headerTitle: 'Add Electricity' }} />
+      <Stack.Screen name="ElectricityArchives" component={ElectricityArchiveScreen} options={{ headerTitle: 'Add Electricity' }} />
     </Stack.Navigator>
   );
 };

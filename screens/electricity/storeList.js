@@ -6,7 +6,6 @@ const StoreList = ({ stores }) => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
 
-
     const navigateElectricity = (id) => {
         navigation.navigate('ElectricityTransactions', { id });
     };

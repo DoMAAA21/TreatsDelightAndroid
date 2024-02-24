@@ -23,7 +23,8 @@ export const fetchAllElectricity = createAsyncThunk('allElectricity/fetchAllElec
                 Authorization: `${token}`,
             },
         };
-        const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/water/store/${id}`, config);
+        const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/electricity/store/${id}`, config);
+
         dispatch(allElectricitySuccess(data.electricity));
         return data.electricity;
     } catch (error) {
@@ -33,7 +34,7 @@ export const fetchAllElectricity = createAsyncThunk('allElectricity/fetchAllElec
 });
 
 export const fetchArchivedElectricity = createAsyncThunk('allElectricity/fetchArchivedElectricity', async (id, { dispatch }) => {
-    
+
     try {
         dispatch(allElectricityRequest());
         const token = await AsyncStorage.getItem('token');
@@ -45,8 +46,8 @@ export const fetchArchivedElectricity = createAsyncThunk('allElectricity/fetchAr
                 Authorization: `${token}`,
             },
         };
-     
-        const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/water/store/${id}/archived`, config);
+
+        const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/electricity/store/${id}/archived`, config);
         dispatch(allElectricitySuccess(data.electricity));
         return data.electricity;
     } catch (error) {

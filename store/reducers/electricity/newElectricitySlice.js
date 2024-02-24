@@ -27,7 +27,6 @@ export const newElectricity = createAsyncThunk('newElectricity/newElectricity', 
     };
 
     const { data } = await axios.post(`${BACKEND_URL}/api/v1/admin/electricity/new`, electricityData, config);
-    console.log(data);
     dispatch(newElectricitySuccess(data))
     return data;
   } catch (error) {
