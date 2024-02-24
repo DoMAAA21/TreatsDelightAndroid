@@ -30,6 +30,11 @@ import RentScreen from '../screens/rent/index';
 import RentTransactionScreen from '../screens/rent/rentTransactions';
 import AddRentScreen from '../screens/rent/addRent';
 import RentArchiveScreen from '../screens/rent/archives';
+import WaterScreen from '../screens/water';
+import WaterTransactionScreen from '../screens/water/waterTransactions';
+import AddWaterScreen from '../screens/water/addWater';
+import WaterArchiveScreen from '../screens/water/archives';
+
 
 
 
@@ -82,6 +87,10 @@ const HomeStack = () => {
       <Stack.Screen name="RentTransactions" component={RentTransactionScreen} options={{ headerTitle: 'Rent Transactions' }} />
       <Stack.Screen name="AddRent" component={AddRentScreen} options={{ headerTitle: 'Add Rent' }} />
       <Stack.Screen name="RentArchives" component={RentArchiveScreen} options={{ headerTitle: 'Rent Archives' }} />
+      <Stack.Screen name="Water" component={WaterScreen} options={{ headerTitle: 'Water' }} />
+      <Stack.Screen name="WaterTransactions" component={WaterTransactionScreen} options={{ headerTitle: 'Water Transactions' }} />
+      <Stack.Screen name="AddWater" component={AddWaterScreen} options={{ headerTitle: 'Add Water' }} />
+      <Stack.Screen name="WaterArchives" component={WaterArchiveScreen} options={{ headerTitle: 'Water Archives' }} />
     </Stack.Navigator>
   );
 };

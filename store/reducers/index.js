@@ -23,6 +23,9 @@ import allSalesReducer from './chart/allSalesSlice';
 import allRentsReducer from './rent/allRentsSlice';
 import newRentReducer from './rent/newRentSlice';
 import rentReducer from './rent/rentSlice';
+import allWatersReducer from './water/allWatersSlice';
+import newWaterReducer from './water/newWaterSlice';
+import waterReducer from './water/waterSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -49,6 +52,9 @@ const rootReducer = combineReducers({
   allRent : allRentsReducer,
   newRent : newRentReducer,
   rent : rentReducer,
+  allWater : allWatersReducer,
+  newWater : newWaterReducer,
+  water : waterReducer,
 
 });
 

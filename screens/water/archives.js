@@ -3,21 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import ArchivesList from './archivesList';
-import { fetchArchivedRents, clearErrors, clearRents } from '../../store/reducers/rent/allRentsSlice';
+import { fetchArchivedWaters, clearErrors, clearWaters } from '../../store/reducers/water/allWatersSlice';
 import { errorMsg, successMsg } from '../../shared/toast';
-import { restoreRentReset } from '../../store/reducers/rent/rentSlice';
+import { restoreWaterReset } from '../../store/reducers/water/waterSlice';
 
-const RentArchiveScreen = () => {
+const WaterArchiveScreen = () => {
     const dispatch = useDispatch();
     const route = useRoute();
     const { id } = route.params;
-    const { error, rents} = useSelector(state => state.allRent);
-    const { isRestored } = useSelector(state => state.rent);
-    const [ firstLoading, setFirstLoading] = useState(true);
+    const { error, waters } = useSelector(state => state.allWater);
+    const { isRestored } = useSelector(state => state.water);
+    const [firstLoading, setFirstLoading] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
-            dispatch(fetchArchivedRents(id)).then(()=>{
+            dispatch(fetchArchivedWaters(id)).then(() => {
                 setFirstLoading(false);
             });
             if (error) {
@@ -25,22 +25,22 @@ const RentArchiveScreen = () => {
                 dispatch(clearErrors())
             }
             return () => {
-                dispatch(clearRents())
+                dispatch(clearWaters())
             };
         }, [dispatch, error])
     );
 
-    useEffect(()=>{
+    useEffect(() => {
         if (isRestored) {
-          successMsg('Restored','Rent Restored');
-          dispatch(restoreRentReset());
-          dispatch(fetchArchivedRents(id));
+            successMsg('Restored', 'Water Restored');
+            dispatch(restoreWaterReset());
+            dispatch(fetchArchivedWaters(id));
         }
-      },[isRestored])
-      
+    }, [isRestored])
+
     return (
         <View style={styles.container}>
-            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ArchivesList rents={rents} />}
+            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <ArchivesList waters={waters} />}
         </View>
     );
 };
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default RentArchiveScreen;
+export default WaterArchiveScreen;
