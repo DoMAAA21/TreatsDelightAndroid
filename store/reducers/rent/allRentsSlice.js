@@ -32,11 +32,11 @@ export const fetchAllRents = createAsyncThunk('allRents/fetchAllRents', async (i
     }
 });
 
-export const fetchRents = createAsyncThunk('allRents/fetchAllRents', async (_, { dispatch }) => {
+export const fetchArchivedRents = createAsyncThunk('allRents/fetchArchivedRents', async (id, { dispatch }) => {
+    
     try {
         dispatch(allRentsRequest());
         const token = await AsyncStorage.getItem('token');
-
         if (!token) {
             dispatch(allRentsFail('Login First'));
         }
@@ -45,7 +45,8 @@ export const fetchRents = createAsyncThunk('allRents/fetchAllRents', async (_, {
                 Authorization: `${token}`,
             },
         };
-        const { data } = await axios.get(`${BACKEND_URL}/api/v1/rents`, config);
+     
+        const { data } = await axios.get(`${BACKEND_URL}/api/v1/admin/rent/store/${id}/archived`, config);
         dispatch(allRentsSuccess(data.rents));
         return data.rents;
     } catch (error) {

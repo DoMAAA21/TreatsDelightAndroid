@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FlatList, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { deleteRent } from '../../store/reducers/rent/rentSlice';
+import { restoreRent } from '../../store/reducers/rent/rentSlice';
 
 const { width } = Dimensions.get('screen');
 
-const TransactionList = ({ rents }) => {
+const ArchivesList = ({ rents }) => {
     const dispatch = useDispatch();
     const [searchQuery, setSearchQuery] = useState('');
-
 
     const confirmDelete = (id) => {
         Alert.alert(
           'Confirm Delete',
-          'Are you sure you want to delete this rent?',
+          'Are you sure you want to restore this rent?',
           [
             {
               text: 'Cancel',
               style: 'cancel',
             },
             {
-              text: 'Delete',
-              onPress: () => dispatch(deleteRent(id)),
+              text: 'Restore',
+              onPress: () => dispatch(restoreRent(id)),
               style: 'destructive',
             },
           ],
@@ -61,9 +60,9 @@ const TransactionList = ({ rents }) => {
                             </View>
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity
-                                    style={[styles.followButton, { backgroundColor: '#ff2752' }]}
+                                    style={[styles.followButton, { backgroundColor: '#2196F3' }]}
                                     onPress={() => confirmDelete(rent._id)}>
-                                    <Text style={styles.followButtonText}>Delete</Text>
+                                    <Text style={styles.followButtonText}>Restore</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -158,4 +157,4 @@ const styles = {
 
 };
 
-export default TransactionList;
+export default ArchivesList;

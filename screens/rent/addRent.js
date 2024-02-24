@@ -54,7 +54,7 @@ const AddRentScreen = () => {
         }
 
         if (success) {
-            navigation.navigate('RentTransactions',{id});
+            navigation.navigate('RentTransactions', { id });
             dispatch(newRentReset())
             successMsg('New Rent Added');
         }
@@ -143,7 +143,7 @@ const AddRentScreen = () => {
                                             onConfirm={(date) => {
                                                 setIssuedAtPickerVisible(false);
                                                 setIssuedAt(date.toISOString().split('T')[0]);
-                            
+
                                             }}
                                             onCancel={() => setIssuedAtPickerVisible(false)}
                                         />
@@ -159,7 +159,7 @@ const AddRentScreen = () => {
                                             <Text>Paid At</Text>
 
                                             <TouchableOpacity style={styles.dateButton} onPress={() => setPaidAtPickerVisible(true)}>
-                                            <Text style={styles.dateButtonText}>{paidAt ? paidAt : 'Select date'}</Text>
+                                                <Text style={styles.dateButtonText}>{paidAt ? paidAt : 'Select date'}</Text>
                                             </TouchableOpacity>
 
                                             <DateTimePickerModal
