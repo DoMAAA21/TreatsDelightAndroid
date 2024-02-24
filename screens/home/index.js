@@ -63,9 +63,6 @@ const HomeScreen = () => {
             </>
           )
           }
-
-
-
           <View style={styles.grid}>
 
             {user.role === 'Employee' || user.role === 'Owner' ?
@@ -130,65 +127,76 @@ const HomeScreen = () => {
 
               ) : user.role === "Admin" ?
 
-              <>
+                <>
 
-                <TouchableOpacity
-                  key='User'
-                  style={styles.box}
-                  onPress={() => navigation.navigate('Users')}
-                >
-                  <Block middle center style={styles.content}>
-                    <UserGroup height={40} width={40} />
-                    <Text size={16}>Owners</Text>
-                  </Block>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    key='User'
+                    style={styles.box}
+                    onPress={() => navigation.navigate('Users')}
+                  >
+                    <Block middle center style={styles.content}>
+                      <UserGroup height={40} width={40} />
+                      <Text size={16}>Owners</Text>
+                    </Block>
+                  </TouchableOpacity>
 
 
-                <TouchableOpacity
-                  key='Stores'
-                  style={styles.box}
-                  onPress={() => navigation.navigate('Stores')}
-                >
-                  <Block middle center style={styles.content}>
-                    <Store height={40} width={40} />
-                    <Text size={16}>Stores</Text>
-                  </Block>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    key='Stores'
+                    style={styles.box}
+                    onPress={() => navigation.navigate('Stores')}
+                  >
+                    <Block middle center style={styles.content}>
+                      <Store height={40} width={40} />
+                      <Text size={16}>Stores</Text>
+                    </Block>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  key='Rent'
-                  style={styles.box}
-                  onPress={() => navigation.navigate('Rent')}
-                >
-                  <Block middle center style={styles.content}>
-                    <Store height={40} width={40} />
-                    <Text size={16}>Rent</Text>
-                  </Block>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    key='Rent'
+                    style={styles.box}
+                    onPress={() => navigation.navigate('Rent')}
+                  >
+                    <Block middle center style={styles.content}>
+                      <Store height={40} width={40} />
+                      <Text size={16}>Rent</Text>
+                    </Block>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  key='Water'
-                  style={styles.box}
-                  onPress={() => navigation.navigate('Water')}
-                >
-                  <Block middle center style={styles.content}>
-                    <Store height={40} width={40} />
-                    <Text size={16}>Water</Text>
-                  </Block>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    key='Water'
+                    style={styles.box}
+                    onPress={() => navigation.navigate('Water')}
+                  >
+                    <Block middle center style={styles.content}>
+                      <Store height={40} width={40} />
+                      <Text size={16}>Water</Text>
+                    </Block>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  key='Electricity'
-                  style={styles.box}
-                  onPress={() => navigation.navigate('Electricity')}
-                >
-                  <Block middle center style={styles.content}>
-                    <Store height={40} width={40} />
-                    <Text size={16}>Electricity</Text>
-                  </Block>
-                </TouchableOpacity>
-              </>
-            : null
+                  <TouchableOpacity
+                    key='Electricity'
+                    style={styles.box}
+                    onPress={() => navigation.navigate('Electricity')}
+                  >
+                    <Block middle center style={styles.content}>
+                      <Store height={40} width={40} />
+                      <Text size={16}>Electricity</Text>
+                    </Block>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    key='Maintenance'
+                    style={styles.box}
+                    onPress={() => navigation.navigate('Maintenance')}
+                  >
+                    <Block middle center style={styles.content}>
+                      <Store height={40} width={40} />
+                      <Text size={16}>Maintenance</Text>
+                    </Block>
+                  </TouchableOpacity>
+                </>
+                : null
             }
 
 

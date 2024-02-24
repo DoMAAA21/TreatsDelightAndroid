@@ -38,6 +38,11 @@ import ElectricityScreen from '../screens/electricity';
 import ElectricityTransactionScreen from '../screens/electricity/electricityTransactions';
 import AddElectricityScreen from '../screens/electricity/addElectricity';
 import ElectricityArchiveScreen from '../screens/electricity/archives';
+import MaintenanceScreen from '../screens/maintenance';
+import MaintenanceTransactionScreen from '../screens/maintenance/maintenanceTransactions';
+import AddMaintenanceScreen from '../screens/maintenance/addMaintenance';
+import MaintenanceArchiveScreen from '../screens/maintenance/archives';
+
 
 
 
@@ -95,9 +100,13 @@ const HomeStack = () => {
       <Stack.Screen name="AddWater" component={AddWaterScreen} options={{ headerTitle: 'Add Water' }} />
       <Stack.Screen name="WaterArchives" component={WaterArchiveScreen} options={{ headerTitle: 'Water Archives' }} />
       <Stack.Screen name="Electricity" component={ElectricityScreen} options={{ headerTitle: 'Electricity' }} />
-      <Stack.Screen name="ElectricityTransactions" component={ElectricityTransactionScreen} options={{ headerTitle: 'Electricity Archives' }} />
+      <Stack.Screen name="ElectricityTransactions" component={ElectricityTransactionScreen} options={{ headerTitle: 'Electricity Transactions' }} />
       <Stack.Screen name="AddElectricity" component={AddElectricityScreen} options={{ headerTitle: 'Add Electricity' }} />
-      <Stack.Screen name="ElectricityArchives" component={ElectricityArchiveScreen} options={{ headerTitle: 'Add Electricity' }} />
+      <Stack.Screen name="ElectricityArchives" component={ElectricityArchiveScreen} options={{ headerTitle: 'Electricity Archives' }} />
+      <Stack.Screen name="Maintenance" component={MaintenanceScreen} options={{ headerTitle: 'Maintenance' }} />
+      <Stack.Screen name="MaintenanceTransactions" component={MaintenanceTransactionScreen} options={{ headerTitle: 'Maintenance Transactions' }} />
+      <Stack.Screen name="AddMaintenance" component={AddMaintenanceScreen} options={{ headerTitle: 'Add Maintenance' }} />
+      <Stack.Screen name="MaintenanceArchives" component={MaintenanceArchiveScreen} options={{ headerTitle: 'Maintenance Archives' }} />
     </Stack.Navigator>
   );
 };

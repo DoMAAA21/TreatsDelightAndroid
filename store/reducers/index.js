@@ -29,6 +29,9 @@ import waterReducer from './water/waterSlice';
 import allElectricityReducer from './electricity/allElectricitySlice';
 import newElectricityReducer from './electricity/newElectricitySlice';
 import electricityReducer from './electricity/electricitySlice';
+import allMaintenancesReducer from './maintenance/allMaintenancesSlice';
+import newMaintenanceReducer from './maintenance/newMaintenanceSlice';
+import maintenanceReducer from './maintenance/maintenanceSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -60,7 +63,10 @@ const rootReducer = combineReducers({
   water : waterReducer,
   allElectricity : allElectricityReducer,
   newElectricity :  newElectricityReducer,
-  electricity : electricityReducer
+  electricity : electricityReducer,
+  allMaintenance : allMaintenancesReducer,
+  newMaintenance :  newMaintenanceReducer,
+  maintenance : maintenanceReducer
 
 });
 
