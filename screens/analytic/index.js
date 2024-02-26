@@ -8,7 +8,8 @@ import SalesPerMonth from './chart/salesPerMonth';
 import { fetchAllOrders, clearAllOrders } from '../../store/reducers/chart/allOrdersSlice';
 import { fetchAllSold, clearAllSold } from '../../store/reducers/chart/productsSoldSlice';
 import { fetchAllSales, clearAllSales } from '../../store/reducers/chart/allSalesSlice';
-import { fetchAllItems } from '../../store/reducers/product/allProductsSlice';
+import { fetchAllProducts } from '../../store/reducers/product/allProductsSlice';
+import { getStoreDetails } from '../../store/reducers/store/storeDetailsSlice';
 import Card from './card';
 import Food from '../../assets/svg/Food';
 import Order from '../../assets/svg/Order';
@@ -16,39 +17,55 @@ import Peso from '../../assets/svg/Peso';
 import Employees from '../../assets/svg/Employees'
 
 const { height } = Dimensions.get('window');
-const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }];
+
+
+
+
+const formattedExpenses= (value) => {
+    const formattedValue = (value || 0) < 0 ? `-₱${Math.abs(value || 0)}` : `₱${value || 0}`;
+    const color = value && value < 0 ? 'red' : 'green';
+    return { formattedValue, color };
+  };
 
 const ChartScreen = () => {
     const dispatch = useDispatch();
     const { orders } = useSelector(state => state.allOrders);
+    const { user } = useSelector(state => state.auth);
+    const { store } = useSelector((state) => state.storeDetails);
     const { sold, loading: soldLoading } = useSelector(state => state.allSold);
     const { sales, loading: salesLoading } = useSelector(state => state.allSales);
-    const { items } = useSelector(state => state.allProducts);
+    const { products } = useSelector(state => state.allProducts);
     const [loading, setLoading] = useState(true);
-    const fetchAllOrdersAction = useMemo(() => fetchAllOrders(), []);
-    const fetchAllSoldAction = useMemo(() => fetchAllSold(), []);
-    const fetchAllSalesAction = useMemo(() => fetchAllSales(), []);
-    const fetchAllItemsAction = useMemo(() => fetchAllItems(), []);
     const totalOrder = orders && orders.reduce((sum, { totalOrderItems }) => sum + totalOrderItems, 0);
     const totalSales = sales && sales.reduce((sum, { totalSales }) => sum + totalSales, 0);
-    const totalItems = items.length;
+    const totalItems = products.length;
+
+    const electricity = formattedExpenses(store?.electricity);
+    const water = formattedExpenses(store?.water);
+    const rent = formattedExpenses(store?.rent);
 
 
 
     useFocusEffect(
         useCallback(() => {
-            dispatch(fetchAllOrdersAction).then(() => {
+            dispatch(fetchAllOrders()).then(()=>{
                 setLoading(false);
             });
-            dispatch(fetchAllSoldAction);
-            dispatch(fetchAllSalesAction);
-            dispatch(fetchAllItemsAction);
+            
+
+            if (user?.store?.storeId) {
+                dispatch(getStoreDetails(user.store.storeId));
+            }
+            dispatch(fetchAllSold());
+            dispatch(fetchAllSales());
+            dispatch(fetchAllProducts());
             return () => {
                 dispatch(clearAllOrders());
                 dispatch(clearAllSold());
                 dispatch(clearAllSales());
+                setLoading(true);
             }
-        }, [fetchAllOrdersAction, fetchAllSoldAction, fetchAllSalesAction])
+        }, [dispatch])
     );
 
     if (loading) {
@@ -58,16 +75,27 @@ const ChartScreen = () => {
             </View>
         );
     }
+
+
     return (
         <>
             <View style={styles.container}>
                 <View style={styles.row}>
-                    <Card title="Total Products" value={totalItems} icon={<Food height={40} width={40} />} />
+                    <Card title="Rent" 
+                    value={rent.formattedValue}
+                    valueStyle={{ color: rent.color }}
+                    icon={<Food height={40} width={40} />} />
 
-                    <Card title="Total Orders" value={totalOrder} icon={<Order height={40} width={40} />} />
+                    <Card title="Electricity" 
+                    value={electricity.formattedValue}
+                    valueStyle={{ color: electricity.color }}
+                    icon={<Order height={40} width={40} />} />
                 </View>
                 <View style={styles.row}>
-                    <Card title="Total Employees" value={2} icon={<Employees height={40} width={40} />} />
+                    <Card title="Water" 
+                    value={water.formattedValue}
+                    valueStyle={{ color: water.color }}
+                    icon={<Employees height={40} width={40} />} />
 
                     <Card title="Total Sales" value={`₱${totalSales}`} icon={<Peso height={40} width={40} />} />
                 </View>
@@ -80,7 +108,7 @@ const ChartScreen = () => {
                     </View>
                     <View>
                         <Text style={styles.title}>Orders Per Month</Text>
-                        <OrdersPerMonth data={orders} />
+                       {/* { orders && <OrdersPerMonth data={orders} /> }  */}
                     </View>
                     <View>
                         {soldLoading ? <ActivityIndicator /> : <ProductsSold data={sold} />}
