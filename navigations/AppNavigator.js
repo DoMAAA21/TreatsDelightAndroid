@@ -11,8 +11,6 @@ import HomeDark from '../assets/svg/HomeDark';
 import HomeWhite from '../assets/svg/HomeWhite';
 import BagDark from '../assets/svg/BagDark';
 import BagWhite from '../assets/svg/BagWhite';
-import MessageDark from '../assets/svg/MessageDark';
-import MessageWhite from '../assets/svg/MessageWhite';
 import ProfileDark from '../assets/svg/ProfileDark';
 import ProfileWhite from '../assets/svg/ProfileWhite';
 
@@ -89,15 +87,6 @@ const AppNavigator = () => {
           tabBarShowLabel: false,
           headerShown: false,
           tabBarIcon: () => <ShopIcon />,
-        }}
-      />
-      <Tab.Screen
-        name="Message"
-        component={ProfileStack}
-        options={{
-          tabBarShowLabel: false,
-          headerShown: false,
-          tabBarIcon: () => <MessageIcon />,
         }}
       />
       <Tab.Screen
