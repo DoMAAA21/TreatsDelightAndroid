@@ -57,6 +57,9 @@ const storeDetailsSlice = createSlice({
       state.error = null;
       state.store = {};
     },
+    clearStoreDetails: (state) => {
+      state.store = {};
+    }
   },
 });
 
@@ -65,6 +68,7 @@ export const {
   storeDetailsSuccess,
   storeDetailsFail,
   clearErrors,
+  clearStoreDetails,
   storeUpdated
 } = storeDetailsSlice.actions;
 

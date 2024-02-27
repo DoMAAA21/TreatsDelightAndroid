@@ -4,28 +4,56 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
 
 const initialState = {
-  sales: [],
+  salesThisMonth: [],
+  salesToday: [],
   loading: true,
   error: null,
 };
 
-export const fetchAllSales = createAsyncThunk('allSales/fetchAllSales', async (_, { dispatch }) => {
+export const fetchSalesThisMonth = createAsyncThunk('allSales/fetchSalesThisMonth', async (_, { dispatch }) => {
   try {
-    dispatch(allSalesRequest());
+    dispatch(salesThisMonthRequest());
     const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem('user');
+    const userCreds = JSON.parse(user);
+    const storeId = userCreds?.store?.storeId;
     if (!token) {
-      dispatch(allSalesFail('Login First'));
+      dispatch(salesThisMonthFail('Login First'));
     }
     const config = {
       headers: {
         Authorization: `${token}`,
       },
     };
-    const { data } = await axios.get(`${BACKEND_URL}/api/v1/chart/sales-per-month`, config);
-    dispatch(allSalesSuccess(data));
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/chart/store/${storeId}/sales-current-month`, config);
+    dispatch(salesThisMonthSuccess(data));
     return response.data;
   } catch (error) {
-    dispatch(allSalesFail(error.response.data.message));
+    dispatch(salesThisMonthFail(error.response.data.message));
+    throw error.response.data.message;
+  }
+});
+
+export const fetchSalesToday = createAsyncThunk('allSales/fetchSalesThisMonth', async (_, { dispatch }) => {
+  try {
+    dispatch(salesTodayRequest());
+    const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem('user');
+    const userCreds = JSON.parse(user);
+    const storeId = userCreds?.store?.storeId;
+    if (!token) {
+      dispatch(salesTodayFail('Login First'));
+    }
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/chart/store/${storeId}/sales-current-day`, config);
+    dispatch(salesTodaySuccess(data));
+    return response.data;
+  } catch (error) {
+    dispatch(salesTodayFail(error.response.data.message));
     throw error.response.data.message;
   }
 });
@@ -34,25 +62,50 @@ const allSalesSlice = createSlice({
   name: 'allSales',
   initialState,
   reducers: {
-    allSalesSuccess: (state, action) => {
-      state.sales = action.payload;
+    salesThisMonthSuccess: (state, action) => {
+      state.salesThisMonth = action.payload;
       state.loading = false;
       state.error = null;
     },
-    allSalesRequest: (state) => {
+    salesThisMonthRequest: (state) => {
       state.loading = true;
     },
-    allSalesFail: (state, action) => {
+    salesThisMonthFail: (state, action) => {
       state.error = action.payload;
       state.loading = false;
     },
-    clearAllSales: (state) => {
-      state.sales = [];
+    clearSalesThisMonth: (state) => {
+      state.salesThisMonth = [];
+
+    },
+    salesTodaySuccess: (state, action) => {
+      state.salesToday = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    salesTodayRequest: (state) => {
+      state.loading = true;
+    },
+    salesTodayFail: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+    clearSalesToday: (state) => {
+      state.salesToday = [];
 
     },
   },
 });
 
-export const { allSalesSuccess, allSalesRequest, allSalesFail, clearAllSales } = allSalesSlice.actions;
+export const { 
+  salesThisMonthRequest,
+  salesThisMonthSuccess,
+  salesThisMonthFail,
+  clearSalesThisMonth,
+  salesTodayRequest,
+  salesTodaySuccess,
+  salesTodayFail,
+  clearSalesToday
+} = allSalesSlice.actions;
 
 export default allSalesSlice.reducer;
