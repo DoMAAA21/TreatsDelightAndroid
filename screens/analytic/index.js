@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, Dimensions, ActivityIndicator, StyleSheet, ScrollView } from "react-native";
 import OrdersPerMonth from './chart/ordersPerMonth';
+import ElectricBillChart from './chart/electricBillsPerMonth';
+import WaterBillChart from './chart/waterBillsPerMonth';
 import ProductsSold from './chart/productsSold';
 import SalesPerMonth from './chart/salesPerMonth';
 import { fetchAllOrders } from '../../store/reducers/chart/allOrdersSlice';
@@ -20,11 +22,11 @@ const { height } = Dimensions.get('window');
 
 
 
-const formattedExpenses= (value) => {
+const formattedExpenses = (value) => {
     const formattedValue = (value || 0) < 0 ? `-₱${Math.abs(value || 0)}` : `₱${value || 0}`;
     const color = value && value < 0 ? 'red' : 'green';
     return { formattedValue, color };
-  };
+};
 
 const ChartScreen = () => {
     const dispatch = useDispatch();
@@ -41,10 +43,10 @@ const ChartScreen = () => {
 
     useFocusEffect(
         useCallback(() => {
-            dispatch(fetchAllOrders()).then(()=>{
+            dispatch(fetchAllOrders()).then(() => {
                 setLoading(false);
             });
-            
+
 
             if (user?.store?.storeId) {
                 dispatch(getStoreDetails(user?.store?.storeId));
@@ -72,21 +74,21 @@ const ChartScreen = () => {
         <>
             <View style={styles.container}>
                 <View style={styles.row}>
-                    <Card title="Rent" 
-                    value={rent.formattedValue}
-                    valueStyle={{ color: rent.color }}
-                    icon={<RentIcon height={40} width={40} />} />
+                    <Card title="Rent"
+                        value={rent.formattedValue}
+                        valueStyle={{ color: rent.color }}
+                        icon={<RentIcon height={40} width={40} />} />
 
-                    <Card title="Electricity" 
-                    value={electricity.formattedValue}
-                    valueStyle={{ color: electricity.color }}
-                    icon={<ElectricityIcon height={40} width={40} />} />
+                    <Card title="Electricity"
+                        value={electricity.formattedValue}
+                        valueStyle={{ color: electricity.color }}
+                        icon={<ElectricityIcon height={40} width={40} />} />
                 </View>
                 <View style={styles.row}>
-                    <Card title="Water" 
-                    value={water.formattedValue}
-                    valueStyle={{ color: water.color }}
-                    icon={<WaterIcon height={40} width={40} />} />
+                    <Card title="Water"
+                        value={water.formattedValue}
+                        valueStyle={{ color: water.color }}
+                        icon={<WaterIcon height={40} width={40} />} />
 
                     {/* <Card title="Sales This Month" value={`₱${salesThisMonth}`} icon={<Peso height={40} width={40} />} /> */}
                 </View>
@@ -94,23 +96,25 @@ const ChartScreen = () => {
             </View>
             <View style={styles.bottomContainer}>
                 <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-                    
-                <View style={styles.row}>
-                    <Card title="Sales Today" value={`₱${salesToday}`} valueStyle={{ color: 'green' }} icon={<Peso height={40} width={40} />} />
 
-                    <Card title="Sales This Month" value={`₱${salesThisMonth}`}  valueStyle={{ color: 'green' }} icon={<Peso height={40} width={40} />} />
-                </View>
-                    <View>
-                        <Text style={styles.title}>Sales Per Month</Text>
-                        {/* {salesLoading ? <ActivityIndicator /> : <SalesPerMonth data={salesThisMonth} />} */}
-                    </View>
-                    <View>
-                        <Text style={styles.title}>Orders Per Month</Text>
-                       {/* { orders && <OrdersPerMonth data={orders} /> }  */}
+                    <View style={styles.row}>
+                        <Card title="Sales Today" value={`₱${salesToday}`} valueStyle={{ color: 'green' }} icon={<Peso height={40} width={40} />} />
+
+                        <Card title="Sales This Month" value={`₱${salesThisMonth}`} valueStyle={{ color: 'green' }} icon={<Peso height={40} width={40} />} />
                     </View>
                     <View>
                         {soldLoading ? <ActivityIndicator /> : <ProductsSold data={sold} />}
                     </View>
+                    <View>
+                        <Text style={styles.title}>Electric Bill Per Month</Text>
+                    
+                        <ElectricBillChart />
+                    </View>
+                    <View>
+                        <Text style={styles.title}>Water Bill Per Month</Text>
+                        
+                    </View>
+
 
                 </ScrollView>
             </View>
