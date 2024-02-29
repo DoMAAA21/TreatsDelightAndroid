@@ -1,12 +1,8 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, Dimensions, ActivityIndicator, StyleSheet, ScrollView } from "react-native";
-import OrdersPerMonth from './chart/ordersPerMonth';
-import ElectricBillChart from './chart/electricBillsPerMonth';
-import WaterBillChart from './chart/waterBillsPerMonth';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { View, Text, Dimensions, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import ProductsSold from './chart/productsSold';
-import SalesPerMonth from './chart/salesPerMonth';
 import { fetchAllOrders } from '../../store/reducers/chart/allOrdersSlice';
 import { fetchAllSold } from '../../store/reducers/chart/productsSoldSlice';
 import { fetchSalesThisMonth, fetchSalesToday } from '../../store/reducers/chart/allSalesSlice';
@@ -17,7 +13,7 @@ import WaterIcon from '../../assets/svg/WaterIcon';
 import Peso from '../../assets/svg/Peso';
 import ElectricityIcon from '../../assets/svg/ElectricityIcon'
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 
 
@@ -30,12 +26,13 @@ const formattedExpenses = (value) => {
 
 const ChartScreen = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const { user } = useSelector(state => state.auth);
     const { store } = useSelector((state) => state.storeDetails);
     const { sold, loading: soldLoading } = useSelector(state => state.allSold);
     const { salesThisMonth, salesToday, loading: salesLoading } = useSelector(state => state.allSales);
     const [loading, setLoading] = useState(true);
-    // const totalSales = sales && sales.reduce((sum, { totalSales }) => sum + totalSales, 0);
+   
 
     const electricity = formattedExpenses(store?.electricity);
     const water = formattedExpenses(store?.water);
@@ -90,7 +87,7 @@ const ChartScreen = () => {
                         valueStyle={{ color: water.color }}
                         icon={<WaterIcon height={40} width={40} />} />
 
-                    {/* <Card title="Sales This Month" value={`₱${salesThisMonth}`} icon={<Peso height={40} width={40} />} /> */}
+                 
                 </View>
 
             </View>
@@ -105,14 +102,16 @@ const ChartScreen = () => {
                     <View>
                         {soldLoading ? <ActivityIndicator /> : <ProductsSold data={sold} />}
                     </View>
-                    <View>
-                        <Text style={styles.title}>Electric Bill Per Month</Text>
-                    
-                        <ElectricBillChart />
-                    </View>
-                    <View>
-                        <Text style={styles.title}>Water Bill Per Month</Text>
-                        
+                    <View style={styles.billButtonContainer}>
+                        <TouchableOpacity onPress={()=> navigation.navigate('ElectricBill')} style={styles.button}>
+                            <Text style={styles.buttonText}>Electricity Bill</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=> navigation.navigate('WaterBill')} style={styles.button}>
+                            <Text style={styles.buttonText}>Water Bill</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=> navigation.navigate('RentBill')} style={styles.button}>
+                            <Text style={styles.buttonText}>Rent Bill</Text>
+                        </TouchableOpacity>
                     </View>
 
 
@@ -156,9 +155,27 @@ const styles = StyleSheet.create({
     scrollView: {
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    billButtonContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {
+        backgroundColor: '#007bff',
+        padding: 10,
+        margin: 5,
+        borderRadius: 5,
+        width: width - 20,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+    },
 
 });
+
 
 
 export default ChartScreen;

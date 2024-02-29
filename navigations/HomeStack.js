@@ -24,7 +24,6 @@ import AddMealScreen from '../screens/meal/addMeal';
 import EditMealScreen from '../screens/meal/editMeal';
 import MealInfo from '../screens/meal/mealInfo';
 import StockScreen from  '../screens/stock/index';
-import ChartSreen from '../screens/analytic/index';
 import ScannerScreen from '../screens/scanner/index';
 import RentScreen from '../screens/rent/index';
 import RentTransactionScreen from '../screens/rent/rentTransactions';
@@ -43,6 +42,10 @@ import MaintenanceTransactionScreen from '../screens/maintenance/maintenanceTran
 import AddMaintenanceScreen from '../screens/maintenance/addMaintenance';
 import MaintenanceArchiveScreen from '../screens/maintenance/archives';
 
+import ChartSreen from '../screens/analytic/index';
+import ElectricBillScreen from '../screens/analytic/electricBill';
+import WaterBillScreen from '../screens/analytic/waterBill';
+import RentBillScreen from '../screens/analytic/rentBill';
 
 
 const Stack = createStackNavigator();
@@ -105,6 +108,9 @@ const HomeStack = () => {
       <Stack.Screen name="MaintenanceTransactions" component={MaintenanceTransactionScreen} options={{ headerTitle: 'Maintenance Transactions' }} />
       <Stack.Screen name="AddMaintenance" component={AddMaintenanceScreen} options={{ headerTitle: 'Add Maintenance' }} />
       <Stack.Screen name="MaintenanceArchives" component={MaintenanceArchiveScreen} options={{ headerTitle: 'Maintenance Archives' }} />
+      <Stack.Screen name="ElectricBill" component={ElectricBillScreen} options={{ headerTitle: 'Electric Bill' }} />
+      <Stack.Screen name="WaterBill" component={WaterBillScreen} options={{ headerTitle: 'Water Bill' }} />
+      <Stack.Screen name="RentBill" component={RentBillScreen} options={{ headerTitle: 'Rent Bill' }} />
     </Stack.Navigator>
   );
 };

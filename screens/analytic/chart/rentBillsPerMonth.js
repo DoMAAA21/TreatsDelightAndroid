@@ -3,7 +3,7 @@ import { View, ActivityIndicator, Dimensions } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { BarChart } from "react-native-gifted-charts";
-import { fetchElectricBillPerMonth } from "../../../store/reducers/chart/electricBillsPerMonthSlice";
+import { fetchRentBillPerMonth } from "../../../store/reducers/chart/rentBillsPerMonthSlice";
 
 const { width } = Dimensions.get('window');
 
@@ -19,19 +19,17 @@ function getMonthName(monthNumber) {
     }
 }
 
-const ElectricBillChart = () => {
+const RentBillChart = () => {
     const dispatch = useDispatch();
-    const { electricBillsPerMonth, loading } = useSelector(state => state.electricBill);
+    const { rentBillsPerMonth, loading } = useSelector(state => state.rentBill);
 
     useFocusEffect(
         useCallback(() => {
-            dispatch(fetchElectricBillPerMonth());
+            dispatch(fetchRentBillPerMonth());
         }, [dispatch])
     );
 
-    console.log(electricBillsPerMonth);
-
-    const chartData = electricBillsPerMonth.map((bill) => ({
+    const chartData = rentBillsPerMonth.map((bill) => ({
         label: getMonthName(bill.month),
         value: bill.totalBill
     }));
@@ -56,4 +54,4 @@ const ElectricBillChart = () => {
 
 
 
-export default ElectricBillChart;
+export default RentBillChart;

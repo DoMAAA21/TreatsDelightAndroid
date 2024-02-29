@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
+import { View, ActivityIndicator, Dimensions } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { View, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { LineChart } from "react-native-gifted-charts";
+import { BarChart } from "react-native-gifted-charts";
 import { fetchWaterBillPerMonth } from "../../../store/reducers/chart/waterBillsPerMonthSlice";
 
-
+const { width } = Dimensions.get('window');
 
 function getMonthName(monthNumber) {
     const months = [
@@ -19,46 +19,42 @@ function getMonthName(monthNumber) {
     }
 }
 
+// Function to convert large numbers to a simplified form (e.g., 1k, 2k, 3.5k)
+function simplifyNumber(number) {
+    if (number < 10000) return (number / 1000).toFixed(1); // Less than 10k, show 1 decimal place
+    return Math.round(number / 1000); // More than 10k, round to nearest integer
+}
 
 const WaterBillChart = () => {
     const dispatch = useDispatch();
     const { waterBillsPerMonth, loading } = useSelector(state => state.waterBill);
-
-
+   
     useFocusEffect(
         useCallback(() => {
             dispatch(fetchWaterBillPerMonth());
         }, [dispatch])
-
-
-
     );
-
-    console.log(waterBillsPerMonth);
 
     const chartData = waterBillsPerMonth.map((bill) => ({
         label: getMonthName(bill.month),
-        value: bill.totalBill
+        value: simplifyNumber(bill?.totalBill) // Simplify the number before passing it to the chart
     }));
 
-
-    if (loading && !waterBillsPerMonth) {
-        return <ActivityIndicator />
+    if (loading) {
+        return <ActivityIndicator />;
     }
 
     return (
-        <View style={{ flex: 1, width: '100%' }}>
-            <LineChart
+        <View>
+            <BarChart
+                frontColor="#6366F1"
                 data={chartData}
-                areaChart
-                color="green"
-                colorNegative="red"
-                startFillColor="green"
-                startFillColorNegative="red"
-
+                width={width / 1.4}
+                color="red"
+                yAxisLabelSuffix ={`k`}
             />
         </View>
-    )
-}
+    );
+};
 
 export default WaterBillChart;
