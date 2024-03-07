@@ -24,10 +24,28 @@ import AddMealScreen from '../screens/meal/addMeal';
 import EditMealScreen from '../screens/meal/editMeal';
 import MealInfo from '../screens/meal/mealInfo';
 import StockScreen from  '../screens/stock/index';
-import ChartSreen from '../screens/analytic/index';
 import ScannerScreen from '../screens/scanner/index';
+import RentScreen from '../screens/rent/index';
+import RentTransactionScreen from '../screens/rent/rentTransactions';
+import AddRentScreen from '../screens/rent/addRent';
+import RentArchiveScreen from '../screens/rent/archives';
+import WaterScreen from '../screens/water';
+import WaterTransactionScreen from '../screens/water/waterTransactions';
+import AddWaterScreen from '../screens/water/addWater';
+import WaterArchiveScreen from '../screens/water/archives';
+import ElectricityScreen from '../screens/electricity';
+import ElectricityTransactionScreen from '../screens/electricity/electricityTransactions';
+import AddElectricityScreen from '../screens/electricity/addElectricity';
+import ElectricityArchiveScreen from '../screens/electricity/archives';
+import MaintenanceScreen from '../screens/maintenance';
+import MaintenanceTransactionScreen from '../screens/maintenance/maintenanceTransactions';
+import AddMaintenanceScreen from '../screens/maintenance/addMaintenance';
+import MaintenanceArchiveScreen from '../screens/maintenance/archives';
 
-
+import ChartSreen from '../screens/analytic/index';
+import ElectricBillScreen from '../screens/analytic/electricBill';
+import WaterBillScreen from '../screens/analytic/waterBill';
+import RentBillScreen from '../screens/analytic/rentBill';
 
 
 const Stack = createStackNavigator();
@@ -74,6 +92,25 @@ const HomeStack = () => {
       <Stack.Screen name="Stocks" component={StockScreen} options={{ headerTitle: 'Manage Stocks' }} />
       <Stack.Screen name="Analytics" component={ChartSreen} options={{ headerTitle: 'Analytics' }} />
       <Stack.Screen name="Scanner" component={ScannerScreen} />
+      <Stack.Screen name="Rent" component={RentScreen} options={{ headerTitle: 'Rent' }} />
+      <Stack.Screen name="RentTransactions" component={RentTransactionScreen} options={{ headerTitle: 'Rent Transactions' }} />
+      <Stack.Screen name="AddRent" component={AddRentScreen} options={{ headerTitle: 'Add Rent' }} />
+      <Stack.Screen name="RentArchives" component={RentArchiveScreen} options={{ headerTitle: 'Rent Archives' }} />
+      <Stack.Screen name="Water" component={WaterScreen} options={{ headerTitle: 'Water' }} />
+      <Stack.Screen name="WaterTransactions" component={WaterTransactionScreen} options={{ headerTitle: 'Water Transactions' }} />
+      <Stack.Screen name="AddWater" component={AddWaterScreen} options={{ headerTitle: 'Add Water' }} />
+      <Stack.Screen name="WaterArchives" component={WaterArchiveScreen} options={{ headerTitle: 'Water Archives' }} />
+      <Stack.Screen name="Electricity" component={ElectricityScreen} options={{ headerTitle: 'Electricity' }} />
+      <Stack.Screen name="ElectricityTransactions" component={ElectricityTransactionScreen} options={{ headerTitle: 'Electricity Transactions' }} />
+      <Stack.Screen name="AddElectricity" component={AddElectricityScreen} options={{ headerTitle: 'Add Electricity' }} />
+      <Stack.Screen name="ElectricityArchives" component={ElectricityArchiveScreen} options={{ headerTitle: 'Electricity Archives' }} />
+      <Stack.Screen name="Maintenance" component={MaintenanceScreen} options={{ headerTitle: 'Maintenance' }} />
+      <Stack.Screen name="MaintenanceTransactions" component={MaintenanceTransactionScreen} options={{ headerTitle: 'Maintenance Transactions' }} />
+      <Stack.Screen name="AddMaintenance" component={AddMaintenanceScreen} options={{ headerTitle: 'Add Maintenance' }} />
+      <Stack.Screen name="MaintenanceArchives" component={MaintenanceArchiveScreen} options={{ headerTitle: 'Maintenance Archives' }} />
+      <Stack.Screen name="ElectricBill" component={ElectricBillScreen} options={{ headerTitle: 'Electric Bill' }} />
+      <Stack.Screen name="WaterBill" component={WaterBillScreen} options={{ headerTitle: 'Water Bill' }} />
+      <Stack.Screen name="RentBill" component={RentBillScreen} options={{ headerTitle: 'Rent Bill' }} />
     </Stack.Navigator>
   );
 };

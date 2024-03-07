@@ -23,10 +23,6 @@ const ProductsSold = ({ data }) => {
     const totalSum = data.reduce((sum, item) => sum + item.value, 0);
 
     const colors = ["#FF5733", "#33FF57", "#5733FF", "#FF3366", "#33A6FF", "#FFD700"];
-    // const colors = ["#f7aab9", "#f27a93", "#e63f66", "#b21e4b", "#801b40", "#470a1f"];
-    // const colors = ["#fff1c9", "#f7b7a3", "#ea5f89", "#9b3192", "#57167e", "#2b0b3f"];
-    // const colors = ["#2085ec", "#72b4eb", "#0a417a", "#8464a0", "#cea9bc", "#323232"];
-
     const newData = data.map((item, index) => ({
         ...item,
         text: `${parseFloat(((item.value / totalSum) * 100).toFixed(2))}%`,

@@ -1,54 +1,61 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, Dimensions, ActivityIndicator, StyleSheet, ScrollView } from "react-native";
-import OrdersPerMonth from './chart/ordersPerMonth';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { View, Text, Dimensions, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import ProductsSold from './chart/productsSold';
-import SalesPerMonth from './chart/salesPerMonth';
-import { fetchAllOrders, clearAllOrders } from '../../store/reducers/chart/allOrdersSlice';
-import { fetchAllSold, clearAllSold } from '../../store/reducers/chart/productsSoldSlice';
-import { fetchAllSales, clearAllSales } from '../../store/reducers/chart/allSalesSlice';
-import { fetchAllItems } from '../../store/reducers/product/allProductsSlice';
+import { fetchAllOrders } from '../../store/reducers/chart/allOrdersSlice';
+import { fetchAllSold } from '../../store/reducers/chart/productsSoldSlice';
+import { fetchSalesThisMonth, fetchSalesToday } from '../../store/reducers/chart/allSalesSlice';
+import { getStoreDetails } from '../../store/reducers/store/storeDetailsSlice';
 import Card from './card';
-import Food from '../../assets/svg/Food';
-import Order from '../../assets/svg/Order';
+import RentIcon from '../../assets/svg/RentIcon';
+import WaterIcon from '../../assets/svg/WaterIcon';
 import Peso from '../../assets/svg/Peso';
-import Employees from '../../assets/svg/Employees'
+import ElectricityIcon from '../../assets/svg/ElectricityIcon'
 
-const { height } = Dimensions.get('window');
-const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }];
+const { height, width } = Dimensions.get('window');
+
+
+
+
+const formattedExpenses = (value) => {
+    const formattedValue = (value || 0) < 0 ? `-₱${Math.abs(value || 0)}` : `₱${value || 0}`;
+    const color = value && value < 0 ? 'red' : 'green';
+    return { formattedValue, color };
+};
 
 const ChartScreen = () => {
     const dispatch = useDispatch();
-    const { orders } = useSelector(state => state.allOrders);
+    const navigation = useNavigation();
+    const { user } = useSelector(state => state.auth);
+    const { store } = useSelector((state) => state.storeDetails);
     const { sold, loading: soldLoading } = useSelector(state => state.allSold);
-    const { sales, loading: salesLoading } = useSelector(state => state.allSales);
-    const { items } = useSelector(state => state.allProducts);
+    const { salesThisMonth, salesToday, loading: salesLoading } = useSelector(state => state.allSales);
     const [loading, setLoading] = useState(true);
-    const fetchAllOrdersAction = useMemo(() => fetchAllOrders(), []);
-    const fetchAllSoldAction = useMemo(() => fetchAllSold(), []);
-    const fetchAllSalesAction = useMemo(() => fetchAllSales(), []);
-    const fetchAllItemsAction = useMemo(() => fetchAllItems(), []);
-    const totalOrder = orders && orders.reduce((sum, { totalOrderItems }) => sum + totalOrderItems, 0);
-    const totalSales = sales && sales.reduce((sum, { totalSales }) => sum + totalSales, 0);
-    const totalItems = items.length;
+   
 
-
+    const electricity = formattedExpenses(store?.electricity);
+    const water = formattedExpenses(store?.water);
+    const rent = formattedExpenses(store?.rent);
 
     useFocusEffect(
         useCallback(() => {
-            dispatch(fetchAllOrdersAction).then(() => {
+            dispatch(fetchAllOrders()).then(() => {
                 setLoading(false);
             });
-            dispatch(fetchAllSoldAction);
-            dispatch(fetchAllSalesAction);
-            dispatch(fetchAllItemsAction);
-            return () => {
-                dispatch(clearAllOrders());
-                dispatch(clearAllSold());
-                dispatch(clearAllSales());
+
+
+            if (user?.store?.storeId) {
+                dispatch(getStoreDetails(user?.store?.storeId));
             }
-        }, [fetchAllOrdersAction, fetchAllSoldAction, fetchAllSalesAction])
+            dispatch(fetchAllSold());
+            dispatch(fetchSalesThisMonth());
+            dispatch(fetchSalesToday())
+
+            return () => {
+                setLoading(true);
+            }
+        }, [dispatch, user?.store])
     );
 
     if (loading) {
@@ -58,33 +65,55 @@ const ChartScreen = () => {
             </View>
         );
     }
+
+
     return (
         <>
             <View style={styles.container}>
                 <View style={styles.row}>
-                    <Card title="Total Products" value={totalItems} icon={<Food height={40} width={40} />} />
+                    <Card title="Rent"
+                        value={rent.formattedValue}
+                        valueStyle={{ color: rent.color }}
+                        icon={<RentIcon height={40} width={40} />} />
 
-                    <Card title="Total Orders" value={totalOrder} icon={<Order height={40} width={40} />} />
+                    <Card title="Electricity"
+                        value={electricity.formattedValue}
+                        valueStyle={{ color: electricity.color }}
+                        icon={<ElectricityIcon height={40} width={40} />} />
                 </View>
                 <View style={styles.row}>
-                    <Card title="Total Employees" value={2} icon={<Employees height={40} width={40} />} />
+                    <Card title="Water"
+                        value={water.formattedValue}
+                        valueStyle={{ color: water.color }}
+                        icon={<WaterIcon height={40} width={40} />} />
 
-                    <Card title="Total Sales" value={`₱${totalSales}`} icon={<Peso height={40} width={40} />} />
+                 
                 </View>
+
             </View>
             <View style={styles.bottomContainer}>
                 <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-                    <View>
-                        <Text style={styles.title}>Sales Per Month</Text>
-                        {salesLoading ? <ActivityIndicator /> : <SalesPerMonth data={sales} />}
-                    </View>
-                    <View>
-                        <Text style={styles.title}>Orders Per Month</Text>
-                        <OrdersPerMonth data={orders} />
+
+                    <View style={styles.row}>
+                        <Card title="Sales Today" value={`₱${salesToday}`} valueStyle={{ color: 'green' }} icon={<Peso height={40} width={40} />} />
+
+                        <Card title="Sales This Month" value={`₱${salesThisMonth}`} valueStyle={{ color: 'green' }} icon={<Peso height={40} width={40} />} />
                     </View>
                     <View>
                         {soldLoading ? <ActivityIndicator /> : <ProductsSold data={sold} />}
                     </View>
+                    <View style={styles.billButtonContainer}>
+                        <TouchableOpacity onPress={()=> navigation.navigate('ElectricBill')} style={styles.button}>
+                            <Text style={styles.buttonText}>Electricity Bill</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=> navigation.navigate('WaterBill')} style={styles.button}>
+                            <Text style={styles.buttonText}>Water Bill</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=> navigation.navigate('RentBill')} style={styles.button}>
+                            <Text style={styles.buttonText}>Rent Bill</Text>
+                        </TouchableOpacity>
+                    </View>
+
 
                 </ScrollView>
             </View>
@@ -126,9 +155,27 @@ const styles = StyleSheet.create({
     scrollView: {
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    billButtonContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {
+        backgroundColor: '#007bff',
+        padding: 10,
+        margin: 5,
+        borderRadius: 5,
+        width: width - 20,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+    },
 
 });
+
 
 
 export default ChartScreen;

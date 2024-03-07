@@ -13,6 +13,9 @@ export const fetchAllSold = createAsyncThunk('allSold/fetchAllSold', async (_, {
   try {
     dispatch(allSoldRequest());
     const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem('user');
+    const userCreds = JSON.parse(user);
+    const storeId = userCreds?.store?.storeId;
     if (!token) {
       dispatch(allSoldFail('Login First'));
     }
@@ -21,7 +24,7 @@ export const fetchAllSold = createAsyncThunk('allSold/fetchAllSold', async (_, {
         Authorization: `${token}`,
       },
     };
-    const { data } = await axios.get(`${BACKEND_URL}/api/v1/chart/products-sold`, config);
+    const { data } = await axios.get(`${BACKEND_URL}/api/v1/chart/store/${storeId}/products-sold`, config);
     dispatch(allSoldSuccess(data));
     return response.data;
   } catch (error) {

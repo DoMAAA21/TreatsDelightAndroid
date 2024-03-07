@@ -20,6 +20,21 @@ import cartReducer from './cart/cartSlice';
 import allOrdersReducer from './chart/allOrdersSlice';
 import productsSoldReducer from './chart/productsSoldSlice';
 import allSalesReducer from './chart/allSalesSlice';
+import allRentsReducer from './rent/allRentsSlice';
+import newRentReducer from './rent/newRentSlice';
+import rentReducer from './rent/rentSlice';
+import allWatersReducer from './water/allWatersSlice';
+import newWaterReducer from './water/newWaterSlice';
+import waterReducer from './water/waterSlice';
+import allElectricityReducer from './electricity/allElectricitySlice';
+import newElectricityReducer from './electricity/newElectricitySlice';
+import electricityReducer from './electricity/electricitySlice';
+import allMaintenancesReducer from './maintenance/allMaintenancesSlice';
+import newMaintenanceReducer from './maintenance/newMaintenanceSlice';
+import maintenanceReducer from './maintenance/maintenanceSlice';
+import electricBillsPerMonthReducer from './chart/electricBillsPerMonthSlice';
+import waterBillsPerMonthReducer from './chart/waterBillsPerMonthSlice';
+import rentBillsPerMonthSlice from './chart/rentBillsPerMonthSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -42,7 +57,22 @@ const rootReducer = combineReducers({
   cart : cartReducer,
   allOrders : allOrdersReducer,
   allSold : productsSoldReducer,
-  allSales : allSalesReducer
+  allSales : allSalesReducer,
+  allRent : allRentsReducer,
+  newRent : newRentReducer,
+  rent : rentReducer,
+  allWater : allWatersReducer,
+  newWater : newWaterReducer,
+  water : waterReducer,
+  allElectricity : allElectricityReducer,
+  newElectricity :  newElectricityReducer,
+  electricity : electricityReducer,
+  allMaintenance : allMaintenancesReducer,
+  newMaintenance :  newMaintenanceReducer,
+  maintenance : maintenanceReducer,
+  electricBill : electricBillsPerMonthReducer,
+  waterBill : waterBillsPerMonthReducer,
+  rentBill  : rentBillsPerMonthSlice
 
 });
 

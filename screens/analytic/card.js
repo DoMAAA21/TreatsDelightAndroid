@@ -2,17 +2,18 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 
 const { width, height } = Dimensions.get('window');
 
-const Card = ({ title, value, icon }) => {
+const Card = ({ title, value, icon, ...props }) => {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, props.style]}>
       {icon && <View style={styles.iconContainer}>{icon}</View>}
       <View style={styles.textContainer}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardValue}>{value}</Text>
+        <Text style={[styles.cardTitle, props.titleStyle]}>{title}</Text>
+        <Text style={[styles.cardValue, props.valueStyle]}>{value}</Text>
       </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   card: {
