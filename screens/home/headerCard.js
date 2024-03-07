@@ -26,7 +26,7 @@ const HeaderCard = ({ user, date, store }) => {
     if (user.role === 'Employee' || user.role === 'Owner') {
         return (
             <>
-                <View style={[styles.card, { backgroundColor: isEnabled ? '#86CD82' : 'grey' }]}>
+                <View style={[styles.card, { backgroundColor: isEnabled ? '#F88379' : 'grey' }]}>
                     <View style={styles.header}>
                         <Text style={styles.headerTitle}>Howdy! {user?.store?.name} {user?.role === "Employee" ? 'Store' : null}</Text>
                         <Text style={styles.headerSubtitle}>{date}</Text>
@@ -56,7 +56,7 @@ const HeaderCard = ({ user, date, store }) => {
             <>
                 <View style={styles.card}>
                     <View style={styles.header}>
-                        <Text style={styles.headerTitle}>Howdy!</Text>
+                        <Text style={styles.headerTitle}>Hello!</Text>
                         <Text style={styles.headerSubtitle}>{date}</Text>
                     </View>
 
@@ -77,7 +77,7 @@ const HeaderCard = ({ user, date, store }) => {
 }
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#ff7f50',
+        backgroundColor: '#609D9F',
         borderRadius: 15,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

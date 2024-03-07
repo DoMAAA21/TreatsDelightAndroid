@@ -157,11 +157,6 @@ const HomeScreen = () => {
               </>
             : null
             }
-
-
-
-
-
           </View>
         </View>
       </ScrollView>
@@ -199,7 +194,7 @@ const styles = StyleSheet.create({
   },
   box: {
     margin: 10,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#000',
     borderRadius: 10,
     overflow: 'hidden',

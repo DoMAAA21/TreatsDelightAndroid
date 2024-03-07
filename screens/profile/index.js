@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   menuCard:{
     width: '80%',
     borderColor: 'black',
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderRadius: 20,
   },
   buttonContainer: {

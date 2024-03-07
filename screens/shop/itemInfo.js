@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   },
   shopName: {
     fontSize: 20,
-    color: '#333',
+    color: '#4B7F52',
     marginBottom: 10,
   },
   price: {
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   addToCartButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#609D9F',
     padding: 18,
     borderRadius: 25,
     alignItems: 'center',

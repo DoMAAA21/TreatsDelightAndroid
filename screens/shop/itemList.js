@@ -4,7 +4,7 @@ import { FlatList, Image, View, TextInput, TouchableOpacity, Dimensions, Text, R
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { allCategories } from '../../shared/inputs';
-import { fetchAllStores } from '../../store/reducers/store/allStoresSlice';
+import { fetchAllStores, fetchStores } from '../../store/reducers/store/allStoresSlice';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -18,7 +18,7 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
     const { stores } = useSelector(state => state.allStores);
 
     useEffect(() => {
-        dispatch(fetchAllStores());
+        dispatch(fetchStores());
     }, [dispatch]);
     
 
