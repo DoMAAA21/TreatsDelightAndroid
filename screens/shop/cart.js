@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { removeItemFromCart, increaseItemQuantity, decreaseItemQuantity, checkoutCart } from '../../store/reducers/cart/cartSlice';
-import { topErrorMsg } from '../../shared/toast';
+import { errorMsg, topErrorMsg } from '../../shared/toast';
 import EmptyCart from '../../assets/svg/EmptyCart'
 
 
@@ -26,22 +26,15 @@ const Cart = () => {
   const removeItem = (id) => {
     dispatch(removeItemFromCart(id))
   }
-  const onCheckout = async () => {
-    const isReserve = false;
+
+  const onProceed = () => {
     if (cartItems.length === 0) {
-      topErrorMsg('Empty Cart')
+      errorMsg('No items in cart.')
       return;
     }
-    const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-    await dispatch(checkoutCart({ cartItems, totalPrice, isReserve })).then(() => {
-      navigation.navigate('Receipt');
-    })
-
-  };
-
-  const onReserve = async () => {
-
-    const isReserve = true;
+  }
+  const onCheckout = async () => {
+    const isReserve = false;
     if (cartItems.length === 0) {
       topErrorMsg('Empty Cart')
       return;
@@ -90,13 +83,14 @@ const Cart = () => {
         {isAuthenticated &&
           <TouchableOpacity
             style={[styles.reserveButton, loading && { opacity: 0.5 }]}
-            onPress={onReserve}
+            onPress={() => navigation.navigate("Payment")}
             disabled={loading}
+            key="reserve"
           >
             {loading ? (
               <ActivityIndicator color="black" />
             ) : (
-              <Text style={styles.reserveButtonText}>Reserve</Text>
+              <Text style={styles.reserveButtonText}>Go Reserve</Text>
             )}
           </TouchableOpacity>
         }
@@ -104,12 +98,9 @@ const Cart = () => {
           style={[styles.checkoutButton, loading && { opacity: 0.5 }]}
           onPress={onCheckout}
           disabled={loading}
+          key="checkout"
         >
-          {loading ? (
-            <ActivityIndicator color="black" />
-          ) : (
-            <Text style={styles.checkoutButtonText}>Checkout</Text>
-          )}
+          <Text style={styles.checkoutButtonText}>Mobile Kiosk</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -197,7 +188,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   checkoutButton: {
-    backgroundColor: '#ff7f50',
+    backgroundColor: '#0fd842',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,

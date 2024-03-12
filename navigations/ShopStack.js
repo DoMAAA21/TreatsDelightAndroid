@@ -5,6 +5,7 @@ import ShopScreen from '../screens/shop/index';
 import ItemInfo from '../screens/shop/itemInfo';
 import Cart from '../screens/shop/cart';
 import ReceiptScreen from '../screens/shop/receipt';
+import PaymentSelectionScreen from '../screens/shop/payment';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const ShopStack = () => {
       <Stack.Screen name="ItemInfo" component={ItemInfo} options={{ headerTitle: 'Item Information' }} />
       <Stack.Screen name="Cart" component={Cart} options={{ headerTitle: 'Cart' }} />
       <Stack.Screen name="Receipt" component={ReceiptScreen} options={{ headerTitle: 'Receipt' }} />
+      <Stack.Screen name="Payment" component={PaymentSelectionScreen} options={{ headerTitle: 'Choose Payment' }} />
     </Stack.Navigator>
   );
 
