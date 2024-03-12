@@ -1,7 +1,8 @@
-import React, { useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useRef, useCallback, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, BackHandler} from 'react-native';
 import { useSelector } from 'react-redux';
 import ViewShot from 'react-native-view-shot';
+import { useNavigation } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import { topSuccessMsg, topErrorMsg } from '../../shared/toast';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -11,9 +12,23 @@ import QRCode from 'react-native-qrcode-svg';
 export default ReceiptScreen = () => {
     const viewShot = useRef(null);
     const { receipt, qrCode } = useSelector(state => state.cart);
-    console.log(qrCode);
     const datePart = receipt?.paidAt ? new Date(receipt.paidAt).toISOString().split('T')[0] : '';
     const groupedItems = _.groupBy(receipt?.orderItems, 'storeId');
+
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const backAction = () => {
+            navigation.navigate('Shops');
+            return true;
+        };
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+
+        return () => backHandler.remove();
+    }, [navigation]);
 
     const onCapture = useCallback(async () => {
         try {
@@ -93,14 +108,14 @@ export default ReceiptScreen = () => {
                         <Text style={styles.total}>₱{receipt.totalPrice}</Text>
                     </View>
                     {qrCode &&
-                    <View style={styles.qrCode}>
-                        <QRCode
-                            value={qrCode}
-                            size={200}
-                            color="black"
-                            backgroundColor="white"
-                        />
-                    </View>
+                        <View style={styles.qrCode}>
+                            <QRCode
+                                value={qrCode}
+                                size={200}
+                                color="black"
+                                backgroundColor="white"
+                            />
+                        </View>
                     }
                 </ViewShot>
             </ScrollView>
@@ -235,7 +250,7 @@ const styles = StyleSheet.create({
     },
     qrCode: {
         marginVertical: 20,
-        justifyContent: 'center', 
-        alignItems: 'center', 
-      },
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });

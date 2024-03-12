@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, Button, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { removeItemFromCart, increaseItemQuantity, decreaseItemQuantity, checkoutCart } from '../../store/reducers/cart/cartSlice';
 import { errorMsg, topErrorMsg } from '../../shared/toast';
 import EmptyCart from '../../assets/svg/EmptyCart'
@@ -13,7 +13,15 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { cartItems, loading } = useSelector(state => state.cart);
+  const { error } = useSelector(state => state.cart);
   const { isAuthenticated } = useSelector(state => state.auth);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (error) {
+        topErrorMsg(error);
+      }
+    }, [error]))
 
 
   const increaseQuantity = (id) => {
@@ -60,11 +68,11 @@ const Cart = () => {
                   <Text style={styles.price}>₱{item.price}</Text>
                 </View>
                 <View style={styles.quantityContainer}>
-                  <Button title="-" color="red" onPress={() => decreaseQuantity(item.id)} />
+                  <Button title="-" color="red" onPress={() => decreaseQuantity(item._id)} />
                   <Text style={styles.quantity}>{item.quantity}</Text>
-                  <Button title="+" onPress={() => increaseQuantity(item.id)} />
+                  <Button title="+" onPress={() => increaseQuantity(item._id)} />
                 </View>
-                <TouchableOpacity style={styles.removeButton} onPress={() => removeItem(item.id)}>
+                <TouchableOpacity style={styles.removeButton} onPress={() => removeItem(item._id)}>
                   <FontAwesome name="remove" color="white" size={15} />
                 </TouchableOpacity>
               </View>

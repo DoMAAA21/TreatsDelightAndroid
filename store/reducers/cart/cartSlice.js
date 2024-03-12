@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';4
+import AsyncStorage from '@react-native-async-storage/async-storage'; 4
 import { useNavigation } from '@react-navigation/native';
 import { BACKEND_URL } from '../../../shared/constants';
 
@@ -9,23 +9,25 @@ const initialState = {
   cartItems: [],
   receipt: [],
   success: false,
+  addToCartSuccess: false,
   loading: false,
-  qrCode: null
+  qrCode: null,
+  error: null,
 };
 
 export const addItemToCart = createAsyncThunk('cart/addItemToCart', async ({ id, quantity }, { dispatch }) => {
   try {
     const { data } = await axios.get(`${BACKEND_URL}/api/v1/product/${id}`);
     const cartItem = {
-       _id: data.product._id,
-        name: data.product.name,
-        price: data.product.sellPrice,
-        image: data.product.images[0].url,
-        storeId: data.product.store.storeId,
-        storeName: data.product.store.name,
-        category: data.product.category,
-        stock: data.product.stock,
-        quantity,
+      _id: data.product._id,
+      name: data.product.name,
+      price: data.product.sellPrice,
+      image: data.product.images[0].url,
+      storeId: data.product.store.storeId,
+      storeName: data.product.store.name,
+      category: data.product.category,
+      stock: data.product.stock,
+      quantity,
     };
     dispatch(addToCart(cartItem));
     return cartItem;
@@ -52,7 +54,7 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
       },
       totalPrice,
       isReserve
-    
+
     }
     if (!token) {
       dispatch(newProductFail('Login First'));
@@ -63,7 +65,7 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
         "Content-Type": "application/json",
       },
     };
-    const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order, { config });   
+    const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order, { config });
     dispatch(showReceipt(data.order));
     dispatch(checkoutSuccess(data.success));
     dispatch(setQrCode(data.qrCodeURL));
@@ -83,31 +85,54 @@ const cartSlice = createSlice({
       state.cartItems = [];
     },
     removeItemFromCart: (state, action) => {
-      state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
+      state.cartItems = state.cartItems.filter((i) => i._id !== action.payload);
     },
     addToCart: (state, action) => {
       const item = action.payload;
-      const isItemExist = state.cartItems.find((i) => i.id === item.id);
-
+      const isItemExist = state.cartItems.find((i) => i._id === item._id);
       if (isItemExist) {
-        state.cartItems = state.cartItems.map((i) => (i.id === isItemExist.id ? { ...i, quantity: i.quantity + 1 } : i));
+        const totalQuantity = isItemExist.quantity + item.quantity;
+        if (item.category.toLowerCase() !== "meals") {
+          if (totalQuantity <= item.stock) {
+            state.cartItems = state.cartItems.map((i) => (i._id === isItemExist._id ? { ...i, quantity: totalQuantity } : i));
+            state.addToCartSuccess = true;
+          } else {
+            state.error = "Cannot add more quantity. Insufficient stock.";
+            return;
+          }
+        } else {
+          state.cartItems = state.cartItems.map((i) => (i._id === isItemExist._id ? { ...i, quantity: totalQuantity } : i));
+          state.addToCartSuccess = true;
+        }
       } else {
         state.cartItems = [...state.cartItems, item];
+        state.addToCartSuccess = true;
       }
     },
     increaseItemQuantity: (state, action) => {
       const id = action.payload;
-      state.cartItems = state.cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      );
+      const itemToUpdate = state.cartItems.find((item) => item._id === id);
+      if (itemToUpdate) {
+        if (itemToUpdate.category.toLowerCase() !== "meals" && itemToUpdate.quantity + 1 <= itemToUpdate.stock) {
+          state.cartItems = state.cartItems.map((item) =>
+            item._id === id ? { ...item, quantity: item.quantity + 1 } : item
+          );
+        } else if (itemToUpdate.category.toLowerCase() === "meals") {
+          state.cartItems = state.cartItems.map((item) =>
+            item._id === id ? { ...item, quantity: item.quantity + 1 } : item
+          );
+        } else {
+          state.error = "Cannot increase quantity. Insufficient stock.";
+        }
+      }
     },
     decreaseItemQuantity: (state, action) => {
       const id = action.payload;
-      state.cartItems = state.cartItems.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(item.quantity - 1, 0) } // Ensure quantity is at least 0
-          : item
-      ).filter((item) => item.quantity > 0);
+      state.cartItems = state.cartItems
+        .map((item) =>
+          item._id === id ? { ...item, quantity: Math.max(item.quantity - 1, 0) } : item
+        )
+        .filter((item) => item.quantity > 0);
     },
     checkoutRequest: (state) => {
       state.loading = true;
@@ -119,13 +144,19 @@ const cartSlice = createSlice({
     showReceipt: (state, action) => {
       state.receipt = action.payload
     },
+    resetAddToCartSuccess: (state) => {
+      state.addToCartSuccess = false;
+    },
+    clearError: (state) => {
+      state.error = false;
+    },
     setQrCode: (state, action) => {
       state.qrCode = action.payload
     },
   },
 });
 
-export const { clearCart, saveShippingInfo, removeItemFromCart, addToCart, increaseItemQuantity,
+export const { clearCart, saveShippingInfo, removeItemFromCart, addToCart, resetAddToCartSuccess, clearError, increaseItemQuantity,
   decreaseItemQuantity, checkoutRequest, checkoutSuccess, setQrCode, showReceipt } = cartSlice.actions;
 
 export default cartSlice.reducer;

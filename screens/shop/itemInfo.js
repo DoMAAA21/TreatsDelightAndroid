@@ -4,8 +4,8 @@ import { useRoute } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Image, Animated, Dimensions, ActivityIndicator, Alert } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { getItemDetails } from '../../store/reducers/product/productDetailsSlice';
-import { addItemToCart } from '../../store/reducers/cart/cartSlice';
-import { topSuccessMsg } from '../../shared/toast';
+import { addItemToCart, clearError, resetAddToCartSuccess } from '../../store/reducers/cart/cartSlice';
+import { topErrorMsg, topSuccessMsg } from '../../shared/toast';
 
 const { width, height } = Dimensions.get('window');
 
@@ -65,6 +65,7 @@ const ItemInfo = () => {
   const route = useRoute();
   const dispatch = useDispatch();
   const { product } = useSelector(state => state.productDetails);
+  const { addToCartSuccess, error } = useSelector(state => state.cart);
   const { productId } = route.params;
   const [fetchLoading, setFetchLoading] = useState(false);
   const [images, setImages] = useState([]);
@@ -78,10 +79,22 @@ const ItemInfo = () => {
       });
   }, [productId, fetchLoading]);
 
+  useEffect(() => {
+    if (addToCartSuccess) {
+      topSuccessMsg("Added to cart.");
+      dispatch(resetAddToCartSuccess());
+      return
+    }
+    if (error) {
+      topErrorMsg(error);
+      dispatch(clearError());
+      return
+    }
+  }, [addToCartSuccess, error])
+
   const addToCart = () => {
-    // Check if product cholesterol is higher than or equal to 50
+
     if (product?.nutrition?.cholesterol >= 50) {
-      // Show alert to the user
       Alert.alert(
         'High Cholesterol Content',
         'This product has high cholesterol content. Are you sure you want to add it to your cart?',
@@ -93,20 +106,14 @@ const ItemInfo = () => {
           {
             text: 'Add to Cart',
             onPress: () => {
-              // Dispatch action to add item to cart
-              dispatch(addItemToCart({ id: productId, quantity: 1 })).then(() => {
-                topSuccessMsg('Added to Cart');
-              });
+              dispatch(addItemToCart({ id: productId, quantity: 1 }));
             },
           },
         ],
         { cancelable: false } // Prevent user from dismissing the alert by tapping outside
       );
     } else {
-      // If cholesterol is not high, directly add item to cart
-      dispatch(addItemToCart({ id: productId, quantity: 1 })).then(() => {
-        topSuccessMsg('Added to Cart');
-      });
+      dispatch(addItemToCart({ id: productId, quantity: 1 }))
     }
   };
   return (
