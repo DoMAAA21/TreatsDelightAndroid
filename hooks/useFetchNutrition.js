@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { OPEN_AI_KEY } from '@env';
+import { BACKEND_URL } from '../shared/constants';
 
 const useFetchNutritionFacts = ({ formik }, item) => {
     const [gptLoading, setGptLoading] = useState(false);
     const [gptError, setGptError] = useState(null);
     const [gptSuccess, setGptSuccess] = useState(false);
-
+    const [openAiKey, setOpenAiKey] = useState(null);
     const measurement = item === 'product' ? 'packet' : '100g';
 
     const fetchNutrition = async () => {
@@ -18,7 +18,13 @@ const useFetchNutritionFacts = ({ formik }, item) => {
             if (!itemName) {
                 return setGptError('Please input name');
             }
-
+            const getKey = axios.get(`${BACKEND_URL}/api/v1/admin/get-ai-key`)
+                .then(response => {
+                    setOpenAiKey(response.data.openAiKey);
+                })
+                .catch(error => {
+                    console.error('Error fetching environment variable:', error);
+                });
             const result = await axios.post(
                 'https://api.openai.com/v1/chat/completions',
                 {
@@ -33,14 +39,14 @@ const useFetchNutritionFacts = ({ formik }, item) => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${OPEN_AI_KEY}`,
+                        Authorization: `Bearer ${openAiKey}`,
                         'Content-Type': 'application/json',
                     },
                 }
             );
 
             const response = result.data.choices[0].message.content;
-        
+
             try {
                 const parsedNutrition = JSON.parse(response);
                 if (

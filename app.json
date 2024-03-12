@@ -25,18 +25,28 @@
         "foregroundImage": "./assets/capstone_icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["WRITE_EXTERNAL_STORAGE"]
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "package": "com.domaaa21.TreatsDelightAndroid"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      ["expo-build-properties", {
-        "android": {
-          "usesCleartextTraffic": true
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
-      }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bd5c91d9-eab9-4a27-8651-754bdfa30e58"
+      }
+    }
   }
 }
