@@ -77,6 +77,25 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
 }
 );
 
+export const kioskCheckout = createAsyncThunk('cart/kioskCheckout', async ({ cartItems, totalPrice }, { dispatch }) => {
+  try {
+    dispatch(checkoutRequest());
+    const order = {
+      orderItems: cartItems,
+      totalPrice
+    }
+    dispatch(showReceipt(order));
+    dispatch(checkoutSuccess(true));
+    dispatch(clearCart());
+    return data;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+}
+);
+
+
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState: initialState,

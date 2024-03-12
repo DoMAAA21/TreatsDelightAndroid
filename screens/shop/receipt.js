@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, BackHandler} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, BackHandler } from 'react-native';
 import { useSelector } from 'react-redux';
 import ViewShot from 'react-native-view-shot';
 import { useNavigation } from '@react-navigation/native';
@@ -12,7 +12,7 @@ import QRCode from 'react-native-qrcode-svg';
 export default ReceiptScreen = () => {
     const viewShot = useRef(null);
     const { receipt, qrCode } = useSelector(state => state.cart);
-    const datePart = receipt?.paidAt ? new Date(receipt.paidAt).toISOString().split('T')[0] : '';
+    const datePart = receipt?.paidAt ? new Date(receipt.paidAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
     const groupedItems = _.groupBy(receipt?.orderItems, 'storeId');
 
     const navigation = useNavigation();
@@ -60,23 +60,30 @@ export default ReceiptScreen = () => {
                         <Text style={styles.title}>Receipt</Text>
                     </View>
                     <View style={styles.invoiceInfoContainer}>
+                        {receipt?._id &&
+                            <View style={styles.invoiceInfo}>
+                                <Text style={styles.label} >Receipt ID:</Text>
+                                <Text style={styles.text}>{receipt?._id}</Text>
+                            </View>
+                        }
                         <View style={styles.invoiceInfo}>
-                            <Text style={styles.label}>Receipt ID:</Text>
-                            <Text style={styles.text}>{receipt?._id}</Text>
-                        </View>
-                        <View style={styles.invoiceInfo}>
-                            <Text style={styles.label}>Date:</Text>
-                            <Text style={styles.text}>{datePart}</Text>
+                            <Text style={[styles.label, { fontSize: 18 }]}>Date:</Text>
+                            <Text style={[styles.text, { fontSize: 18 }]}>{datePart}</Text>
                         </View>
                     </View>
-                    <View style={styles.divider} />
-                    <View style={styles.customerInfoContainer}>
-                        <Text style={styles.subtitle}>Customer Information</Text>
-                        <View style={styles.customerInfo}>
-                            <Text style={styles.label}>Name:</Text>
-                            <Text style={styles.text}>{receipt?.user?.name}</Text>
-                        </View>
-                    </View>
+
+                    {receipt?.user?.name && (
+                        <>
+                            <View style={styles.divider} />
+                            <View style={styles.customerInfoContainer}>
+                                <Text style={styles.subtitle}>Customer Information</Text>
+                                <View style={styles.customerInfo}>
+                                    <Text style={styles.label}>Name:</Text>
+                                    <Text style={styles.text}>{receipt?.user?.name}</Text>
+                                </View>
+                            </View>
+                        </>
+                    )}
                     <View style={styles.divider} />
                     <View>
                         <Text style={styles.subtitle}>Items</Text>
@@ -117,6 +124,10 @@ export default ReceiptScreen = () => {
                             />
                         </View>
                     }
+                    <Text style={styles.infoText}>
+                        **Reservations require a minimum 10-minute pickup window,
+                        which may vary by store, with a maximum pickup time of 4pm.
+                    </Text>
                 </ViewShot>
             </ScrollView>
             <TouchableOpacity style={styles.button} onPress={onCapture}>
@@ -165,6 +176,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     text: {
+        fontSize: 16,
         marginLeft: 5,
     },
     storeDivider: {
@@ -252,5 +264,10 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    infoText: {
+        fontSize: 12,
+        fontStyle: 'italic',
+        color: '#000',
     },
 });

@@ -3,7 +3,7 @@ import { View, Text, Button, Image, StyleSheet, ScrollView, TouchableOpacity, Ac
 import { useDispatch, useSelector } from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { removeItemFromCart, increaseItemQuantity, decreaseItemQuantity, checkoutCart } from '../../store/reducers/cart/cartSlice';
+import { removeItemFromCart, increaseItemQuantity, decreaseItemQuantity, checkoutCart, clearError, kioskCheckout } from '../../store/reducers/cart/cartSlice';
 import { errorMsg, topErrorMsg } from '../../shared/toast';
 import EmptyCart from '../../assets/svg/EmptyCart'
 
@@ -20,6 +20,8 @@ const Cart = () => {
     useCallback(() => {
       if (error) {
         topErrorMsg(error);
+        dispatch(clearError());
+        return
       }
     }, [error]))
 
@@ -40,15 +42,15 @@ const Cart = () => {
       errorMsg('No items in cart.')
       return;
     }
+    navigation.navigate("Payment")
   }
   const onCheckout = async () => {
-    const isReserve = false;
     if (cartItems.length === 0) {
       topErrorMsg('Empty Cart')
       return;
     }
     const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-    await dispatch(checkoutCart({ cartItems, totalPrice, isReserve })).then(() => {
+    await dispatch(kioskCheckout({ cartItems, totalPrice})).then(() => {
       navigation.navigate('Receipt');
     })
 
@@ -91,7 +93,7 @@ const Cart = () => {
         {isAuthenticated &&
           <TouchableOpacity
             style={[styles.reserveButton, loading && { opacity: 0.5 }]}
-            onPress={() => navigation.navigate("Payment")}
+            onPress={onProceed}
             disabled={loading}
             key="reserve"
           >
