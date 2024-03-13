@@ -36,6 +36,7 @@ import electricBillsPerMonthReducer from './chart/electricBillsPerMonthSlice';
 import waterBillsPerMonthReducer from './chart/waterBillsPerMonthSlice';
 import rentBillsPerMonthReducer from './chart/rentBillsPerMonthSlice';
 import myOrdersReducer from './myorder/myOrdersSlice';
+import scanOrderReducer from './myorder/scanOrderSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -74,7 +75,8 @@ const rootReducer = combineReducers({
   electricBill : electricBillsPerMonthReducer,
   waterBill : waterBillsPerMonthReducer,
   rentBill  : rentBillsPerMonthReducer,
-  myOrders : myOrdersReducer
+  myOrders : myOrdersReducer,
+  newScan : scanOrderReducer
 
 });
 
