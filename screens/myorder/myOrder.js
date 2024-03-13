@@ -8,7 +8,7 @@ const getOrderStatusStyle = (status) => {
         return "#D97706";
       case 'paid':
         return "#16A34A";
-      case 'complete':
+      case 'completed':
         return "#4299e1";
       case 'incomplete':
         return "#EF4444";
