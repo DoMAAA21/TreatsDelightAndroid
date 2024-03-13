@@ -5,7 +5,7 @@ import Modal from 'react-native-modal';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logout } from '../../store/reducers/auth/authenticationSlice';
-import { FontAwesome } from 'react-native-vector-icons';
+import { FontAwesome, Ionicons } from 'react-native-vector-icons';
 
 export default ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -87,9 +87,9 @@ export default ProfileScreen = () => {
           </View>
 
           <View style={styles.menuContainer} >
-            <TouchableOpacity style={styles.buttonContainer} >
-              <FontAwesome name="cog" height={35} size={35} width={35} color="#abafac" />
-              <Text style={styles.menuText}>Settings</Text>
+            <TouchableOpacity style={styles.buttonContainer} onPress={()=> navigation.navigate('MyOrder')} >
+              <Ionicons name="fast-food" height={35} size={35} width={35} color="#abafac" />
+              <Text style={styles.menuText}>My Orders</Text>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
               </View>
@@ -97,7 +97,7 @@ export default ProfileScreen = () => {
           </View>
 
 
-          <View style={styles.menuContainer} >
+          {/* <View style={styles.menuContainer} >
             <TouchableOpacity style={styles.buttonContainer} >
               <FontAwesome name="info-circle" height={35} size={35} width={35} color="#abafac" />
               <Text style={styles.menuText}>Information</Text>
@@ -105,7 +105,7 @@ export default ProfileScreen = () => {
                 <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
               </View>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
 
 
