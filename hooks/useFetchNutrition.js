@@ -18,8 +18,6 @@ const useFetchNutritionFacts = ({ formik }, item) => {
             const result = await axios.post(`${BACKEND_URL}/api/v1/admin/product/fetch-nutrition`, {itemName: itemName, measurement: measurement});
             const response = result.data.choices[0].message.content;
 
-            console.log(response);
-
             try {
                 const parsedNutrition = JSON.parse(response);
                 if (
