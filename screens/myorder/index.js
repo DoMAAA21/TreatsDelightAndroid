@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import OrderHistory from './myOrder';
+import { fetchAllMyOrders } from '../../store/reducers/myorder/myOrdersSlice';
 
-const orders = [
-    { date: '2024-03-13', totalAmount: 50.00 },
-    { date: '2024-03-10', totalAmount: 75.00 },
-];
+
 
 const MyOrderScreen = () => {
+    const dispatch = useDispatch();
+    const { orders } = useSelector(state => state.myOrders);
+    const [refreshed, setRefreshed] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
+
+    const onRefresh = () => {
+        setRefreshed(true)
+      };
+
+
+    useFocusEffect(
+        useCallback(() => {
+            dispatch(fetchAllMyOrders()); 
+            
+            if(refreshed){
+                setRefreshing(true)
+                dispatch(fetchAllMyOrders()); 
+                setRefreshing(false)
+                setRefreshed(false);
+              }
+
+
+        }, [dispatch, refreshed]));
+
     return (
         <View style={styles.container}>
-            <OrderHistory orders={orders} />
+            <OrderHistory orders={orders} onRefresh={onRefresh} refreshing={refreshing} />
         </View>
     );
 };

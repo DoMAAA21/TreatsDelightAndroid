@@ -62,7 +62,7 @@ const Cart = () => {
         {cartItems.length > 0 ? (
           <View style={styles.container}>
             {cartItems.map(item => (
-              <View key={item.id} style={styles.itemContainer}>
+              <View key={item._id} style={styles.itemContainer}>
                 <Image source={{ uri: item.image }} style={styles.image} />
                 <View style={styles.infoContainer}>
                   <Text style={styles.name}>{item.name}</Text>

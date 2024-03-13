@@ -26,7 +26,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
     await AsyncStorage.setItem('user', JSON.stringify(data.user));
     await AsyncStorage.setItem('token', data.token);
 
-    dispatch(loginSuccess(data.user));
+    dispatch(loginSuccess(data));
     return data.user;
   } catch (error) {
     dispatch(loginFail(error.response.data.message));

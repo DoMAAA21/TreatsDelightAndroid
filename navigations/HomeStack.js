@@ -1,4 +1,5 @@
 import { TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -23,7 +24,7 @@ import MealScreen from '../screens/meal/index';
 import AddMealScreen from '../screens/meal/addMeal';
 import EditMealScreen from '../screens/meal/editMeal';
 import MealInfo from '../screens/meal/mealInfo';
-import StockScreen from  '../screens/stock/index';
+import StockScreen from '../screens/stock/index';
 import ScannerScreen from '../screens/scanner/index';
 import RentScreen from '../screens/rent/index';
 import RentTransactionScreen from '../screens/rent/rentTransactions';
@@ -47,28 +48,42 @@ import ElectricBillScreen from '../screens/analytic/electricBill';
 import WaterBillScreen from '../screens/analytic/waterBill';
 import RentBillScreen from '../screens/analytic/rentBill';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
   const navigation = useNavigation();
 
+const { user } = useSelector(state => state.auth);
+
+
   return (
     <Stack.Navigator screenOptions={{
       headerStyle: { backgroundColor: '#b4e373', },
-      
+
       headerBackImage: () => (
-        <Ionicons name="chevron-back" size={25} style={[{ paddingStart: 5}]} />
+        <Ionicons name="chevron-back" size={25} style={[{ paddingStart: 5 }]} />
       ),
-     }} >
-      <Stack.Screen name="Dashboard" component={HomeScreen}  options={{
-          headerTitle:'',
-          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('Scanner')}>
-              <Ionicons name="qr-code" size={25} style={{ paddingEnd: 15 }} />
-            </TouchableOpacity>
-          ),
-        }}/>
+    }} >
+      <Stack.Screen
+        name="Dashboard"
+        component={HomeScreen}
+        options={({ navigation, route }) => ({
+          headerTitle: '',
+          headerRight: () => {
+            if (user && (user.role.toLowerCase() === "owner" || user.role.toLowerCase() === "employee")) {
+              return (
+                <TouchableOpacity onPress={() => navigation.navigate('Scanner')}>
+                  <Ionicons name="qr-code" size={25} style={{ paddingRight: 15 }} />
+                </TouchableOpacity>
+              );
+            }
+            return null;
+          },
+        })}
+      />
+
       <Stack.Screen name="Users" component={UserScreen} options={{ headerTitle: 'Owners' }} />
       <Stack.Screen name="AddUser" component={AddUserScreen} options={{ headerTitle: 'Add User' }} />
       <Stack.Screen name="EditUser" component={EditUserScreen} options={{ headerTitle: 'Edit User' }} />

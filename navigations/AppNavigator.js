@@ -49,6 +49,8 @@ const AppNavigator = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
+  
+
   useFocusEffect(
     useCallback(()=>{
       dispatch(verifyToken());
