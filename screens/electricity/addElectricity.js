@@ -36,11 +36,15 @@ const AddElectricityScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { id } = route.params;
+    const { loading, error, success } = useSelector(state => state.newElectricity);
     const [issuedAt, setIssuedAt] = useState(new Date().toISOString().split('T')[0]);
     const [paidAt, setPaidAt] = useState(new Date().toISOString().split('T')[0]);
-    const { loading, error, success } = useSelector(state => state.newElectricity);
+    const [startAt, setStartAt] = useState(new Date().toISOString().split('T')[0]);
+    const [endAt, setEndAt] = useState(new Date().toISOString().split('T')[0]);
     const [issuedAtPickerVisible, setIssuedAtPickerVisible] = useState(false);
     const [paidAtPickerVisible, setPaidAtPickerVisible] = useState(false);
+    const [startAtPickerVisible, setStartAtPickerVisible] = useState(false);
+    const [endAtPickerVisible, setEndAtPickerVisible] = useState(false);
 
     const transactionType = [
         { label: 'To Pay', value: 'topay' },
@@ -77,6 +81,8 @@ const AddElectricityScreen = () => {
             type: values.type,
             issuedAt,
             paidAt,
+            startAt,
+            endAt,
             storeId: id,
         }
         dispatch(newElectricity(electricityData));
@@ -168,6 +174,52 @@ const AddElectricityScreen = () => {
                             </View>
 
                             <Field
+                                name="startAt"
+                                component={() => (
+                                    <View style={styles.inputContainer}>
+                                        <Text>Start At</Text>
+                                        <TouchableOpacity style={styles.dateButton} onPress={() => setStartAtPickerVisible(true)}>
+                                            <Text style={styles.dateButtonText}>{startAt ? startAt : 'Select date'}</Text>
+                                        </TouchableOpacity>
+                                        <DateTimePickerModal
+                                            isVisible={startAtPickerVisible}
+                                            mode="date"
+                                            date={startAt ? new Date(startAt) : new Date()}
+                                            onConfirm={(date) => {
+                                                setStartAtPickerVisible(false);
+                                                setStartAt(date.toISOString().split('T')[0]);
+
+                                            }}
+                                            onCancel={() => setStartAtPickerVisible(false)}
+                                        />
+                                    </View>
+                                )}
+                            />
+
+                            <Field
+                                name="endAt"
+                                component={() => (
+                                    <View style={styles.inputContainer}>
+                                        <Text>End At</Text>
+                                        <TouchableOpacity style={styles.dateButton} onPress={() => setEndAtPickerVisible(true)}>
+                                            <Text style={styles.dateButtonText}>{endAt ? endAt : 'Select date'}</Text>
+                                        </TouchableOpacity>
+                                        <DateTimePickerModal
+                                            isVisible={endAtPickerVisible}
+                                            mode="date"
+                                            date={endAt ? new Date(endAt) : new Date()}
+                                            onConfirm={(date) => {
+                                                setEndAtPickerVisible(false);
+                                                setEndAt(date.toISOString().split('T')[0]);
+
+                                            }}
+                                            onCancel={() => setEndAtPickerVisible(false)}
+                                        />
+                                    </View>
+                                )}
+                            />
+
+                            <Field
                                 name="issuedAt"
                                 component={() => (
                                     <View style={styles.inputContainer}>
@@ -214,18 +266,6 @@ const AddElectricityScreen = () => {
                                     )}
                                 />
                             )}
-
-
-                            <Field
-                                name="note"
-                                placeholder="Note"
-                                component={MyInput}
-                            />
-                            {formik.touched.note && formik.errors.note ? (
-                                <Text style={styles.errorMessage}>{formik.errors.note}</Text>
-                            ) : null}
-
-
 
                             <Button
                                 round

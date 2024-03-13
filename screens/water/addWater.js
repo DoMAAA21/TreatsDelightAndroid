@@ -36,11 +36,15 @@ const AddWaterScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { id } = route.params;
+    const { loading, error, success } = useSelector(state => state.newWater);
     const [issuedAt, setIssuedAt] = useState(new Date().toISOString().split('T')[0]);
     const [paidAt, setPaidAt] = useState(new Date().toISOString().split('T')[0]);
-    const { loading, error, success } = useSelector(state => state.newWater);
+    const [startAt, setStartAt] = useState(new Date().toISOString().split('T')[0]);
+    const [endAt, setEndAt] = useState(new Date().toISOString().split('T')[0]);
     const [issuedAtPickerVisible, setIssuedAtPickerVisible] = useState(false);
     const [paidAtPickerVisible, setPaidAtPickerVisible] = useState(false);
+    const [startAtPickerVisible, setStartAtPickerVisible] = useState(false);
+    const [endAtPickerVisible, setEndAtPickerVisible] = useState(false);
 
     const transactionType = [
         { label: 'To Pay', value: 'topay' },
@@ -77,6 +81,8 @@ const AddWaterScreen = () => {
             type: values.type,
             issuedAt,
             paidAt,
+            startAt,
+            endAt,
             storeId: id,
         }
         dispatch(newWater(waterData));
@@ -97,52 +103,52 @@ const AddWaterScreen = () => {
                                 New Water
                             </Text>
                             <View style={styles.formContainer}>
-                            <Text>Consumed</Text>
-                            <Field
-                                name="consumed"
-                                component={MyInput}
-                                keyboardType="numeric"
-                            />
-                            {formik.touched.consumed && formik.errors.consumed ? (
-                                <Text style={styles.errorMessage}>{formik.errors.consumed}</Text>
-                            ) : null}
+                                <Text>Consumed</Text>
+                                <Field
+                                    name="consumed"
+                                    component={MyInput}
+                                    keyboardType="numeric"
+                                />
+                                {formik.touched.consumed && formik.errors.consumed ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.consumed}</Text>
+                                ) : null}
                             </View>
 
 
                             <View style={styles.formContainer}>
-                            <Text>Price per m³</Text>
-                            <Field
-                                name="price"
-                                placeholder="Price per m³"
-                                component={MyInput}
-                                keyboardType="numeric"
-                            />
-                            {formik.touched.price && formik.errors.price ? (
-                                <Text style={styles.errorMessage}>{formik.errors.price}</Text>
-                            ) : null}
+                                <Text>Price per m³</Text>
+                                <Field
+                                    name="price"
+                                    placeholder="Price per m³"
+                                    component={MyInput}
+                                    keyboardType="numeric"
+                                />
+                                {formik.touched.price && formik.errors.price ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.price}</Text>
+                                ) : null}
                             </View>
 
                             <View style={styles.formContainer}>
-                            <Text>Additionals / Deductions</Text>
-                            <Field
-                                name="additionals"
-                                component={MyInput}
-                                keyboardType="numeric"
-                            />
-                            {formik.touched.additionals && formik.errors.additionals ? (
-                                <Text style={styles.errorMessage}>{formik.errors.additionals}</Text>
-                            ) : null}
+                                <Text>Additionals / Deductions</Text>
+                                <Field
+                                    name="additionals"
+                                    component={MyInput}
+                                    keyboardType="numeric"
+                                />
+                                {formik.touched.additionals && formik.errors.additionals ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.additionals}</Text>
+                                ) : null}
                             </View>
 
 
                             <View style={styles.formContainer}>
-                            <Text>Total</Text>
-                            <Input
-                                name="total"
-                                value={((formik.values.consumed && formik.values.price) ? ((formik.values.consumed * formik.values.price) + parseFloat(formik.values.additionals)).toString() : '0')}
-                                style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
-                                editable={false}
-                            />
+                                <Text>Total</Text>
+                                <Input
+                                    name="total"
+                                    value={((formik.values.consumed && formik.values.price) ? ((formik.values.consumed * formik.values.price) + parseFloat(formik.values.additionals)).toString() : '0')}
+                                    style={{ fontSize: inputSize, height: inputSize, width: '100%' }}
+                                    editable={false}
+                                />
                             </View>
 
 
@@ -167,6 +173,52 @@ const AddWaterScreen = () => {
                                     <Text style={styles.errorMessage}>{formik.errors.type}</Text>
                                 ) : null}
                             </View>
+
+                            <Field
+                                name="startAt"
+                                component={() => (
+                                    <View style={styles.inputContainer}>
+                                        <Text>Start At</Text>
+                                        <TouchableOpacity style={styles.dateButton} onPress={() => setStartAtPickerVisible(true)}>
+                                            <Text style={styles.dateButtonText}>{startAt ? startAt : 'Select date'}</Text>
+                                        </TouchableOpacity>
+                                        <DateTimePickerModal
+                                            isVisible={startAtPickerVisible}
+                                            mode="date"
+                                            date={startAt ? new Date(startAt) : new Date()}
+                                            onConfirm={(date) => {
+                                                setStartAtPickerVisible(false);
+                                                setStartAt(date.toISOString().split('T')[0]);
+
+                                            }}
+                                            onCancel={() => setStartAtPickerVisible(false)}
+                                        />
+                                    </View>
+                                )}
+                            />
+
+                            <Field
+                                name="endAt"
+                                component={() => (
+                                    <View style={styles.inputContainer}>
+                                        <Text>End At</Text>
+                                        <TouchableOpacity style={styles.dateButton} onPress={() => setEndAtPickerVisible(true)}>
+                                            <Text style={styles.dateButtonText}>{endAt ? endAt : 'Select date'}</Text>
+                                        </TouchableOpacity>
+                                        <DateTimePickerModal
+                                            isVisible={endAtPickerVisible}
+                                            mode="date"
+                                            date={endAt ? new Date(endAt) : new Date()}
+                                            onConfirm={(date) => {
+                                                setEndAtPickerVisible(false);
+                                                setEndAt(date.toISOString().split('T')[0]);
+
+                                            }}
+                                            onCancel={() => setEndAtPickerVisible(false)}
+                                        />
+                                    </View>
+                                )}
+                            />
 
                             <Field
                                 name="issuedAt"
@@ -215,18 +267,6 @@ const AddWaterScreen = () => {
                                     )}
                                 />
                             )}
-
-
-                            <Field
-                                name="note"
-                                placeholder="Note"
-                                component={MyInput}
-                            />
-                            {formik.touched.note && formik.errors.note ? (
-                                <Text style={styles.errorMessage}>{formik.errors.note}</Text>
-                            ) : null}
-
-
 
                             <Button
                                 round
