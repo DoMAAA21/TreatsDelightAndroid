@@ -16,6 +16,7 @@ export const courses = [
     { label: 'BET Major In Dies & Moulds Technology', value: 'BETDMT' },
     { label: 'BET Major In Heating, Ventilation, and Airconditioning/Refrigeration Technology', value: 'BETHVAC' },
     { label: 'BET Major In Non-Destructive Testing Technology', value: 'BETCHT' },
+    { label: 'No direct affiliation', value: 'none' },
 ];
 
 export const religions = [
