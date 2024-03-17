@@ -27,9 +27,10 @@ const useFetchNutritionFacts = ({ formik }, item) => {
                     'fat' in parsedNutrition &&
                     'fiber' in parsedNutrition &&
                     'sugar' in parsedNutrition &&
-                    'sodium' in parsedNutrition
+                    'sodium' in parsedNutrition &&
+                    'cholesterol' in parsedNutrition
                 ) {
-                    const nutritionKeys = ['calories', 'protein', 'carbs', 'fat', 'fiber', 'sugar', 'sodium'];
+                    const nutritionKeys = ['calories', 'protein', 'carbs', 'fat', 'fiber', 'sugar', 'sodium', 'cholesterol'];
                     nutritionKeys.forEach((key) => {
                         formik.setFieldValue(key, String(parseFloat(parsedNutrition[key])));
                     });
