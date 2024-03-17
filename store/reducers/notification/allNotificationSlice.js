@@ -31,7 +31,12 @@ export const fetchAllNotifications = createAsyncThunk('allNotifications/fetchAll
             },
         };
         const { data } = await axios.get(`${BACKEND_URL}/api/v1/notification/user/${userId}?page=${page}`, config);
-        dispatch(allNotificationsSuccess(data));
+
+        if (page === 1) {
+            dispatch(allNotificationsSuccess(data));
+        } else {
+            dispatch(concatNotifications(data));
+        }
         return data;
     } catch (error) {
         dispatch(allNotificationsFail(error.response.data.message))

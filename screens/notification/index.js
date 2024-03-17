@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { fetchAllNotifications } from '../../store/reducers/notification/allNotificationSlice';
@@ -7,7 +7,7 @@ import { fetchAllNotifications } from '../../store/reducers/notification/allNoti
 const NotificationsScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { notifications } = useSelector(state => state.allNotification);
+    const { notifications, currentPage } = useSelector(state => state.allNotification);
 
     useEffect(() => {
         dispatch(fetchAllNotifications({ page: 1 }));
@@ -16,6 +16,13 @@ const NotificationsScreen = () => {
     const handleNotificationClick = (item) => {
         navigation.navigate(item.mobileLink.stack, { screen: item.mobileLink.screen});
     };
+
+    
+    const handleLoadMore = () => {
+        console.log('asdas');
+        dispatch(fetchAllNotifications({ page: currentPage + 1 }));
+    };
+
 
 
     const renderItem = ({ item }) => (
@@ -38,6 +45,9 @@ const NotificationsScreen = () => {
                     renderItem={renderItem}
                     keyExtractor={(item) => item._id.toString()}
                     showsVerticalScrollIndicator={false}
+                    onEndReached={handleLoadMore}
+                    onEndReachedThreshold={0.8}
+                    ListFooterComponent={<ActivityIndicator/>}
                 />
             )}
         </View>
@@ -53,7 +63,7 @@ const styles = StyleSheet.create({
     notificationItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 10,
+        paddingHorizontal: 2,
         paddingVertical: 12,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',

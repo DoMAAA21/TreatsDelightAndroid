@@ -6,8 +6,8 @@ const Stack = createStackNavigator();
 
 const NotificationStack = () => {
     return (
-        <Stack.Navigator initialRouteName='Notification' screenOptions={{ headerStyle: { backgroundColor: '#b4e373', } }}>
-            <Stack.Screen name="Notification" component={NotificationsScreen} options={{ headerTitle: 'Notifications' }}/>
+        <Stack.Navigator initialRouteName='NotificationScreen' screenOptions={{ headerStyle: { backgroundColor: '#b4e373', } }}>
+            <Stack.Screen name="NotificationScreen" component={NotificationsScreen} options={{ headerTitle: 'Notifications' }}/>
         </Stack.Navigator>
     );
 
