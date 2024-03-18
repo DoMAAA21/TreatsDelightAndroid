@@ -34,7 +34,6 @@ const NotificationMiddleware = () => {
             }
         };
 
-
         socket.on("connection", () => {
             console.log("Connected to Socket io");
         });
