@@ -94,6 +94,11 @@ const NutritionForm = ({ formik }) => {
             {formik.touched.sodium && formik.errors.sodium ? (
                 <Text style={styles.errorMessage}>{formik.errors.sodium}</Text>
             ) : null}
+
+            <Field name="cholesterol" placeholder="Cholesterol" keyboardType="numeric" component={MyInput} />
+            {formik.touched.cholesterol && formik.errors.cholesterol ? (
+                <Text style={styles.errorMessage}>{formik.errors.cholesterol}</Text>
+            ) : null}
         </>
     )
 }

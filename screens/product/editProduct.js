@@ -31,6 +31,7 @@ const validationSchema = Yup.object({
     fiber: Yup.number().required('Fiber is required').min(0, 'Minimum of 0'),
     sugar: Yup.number().required('Sugar is required').min(0, 'Minimum of 0'),
     sodium: Yup.number().required('Sodium is required').min(0, 'Minimum of 0'),
+    cholesterol: Yup.number().required('Cholesterol is required').min(0, 'Minimum of 0'),
 });
 
 const MyInput = ({ field, form, ...props }) => (
@@ -175,6 +176,7 @@ const EditProductScreen = () => {
         fiber: (product?.nutrition?.fiber || 0).toString(),
         sugar: (product?.nutrition?.sugar || 0).toString(),
         sodium: (product?.nutrition?.sodium || 0).toString(),
+        cholesterol: (product?.nutrition?.cholesterol || 0).toString(),
     };
 
     const onSubmit = (values) => {
@@ -195,6 +197,7 @@ const EditProductScreen = () => {
         formData.append('fiber', values.fiber);
         formData.append('sugar', values.sugar);
         formData.append('sodium', values.sodium);
+        formData.append('cholesterol', values.cholesterol);
 
 
         if (firstImage) {

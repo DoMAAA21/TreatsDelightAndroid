@@ -37,6 +37,7 @@ import waterBillsPerMonthReducer from './chart/waterBillsPerMonthSlice';
 import rentBillsPerMonthReducer from './chart/rentBillsPerMonthSlice';
 import myOrdersReducer from './myorder/myOrdersSlice';
 import scanOrderReducer from './myorder/scanOrderSlice';
+import allNotificationReducer from './notification/allNotificationSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -76,7 +77,8 @@ const rootReducer = combineReducers({
   waterBill : waterBillsPerMonthReducer,
   rentBill  : rentBillsPerMonthReducer,
   myOrders : myOrdersReducer,
-  newScan : scanOrderReducer
+  newScan : scanOrderReducer,
+  allNotification : allNotificationReducer
 
 });
 

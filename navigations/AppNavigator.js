@@ -7,12 +7,16 @@ import HomeStack from './HomeStack';
 import AuthStack from './AuthStack';
 import ProfileStack from './ProfileStack';
 import ShopStack from './ShopStack';
+import NotificationStack from './NotificationStack';
 import HomeDark from '../assets/svg/HomeDark';
 import HomeWhite from '../assets/svg/HomeWhite';
 import BagDark from '../assets/svg/BagDark';
 import BagWhite from '../assets/svg/BagWhite';
 import ProfileDark from '../assets/svg/ProfileDark';
 import ProfileWhite from '../assets/svg/ProfileWhite';
+import BellDark  from '../assets/svg/BellDark';
+import BellWhite  from '../assets/svg/BellWhite';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -30,10 +34,10 @@ const ShopIcon = () => {
     isFocused ?  <BagDark height={30} width={30} /> : <BagWhite height={30} width={30}/>
   );
 };
-const MessageIcon = () => {
+const NotifcationIcon = () => {
   const isFocused = useIsFocused();
   return (
-    isFocused ?  <MessageDark height={30} width={30} /> : <MessageWhite height={30} width={30}/>
+    isFocused ?  <BellDark height={30} width={30} /> : <BellWhite height={30} width={30}/>
   );
 };
 const ProfileIcon = () => {
@@ -89,6 +93,15 @@ const AppNavigator = () => {
           tabBarShowLabel: false,
           headerShown: false,
           tabBarIcon: () => <ShopIcon />,
+        }}
+      />
+       <Tab.Screen
+        name="Notification"
+        component={NotificationStack}
+        options={{
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: () => <NotifcationIcon />,
         }}
       />
       <Tab.Screen
