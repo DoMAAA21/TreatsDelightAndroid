@@ -45,6 +45,34 @@ export const fetchAllNotifications = createAsyncThunk('allNotifications/fetchAll
 }
 );
 
+
+export const fetchAllUnreadNotifications = createAsyncThunk('allNotifications/fetchAllNotifications', async (_, { dispatch }) => {
+    try {
+        dispatch(allUnreadNotificationsRequest());
+        const token = await AsyncStorage.getItem('token');
+        const user = await AsyncStorage.getItem('user');
+        const userCreds = JSON.parse(user);
+        const userId = userCreds._id;
+
+        if (!token) {
+            dispatch(allUnreadNotificationsFail('Login First'));
+        }
+        const config = {
+            headers: {
+                Authorization: `${token}`,
+            },
+        };
+        const { data } = await axios.get(`${BACKEND_URL}/api/v1/notification/user/${userId}/unread`, config);
+
+        dispatch(allUnreadNotificationsSuccess(data.totalUnreadNotifications))
+        return data;
+    } catch (error) {
+        dispatch(allUnreadNotificationsFail(error.response.data.message))
+        throw error.response.data.message;
+    }
+}
+);
+
 const allNotificationsSlice = createSlice({
     name: 'allNotifications',
     initialState,

@@ -1,32 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { fetchAllNotifications } from '../../store/reducers/notification/allNotificationSlice';
+import { updateNotification } from '../../store/reducers/notification/notificationSlice';
 
 const NotificationsScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { notifications, currentPage } = useSelector(state => state.allNotification);
+    const { success } = useSelector(state => state.notification);
 
-    useEffect(() => {
-        dispatch(fetchAllNotifications({ page: 1 }));
-    }, [dispatch]);
+    useFocusEffect(
+        useCallback(() => {
+            dispatch(fetchAllNotifications({ page: 1 }));
+            if (success) {
+                dispatch(fetchAllNotifications({ page: 1 }));
+            }
+        }, [dispatch, success]));
 
     const handleNotificationClick = (item) => {
-        navigation.navigate(item.mobileLink.stack, { screen: item.mobileLink.screen});
+        if (item.mobileLink?.stack && item.mobileLink?.screen) {
+            navigation.navigate(item.mobileLink.stack, { screen: item.mobileLink.screen });
+            console.log(item._id)
+            dispatch(updateNotification(item._id));
+            return
+        }
     };
 
-    
+
     const handleLoadMore = () => {
-        console.log('asdas');
         dispatch(fetchAllNotifications({ page: currentPage + 1 }));
     };
 
 
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleNotificationClick(item)}>
+        <TouchableOpacity key={item._id} onPress={() => handleNotificationClick(item)}>
             <View style={[styles.notificationItem, item.read ? styles.readItem : styles.unreadItem]}>
                 <Image source={{ uri: item.image }} style={styles.notificationImage} />
                 <Text numberOfLines={1} ellipsizeMode="tail" style={styles.notificationText}>{item.message}</Text>
@@ -43,11 +54,10 @@ const NotificationsScreen = () => {
                 <FlatList
                     data={notifications}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item._id.toString()}
                     showsVerticalScrollIndicator={false}
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.8}
-                    ListFooterComponent={<ActivityIndicator/>}
+                    ListFooterComponent={<ActivityIndicator />}
                 />
             )}
         </View>

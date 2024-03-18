@@ -86,3 +86,26 @@ export const topErrorMsg = (message) => {
         },
     });
 };
+
+
+export const topNotificationMsg = (message) => {
+    Toast.show({
+        text1: `${message}`,
+        type: 'NotificationMessage',
+        position: 'top',
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+        customStyles: {
+            title: {
+                fontSize: 30,
+                fontWeight: 'bold',
+            },
+            message: {
+                fontSize: 24,
+                fontWeight: 'bold',
+            },
+        },
+    });
+};
