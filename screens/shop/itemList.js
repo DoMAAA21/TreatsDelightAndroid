@@ -139,22 +139,23 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
                         </TouchableOpacity>
                     )}
                 />
-            ) :<View style={styles.infoContainer}>
-                <QuestionSvg height="80%" />
-                <Text style={styles.infoText}>No products found.</Text>
+            ) :
+                <View style={styles.infoContainer}>
+                    <QuestionSvg height="80%" />
+                    <Text style={styles.infoText}>No products found.</Text>
                 </View>
-                }
+            }
 
         </View>
     );
 };
 
 const styles = {
-    infoContainer:{
+    infoContainer: {
         flex: 1,
         justifyContent: 'center'
     },
-    infoText:{
+    infoText: {
         fontSize: 20,
         alignSelf: 'center'
     },
