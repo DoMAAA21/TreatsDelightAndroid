@@ -14,7 +14,7 @@ const ProductsList = ({ products, onAddToCart }) => {
         <View style={styles.card}>
           <Image source={{ uri: item?.images[0]?.url }} style={styles.image} />
           <Text style={styles.title}>{item?.name}</Text>
-          <Text style={styles.subtitle}>{item?.store?.name}</Text>
+          <Text style={styles.subtitle}> {item.category.toLowerCase() !== "meals" ? `Stock: ${item.stock}` : null}</Text>
           <Text style={styles.price}>₱{item?.sellPrice}</Text>
         </View>
       </TouchableOpacity>

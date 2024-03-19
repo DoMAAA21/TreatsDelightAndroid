@@ -65,14 +65,14 @@ const InventoryScreen = () => {
     const handleAddToCart = (product) => {
         const existingCartItemIndex = cart.findIndex((cartItem) => cartItem._id === product._id);
         if(product.category.toLowerCase() !== "meals" && product.stock <= 0){
-            errorMsg('Insufficient Stock available');
+            topErrorMsg('Insufficient Stock available');
             return;
         }
         
         if (existingCartItemIndex !== -1) {
             const updatedCart = [...cart];
             if (product.category.toLowerCase() !== "meals" && product.stock <= updatedCart[existingCartItemIndex].quantity) {
-                errorMsg('Insufficient Stock available');
+                topErrorMsg('Insufficient Stock available');
                 return;
             }
         
