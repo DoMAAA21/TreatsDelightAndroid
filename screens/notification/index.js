@@ -40,15 +40,15 @@ const NotificationsScreen = () => {
             {notifications.length === 0 ? (
                 <Text>No notifications</Text>
             ) : (
-                <FlatList
-                    data={notifications}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item._id.toString()}
-                    showsVerticalScrollIndicator={false}
-                    onEndReached={handleLoadMore}
-                    onEndReachedThreshold={0.8}
-                    ListFooterComponent={<ActivityIndicator/>}
-                />
+                    <FlatList
+                        data={notifications}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item._id.toString()}
+                        showsVerticalScrollIndicator={false}
+                        onEndReached={handleLoadMore}
+                        onEndReachedThreshold={0.8}
+                        ListFooterComponent={<ActivityIndicator/>}
+                    />
             )}
         </View>
     );
