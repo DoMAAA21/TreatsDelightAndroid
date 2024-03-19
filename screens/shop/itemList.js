@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { allCategories } from '../../shared/inputs';
 import { fetchStores } from '../../store/reducers/store/allStoresSlice';
+import QuestionSvg from '../../assets/svg/Question';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -47,6 +48,7 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
             )
         );
     });
+
 
     return (
         <View style={styles.container}>
@@ -110,36 +112,53 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
                     />
                 </View>
             )}
-            <FlatList
-                contentContainerStyle={styles.flatList}
-                data={filteredProducts}
-                keyExtractor={(product) => product._id.toString()}
-                numColumns={2}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-                renderItem={({ item: product }) => (
-                    <TouchableOpacity onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
-                        <View style={styles.itemContainer}>
-                            <View style={styles.card}>
-                                <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
-                                <Text style={styles.title}>{product?.name}</Text>
-                                <Text style={styles.subtitle}>{product?.store?.name}</Text>
-                                <Text style={styles.price}>₱{product?.sellPrice}</Text>
+
+            {filteredProducts.length > 0 ? (
+                <FlatList
+                    contentContainerStyle={styles.flatList}
+                    data={filteredProducts}
+                    keyExtractor={(product) => product._id.toString()}
+                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                    renderItem={({ item: product }) => (
+                        <TouchableOpacity onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
+                            <View style={styles.itemContainer}>
+                                <View style={styles.card}>
+                                    <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
+                                    <Text style={styles.title}>{product?.name}</Text>
+                                    <Text style={styles.subtitle}>{product?.store?.name}</Text>
+                                    <Text style={styles.price}>₱{product?.sellPrice}</Text>
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            />
+                        </TouchableOpacity>
+                    )}
+                />
+            ) :
+                <View style={styles.infoContainer}>
+                    <QuestionSvg height="80%" />
+                    <Text style={styles.infoText}>No products found.</Text>
+                </View>
+            }
+
         </View>
     );
 };
 
 const styles = {
+    infoContainer: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+    infoText: {
+        fontSize: 20,
+        alignSelf: 'center'
+    },
     flatList: {
         paddingTop: 10,
         paddingBottom: 80,

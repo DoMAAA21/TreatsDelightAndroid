@@ -42,19 +42,16 @@ import MaintenanceScreen from '../screens/maintenance';
 import MaintenanceTransactionScreen from '../screens/maintenance/maintenanceTransactions';
 import AddMaintenanceScreen from '../screens/maintenance/addMaintenance';
 import MaintenanceArchiveScreen from '../screens/maintenance/archives';
+import InventoryScreen from '../screens/inventory';
 
 import ChartSreen from '../screens/analytic/index';
 import ElectricBillScreen from '../screens/analytic/electricBill';
 import WaterBillScreen from '../screens/analytic/waterBill';
 import RentBillScreen from '../screens/analytic/rentBill';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
-  const navigation = useNavigation();
-
 const { user } = useSelector(state => state.auth);
 
 
@@ -126,6 +123,7 @@ const { user } = useSelector(state => state.auth);
       <Stack.Screen name="ElectricBill" component={ElectricBillScreen} options={{ headerTitle: 'Electric Bill' }} />
       <Stack.Screen name="WaterBill" component={WaterBillScreen} options={{ headerTitle: 'Water Bill' }} />
       <Stack.Screen name="RentBill" component={RentBillScreen} options={{ headerTitle: 'Rent Bill' }} />
+      <Stack.Screen name="Inventory" component={InventoryScreen} options={{ headerTitle: 'Inventory'}}/>
     </Stack.Navigator>
   );
 };

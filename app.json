@@ -41,6 +41,12 @@
             "usesCleartextTraffic": true
           }
         }
+      ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
       ]
     ]
 

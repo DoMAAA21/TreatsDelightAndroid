@@ -44,6 +44,22 @@ export const toastConfig = {
       <Ionicons name="checkmark-circle-sharp" size={45} color="white" style={{ marginLeft: 'auto' }} />
     </View>
   ),
+  NotificationMessage: ({text1 }) => (
+    <View style={{
+      height: 60,
+      width: '92%',
+      backgroundColor: '#333333',
+      borderRadius: 10,
+      paddingHorizontal: 20,
+      marginTop: 30,
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      flexDirection: 'row',
+      elevation: 5, 
+    }}>
+      <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{text1}</Text>
+    </View>
+  ),
   MessageError: ({text1 }) => (
     <View style={{
       height: 60,
