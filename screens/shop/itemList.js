@@ -37,13 +37,13 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
         );
     };
 
-    const filteredProducts = products.filter((product) => {
+    const filteredProducts = products?.filter((product) => {
         return (
             (selectedCategory ? product.category === selectedCategory.value : true) &&
             (selectedStore ? product.store.name === selectedStore.name : true) &&
-            (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.store.name.toLowerCase().includes(searchQuery.toLowerCase())
+            (product?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                product?.sellPrice.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+                product?.store?.name.toLowerCase().includes(searchQuery.toLowerCase())
 
             )
         );
@@ -62,7 +62,7 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
                 <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('Cart')}>
                     <MaterialCommunityIcons name="cart" size={30} color="#000" />
                     <View style={styles.badgeContainer}>
-                        <Text style={styles.badgeText}>{cartItems.length}</Text>
+                        <Text style={styles.badgeText}>{cartItems?.length}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -113,7 +113,6 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
                 </View>
             )}
 
-            {filteredProducts.length > 0 ? (
                 <FlatList
                     contentContainerStyle={styles.flatList}
                     data={filteredProducts}
@@ -127,25 +126,27 @@ const ItemList = ({ products, onRefresh, refreshing }) => {
                         />
                     }
                     renderItem={({ item: product }) => (
-                        <TouchableOpacity onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
-                            <View style={styles.itemContainer}>
-                                <View style={styles.card}>
-                                    <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
-                                    <Text style={styles.title}>{product?.name}</Text>
-                                    <Text style={styles.subtitle}>{product?.store?.name}</Text>
-                                    <Text style={styles.price}>₱{product?.sellPrice}</Text>
+                        product ? (
+                            <TouchableOpacity onPress={() => navigation.navigate('ItemInfo', { productId: product._id })}>
+                                <View style={styles.itemContainer}>
+                                    <View style={styles.card}>
+                                        <Image source={{ uri: product?.images[0]?.url }} style={styles.image} />
+                                        <Text style={styles.title}>{product?.name}</Text>
+                                        <Text style={styles.subtitle}>{product?.store?.name}</Text>
+                                        <Text style={styles.price}>₱{product?.sellPrice}</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        ) : (
+                            <View style={styles.infoContainer}>
+                            <QuestionSvg height="80%" />
+                            <Text style={styles.infoText}>No products found.</Text>
+                        </View>
+                        )
                     )}
+                    
                 />
-            ) :
-                <View style={styles.infoContainer}>
-                    <QuestionSvg height="80%" />
-                    <Text style={styles.infoText}>No products found.</Text>
-                </View>
-            }
-
+           
         </View>
     );
 };
