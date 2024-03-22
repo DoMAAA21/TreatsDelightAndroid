@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchAllNotifications } from '../../store/reducers/notification/allNotificationSlice';
 import { updateNotification } from '../../store/reducers/notification/notificationSlice';
+import WomanThinking from '../../assets/svg/WomanThinking';
 
 const NotificationsScreen = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const NotificationsScreen = () => {
     useFocusEffect(
         useCallback(() => {
 
-            dispatch(fetchAllNotifications({ page: 1 })).then(()=>{
+            dispatch(fetchAllNotifications({ page: 1 })).then(() => {
                 setFirstLoading(false);
             });
 
@@ -26,10 +27,10 @@ const NotificationsScreen = () => {
         }, [dispatch, success]));
 
     const handleNotificationClick = (item) => {
+        dispatch(updateNotification(item._id));
         if (item.mobileLink?.stack && item.mobileLink?.screen) {
             navigation.navigate(item.mobileLink.stack, { screen: item.mobileLink.screen });
-            console.log(item._id)
-            dispatch(updateNotification(item._id));
+
             return
         }
     };
@@ -63,7 +64,10 @@ const NotificationsScreen = () => {
     return (
         <View style={styles.container}>
             {notifications.length === 0 && !loading ? (
-                <Text>No notifications</Text>
+                <View style={styles.noNotifContainer}>
+                    <WomanThinking style={styles.womanThinking}/>
+                    <Text style={styles.noNotifText}>No notifications</Text>
+                </View>
             ) : (
                 <FlatList
                     data={notifications}
@@ -124,6 +128,21 @@ const styles = StyleSheet.create({
     },
     unreadItem: {
         backgroundColor: '#cfd8e6', // Define the background color for unread items
+    },
+    noNotifContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f0f0f0', // Background color
+    },
+    noNotifText: {
+        fontSize: 18,
+        marginTop: 20,
+        color: '#555',
+    },
+    womanThinking: {
+        width: 400,
+        height: 400,
     },
 });
 
