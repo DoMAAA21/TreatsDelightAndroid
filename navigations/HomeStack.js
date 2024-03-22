@@ -48,6 +48,7 @@ import ChartSreen from '../screens/analytic/index';
 import ElectricBillScreen from '../screens/analytic/electricBill';
 import WaterBillScreen from '../screens/analytic/waterBill';
 import RentBillScreen from '../screens/analytic/rentBill';
+import TransactionScreen from '../screens/transaction';
 
 const Stack = createStackNavigator();
 
@@ -124,6 +125,7 @@ const { user } = useSelector(state => state.auth);
       <Stack.Screen name="WaterBill" component={WaterBillScreen} options={{ headerTitle: 'Water Bill' }} />
       <Stack.Screen name="RentBill" component={RentBillScreen} options={{ headerTitle: 'Rent Bill' }} />
       <Stack.Screen name="Inventory" component={InventoryScreen} options={{ headerTitle: 'Inventory'}}/>
+      <Stack.Screen name="Transaction" component={TransactionScreen} options={{ headerTitle: 'Transaction'}}/>
     </Stack.Navigator>
   );
 };

@@ -40,6 +40,8 @@ import scanOrderReducer from './myorder/scanOrderSlice';
 import allNotificationReducer from './notification/allNotificationSlice';
 import notificationReducer from './notification/notificationSlice';
 import inventoryReducer from './cart/inventorySlice';
+import allTransactionsReducer from './transaction/allTransactionsSlice';
+import transactionReducer from './transaction/transactionSlice';
 
 const rootReducer = combineReducers({
   allUsers : allUsersReducer,
@@ -82,7 +84,9 @@ const rootReducer = combineReducers({
   newScan : scanOrderReducer,
   allNotification : allNotificationReducer,
   notification : notificationReducer,
-  inventory : inventoryReducer
+  inventory : inventoryReducer,
+  allTransactions : allTransactionsReducer,
+  transaction : transactionReducer
 });
 
 export default rootReducer

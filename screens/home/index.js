@@ -18,6 +18,7 @@ import Faucet from '../../assets/svg/Faucet';
 import Electricity from '../../assets/svg/Electricity';
 import Wrench from '../../assets/svg/Wrench';
 import Inventory from '../../assets/svg/Inventory';
+import TransactionIcon from '../../assets/svg/Transaction';
 
 const screenHeight = Dimensions.get('window').height;
 const HomeScreen = () => {
@@ -124,6 +125,17 @@ const HomeScreen = () => {
                     <Block middle center style={styles.content}>
                       <Inventory height={40} width={40} />
                       <Text size={16}>Inventory</Text>
+                    </Block>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    key='Transaction'
+                    style={styles.box}
+                    onPress={() => navigation.navigate('Transaction')}
+                  >
+                    <Block middle center style={styles.content}>
+                      <TransactionIcon height={40} width={40} />
+                      <Text size={16}>Transaction</Text>
                     </Block>
                   </TouchableOpacity>
 
