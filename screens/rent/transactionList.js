@@ -1,33 +1,52 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FlatList, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { deleteRent } from '../../store/reducers/rent/rentSlice';
+import { deleteRent, updateRentStatus } from '../../store/reducers/rent/rentSlice';
 
 const { width } = Dimensions.get('screen');
 
-const TransactionList = ({ rents }) => {
+const TransactionList = ({ rents, storeId }) => {
     const dispatch = useDispatch();
     const [searchQuery, setSearchQuery] = useState('');
 
 
+    const confirmPay = (id) => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to continue?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Pay',
+                    onPress: () => dispatch(updateRentStatus({ id, storeId })),
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
     const confirmDelete = (id) => {
         Alert.alert(
-          'Confirm Delete',
-          'Are you sure you want to delete this rent?',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Delete',
-              onPress: () => dispatch(deleteRent(id)),
-              style: 'destructive',
-            },
-          ],
-          { cancelable: false }
+            'Confirm Delete',
+            'Are you sure you want to delete this rent?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Delete',
+                    onPress: () => dispatch(deleteRent(id)),
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
         );
-      };
+    };
 
 
     return (
@@ -60,6 +79,13 @@ const TransactionList = ({ rents }) => {
                                 <Text style={styles.count}>Paid At: {rent?.paidAt ? new Date(rent.paidAt).toISOString().slice(0, 10) : 'Not paid yet'}</Text>
                             </View>
                             <View style={styles.buttonContainer}>
+                                {rent.type === "topay" &&
+                                    <TouchableOpacity
+                                        style={[styles.followButton, { backgroundColor: '#22C55E' }]}
+                                        onPress={() => confirmPay(rent._id)}>
+                                        <Text style={styles.followButtonText}>Pay</Text>
+                                    </TouchableOpacity>
+                                }
                                 <TouchableOpacity
                                     style={[styles.followButton, { backgroundColor: '#ff2752' }]}
                                     onPress={() => confirmDelete(rent._id)}>
@@ -132,13 +158,13 @@ const styles = {
         color: 'black',
     },
     buttonContainer: {
-        flexDirection: 'row',
+        flexDirection: 'col',
         justifyContent: 'center',
         marginRight: 20,
     },
     followButton: {
         marginTop: 10,
-        height: 35,
+        height: 40,
         width: 80,
         padding: 10,
         flexDirection: 'row',

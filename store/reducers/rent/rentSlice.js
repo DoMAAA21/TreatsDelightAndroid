@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     isDeleted: false,
     isRestored: false,
+    isUpdated: false,
     error: null,
 };
 
@@ -56,6 +57,30 @@ export const restoreRent = createAsyncThunk('rent/restoreRent', async (id, { dis
 }
 );
 
+export const updateRentStatus = createAsyncThunk('rent/updateRentStatus', async ({id, storeId}, { dispatch }) => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        
+
+        if (!token) {
+            dispatch(updateRentReset());
+        }
+        const config = {
+            headers: {
+                Authorization: `${token}`,
+            },
+        };
+        const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/rent/update-status`, { id, storeId }, config);
+        dispatch(updateRentSuccess(data.success))
+        return data.success;
+
+    } catch (error) {
+        dispatch(updateRentFail(error.response.data.message))
+        throw error.response.data.message;
+    }
+}
+);
+
 
 const rentSlice = createSlice({
     name: 'rent',
@@ -85,6 +110,18 @@ const rentSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        updateRentSuccess: (state, action) => {
+            state.loading = false;
+            state.isUpdated = true;
+        },
+        updateRentReset: (state) => {
+            state.isUpdated = false;
+            state.error = null;
+        },
+        updateRentFail: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
         clearErrors: (state) => {
             state.error = null;
         },
@@ -98,6 +135,9 @@ export const {
     restoreRentSuccess,
     restoreRentReset,
     restoreRentFail,
+    updateRentSuccess,
+    updateRentReset,
+    updateRentFail,
     clearErrors,
 } = rentSlice.actions;
 

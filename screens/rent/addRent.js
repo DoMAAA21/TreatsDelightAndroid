@@ -64,14 +64,14 @@ const AddRentScreen = () => {
 
     const initialValues = {
         amount: '0',
-        type: '',
+        type: 'topay',
         note: '',
     };
 
     const onSubmit = (values) => {
         const rentData = {
             amount: parseFloat(values.amount),
-            type: values.type,
+            type: "topay",
             issuedAt,
             paidAt,
             storeId: id,
@@ -112,6 +112,8 @@ const AddRentScreen = () => {
                                             <Picker
                                                 selectedValue={field.value}
                                                 onValueChange={field.onChange('type')}
+                                                enabled={false}
+                                                style={{backgroundColor: 'lightgray'}}
                                             >
                                                 <Picker.Item label="Choose Type" value="" disabled />
 
@@ -174,17 +176,6 @@ const AddRentScreen = () => {
                                     )}
                                 />
                             )}
-
-
-                            <Field
-                                name="note"
-                                placeholder="Note"
-                                component={MyInput}
-                            />
-                            {formik.touched.note && formik.errors.note ? (
-                                <Text style={styles.errorMessage}>{formik.errors.note}</Text>
-                            ) : null}
-
 
 
                             <Button

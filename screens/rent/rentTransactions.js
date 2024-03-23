@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Transactions from './transactionList';
 import { fetchAllRents, clearErrors, clearRents } from '../../store/reducers/rent/allRentsSlice';
 import { errorMsg, successMsg } from '../../shared/toast';
-import { deleteRentReset } from '../../store/reducers/rent/rentSlice';
+import { deleteRentReset, updateRentReset } from '../../store/reducers/rent/rentSlice';
 
 const RentTransactionScreen = () => {
     const dispatch = useDispatch();
@@ -14,8 +14,9 @@ const RentTransactionScreen = () => {
     const route = useRoute();
     const { id } = route.params;
     const { error, rents } = useSelector(state => state.allRent);
-    const { isDeleted } = useSelector(state => state.rent);
+    const { isDeleted, isUpdated } = useSelector(state => state.rent);
     const [firstLoading, setFirstLoading] = useState(true);
+
     useFocusEffect(
         useCallback(() => {
             dispatch(fetchAllRents(id)).then(() => {
@@ -37,16 +38,21 @@ const RentTransactionScreen = () => {
             dispatch(deleteRentReset());
             dispatch(fetchAllRents(id));
         }
-    }, [isDeleted])
+
+        if (isUpdated) {
+            successMsg('Updated', 'Rent Updated');
+            dispatch(updateRentReset());
+            dispatch(fetchAllRents(id));
+        }
+    }, [isDeleted,  isUpdated])
 
     return (
         <View style={styles.container}>
 
             <TouchableOpacity onPress={() => navigation.navigate('RentArchives', { id })} style={styles.archivesButton}>
-                <Text style={styles.archivesButtonText}>Go To Archives</Text>
-                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'white' }} />
+                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'black' }} />
             </TouchableOpacity>
-            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions rents={rents} />}
+            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions rents={rents} storeId={id} />}
             <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddRent', { id })}>
                 <Text style={styles.floatingButtonText}>+</Text>
             </TouchableOpacity>
@@ -103,13 +109,13 @@ const styles = StyleSheet.create({
     },
     archivesButton: {
         flexDirection: 'row',
-        backgroundColor: '#6757DE',
-        padding: 10,
+        paddingHorizontal: 10,
         borderRadius: 5,
-        margin: 10
+        width: 50,
+        alignSelf: 'flex-end'
     },
     archivesButtonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 18,
         fontWeight: '700',
     },
