@@ -9,8 +9,6 @@ const initialState = {
   error: null,
 };
 
-
-
 export const updateTransaction = createAsyncThunk('transaction/updateTransaction', async ({ id, status }, {dispatch}) => {
   try {
     dispatch(updateTransactionRequest())
