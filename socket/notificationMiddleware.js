@@ -51,11 +51,6 @@ const NotificationMiddleware = () => {
             playNotificationSound();
         });
 
-        socket.on(`notification`, (data) => {
-            topNotificationMsg(data.message);
-            playNotificationSound();
-        });
-
     }, [socket]);
 
 

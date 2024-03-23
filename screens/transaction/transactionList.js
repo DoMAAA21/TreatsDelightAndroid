@@ -33,22 +33,25 @@ const TransactionList = ({ transactions }) => {
           })}
         keyExtractor={(transaction) => transaction.orderItems.id.toString()}
         renderItem={({ item: transaction }) => (
-          <View key={transaction?.orderItems.id} style={styles.container}>
-            <TouchableOpacity style={styles.card} onPress={() => navigateTransaction(transaction.id)}>
-              <View style={styles.cardContent}>
+          <View key={transaction?.orderItems.id} style={styles.itemContainer}>
+          <TouchableOpacity style={styles.card} onPress={() => navigateTransaction(transaction.id)}>
+            <View style={styles.cardContent}>
+              <View style={styles.rowContainer}>
                 <Text style={styles.name}>{transaction?.orderItems.name} x {transaction?.orderItems.quantity}</Text>
                 <Text style={styles.count}>{transaction?.user?.name || 'Guest'}</Text>
                 <Text style={styles.count}>{transaction?.orderItems.status}</Text>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={[styles.followButton, { backgroundColor: '#2196F3', width: width * 0.25 }]}
-                    onPress={() => handleEdit(transaction._id)}>
-                    <Text style={styles.followButtonText}>Edit</Text>
-                  </TouchableOpacity>
-                </View>
               </View>
-            </TouchableOpacity>
-          </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={[styles.followButton, { backgroundColor: '#2196F3' }]}
+                  onPress={() => handleEdit(transaction._id)}>
+                  <Text style={styles.followButtonText}>Edit</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+        
         )}
         contentContainerStyle={styles.flatList}
       />
@@ -73,68 +76,52 @@ const styles = {
     flex: 1,
     marginTop: 10,
   },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    flex: 1,
-  },
-  image: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderWidth: 2,
-    borderColor: '#ebf0f7',
-  },
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-    backgroundColor: 'white',
-    padding: 10,
-    flexDirection: 'row',
-    borderRadius: 30,
-  },
-  name: {
-    fontSize: 18,
-    flex: 1,
-    alignSelf: 'center',
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  count: {
-    fontSize: 14,
-    flex: 1,
-    alignSelf: 'center',
-    color: 'black',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginRight: 20,
-  },
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
+  itemContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: 'white',
+  },
+  card: {
     borderWidth: 1,
-    borderColor: '#dcdcdc',
-    marginLeft: width * 0.015,
-    marginRight: width * 0.015,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 16,
+    margin: 5,
+    width: '100%',
+    backgroundColor: 'white'
+  },
+  cardContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  name: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 10,
+    
+  },
+  count: {
+    flex :1,
+    fontSize: 14,
+    marginRight: 10,
+  },
+  buttonContainer: {},
+  followButton: {
+    padding: 10,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   followButtonText: {
     color: 'white',
-    fontSize: 12,
+    fontWeight: 'bold',
   },
 };
 

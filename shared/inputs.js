@@ -21,7 +21,7 @@ export const courses = [
 
 export const religions = [
     {label: 'Roman Catholic',value: 'Catholic'}, 
-    {label: 'Muslim',value: 'Islam'},
+    {label: 'Islam',value: 'Muslim'},
     {label: 'Iglesia ni Cristo',value: 'Inc'},
     {label: 'Baptist',value: 'Baptist'},
     {label: 'Christian and other Christian groups',value: 'Christian'},
