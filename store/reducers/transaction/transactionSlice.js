@@ -21,14 +21,11 @@ export const updateTransaction = createAsyncThunk('transaction/updateTransaction
     }
     const config = {
       headers: {
-        'Content-Type': 'multipart/form-data',
         Authorization: `${token}`,
       },
     };
-
    
     const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/transaction/update`, {id , status}, config);
-
     dispatch(updateTransactionSuccess(data.success));
   
     return data.success;
