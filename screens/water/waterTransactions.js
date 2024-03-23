@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Transactions from './transactionList';
 import { fetchAllWaters, clearErrors, clearWaters } from '../../store/reducers/water/allWatersSlice';
 import { errorMsg, successMsg } from '../../shared/toast';
-import { deleteWaterReset } from '../../store/reducers/water/waterSlice';
+import { deleteWaterReset, updateWaterReset } from '../../store/reducers/water/waterSlice';
 
 const WaterTransactionScreen = () => {
     const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const WaterTransactionScreen = () => {
     const route = useRoute();
     const { id } = route.params;
     const { error, waters } = useSelector(state => state.allWater);
-    const { isDeleted } = useSelector(state => state.water);
+    const { isDeleted, isUpdated } = useSelector(state => state.water);
     const [firstLoading, setFirstLoading] = useState(true);
     useFocusEffect(
         useCallback(() => {
@@ -37,16 +37,21 @@ const WaterTransactionScreen = () => {
             dispatch(deleteWaterReset());
             dispatch(fetchAllWaters(id));
         }
-    }, [isDeleted])
+
+        if (isUpdated) {
+            successMsg('Updated', 'Paid');
+            dispatch(updateWaterReset());
+            dispatch(fetchAllWaters(id));
+        }
+    }, [isDeleted, isUpdated])
 
     return (
         <View style={styles.container}>
 
             <TouchableOpacity onPress={() => navigation.navigate('WaterArchives', { id })} style={styles.archivesButton}>
-                <Text style={styles.archivesButtonText}>Go To Archives</Text>
-                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'white' }} />
+                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'black' }} />
             </TouchableOpacity>
-            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions waters={waters} />}
+            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions waters={waters} storeId={id} />}
             <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddWater', { id })}>
                 <Text style={styles.floatingButtonText}>+</Text>
             </TouchableOpacity>
@@ -103,13 +108,13 @@ const styles = StyleSheet.create({
     },
     archivesButton: {
         flexDirection: 'row',
-        backgroundColor: '#6757DE',
-        padding: 10,
+        paddingHorizontal: 10,
         borderRadius: 5,
-        margin: 10
+        width: 50,
+        alignSelf: 'flex-end'
     },
     archivesButtonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 18,
         fontWeight: '700',
     },

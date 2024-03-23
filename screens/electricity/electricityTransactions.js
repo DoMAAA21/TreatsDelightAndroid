@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Transactions from './transactionList';
 import { fetchAllElectricity, clearErrors, clearElectricity } from '../../store/reducers/electricity/allElectricitySlice';
 import { errorMsg, successMsg } from '../../shared/toast';
-import { deleteElectricityReset } from '../../store/reducers/electricity/electricitySlice';
+import { deleteElectricityReset, updateElectricityReset } from '../../store/reducers/electricity/electricitySlice';
 
 const ElectricityTransactionScreen = () => {
     const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const ElectricityTransactionScreen = () => {
     const route = useRoute();
     const { id } = route.params;
     const { error, electricity } = useSelector(state => state.allElectricity);
-    const { isDeleted } = useSelector(state => state.electricity);
+    const { isDeleted, isUpdated } = useSelector(state => state.electricity);
     const [firstLoading, setFirstLoading] = useState(true);
     useFocusEffect(
         useCallback(() => {
@@ -37,16 +37,20 @@ const ElectricityTransactionScreen = () => {
             dispatch(deleteElectricityReset());
             dispatch(fetchAllElectricity(id));
         }
-    }, [isDeleted])
+        if (isUpdated) {
+            successMsg('Updated', 'Electricity Updated');
+            dispatch(updateElectricityReset());
+            dispatch(fetchAllElectricity(id));
+        }
+    }, [isDeleted, isUpdated])
 
     return (
         <View style={styles.container}>
 
             <TouchableOpacity onPress={() => navigation.navigate('ElectricityArchives', { id })} style={styles.archivesButton}>
-                <Text style={styles.archivesButtonText}>Go To Archives</Text>
-                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'white' }} />
+                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'black' }} />
             </TouchableOpacity>
-            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions electricity={electricity} />}
+            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions electricity={electricity} storeId={id}/>}
             <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddElectricity', { id })}>
                 <Text style={styles.floatingButtonText}>+</Text>
             </TouchableOpacity>
@@ -103,13 +107,13 @@ const styles = StyleSheet.create({
     },
     archivesButton: {
         flexDirection: 'row',
-        backgroundColor: '#6757DE',
-        padding: 10,
+        paddingHorizontal: 10,
         borderRadius: 5,
-        margin: 10
+        width: 50,
+        alignSelf: 'flex-end'
     },
     archivesButtonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 18,
         fontWeight: '700',
     },

@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     isDeleted: false,
     isRestored: false,
+    isUpdated: false,
     error: null,
 };
 
@@ -56,6 +57,32 @@ export const restoreElectricity = createAsyncThunk('electricity/restoreElectrici
 }
 );
 
+export const updateElectricityStatus = createAsyncThunk('electricity/updateElectricityStatus', async ({id, storeId}, { dispatch }) => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        
+
+        if (!token) {
+            dispatch(updateElectricityReset());
+        }
+        const config = {
+            headers: {
+                Authorization: `${token}`,
+            },
+        };
+        console.log('asdas');
+        const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/electricity/update-status`, { id, storeId }, config);
+        console.log(data);
+        dispatch(updateElectricitySuccess(data.success))
+        return data.success;
+
+    } catch (error) {
+        dispatch(updateElectricityFail(error.response.data.message))
+        throw error.response.data.message;
+    }
+}
+);
+
 
 const electricitySlice = createSlice({
     name: 'electricity',
@@ -85,6 +112,18 @@ const electricitySlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        updateElectricitySuccess: (state, action) => {
+            state.loading = false;
+            state.isUpdated = action.payload;
+        },
+        updateElectricityReset: (state) => {
+            state.isUpdated = false;
+            state.error = null;
+        },
+        updateElectricityFail: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
         clearErrors: (state) => {
             state.error = null;
         },
@@ -98,6 +137,9 @@ export const {
     restoreElectricitySuccess,
     restoreElectricityReset,
     restoreElectricityFail,
+    updateElectricitySuccess,
+    updateElectricityReset,
+    updateElectricityFail,
     clearErrors,
 } = electricitySlice.actions;
 

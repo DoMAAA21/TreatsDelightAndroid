@@ -68,7 +68,7 @@ const AddElectricityScreen = () => {
         consumed: '0',
         price: '0',
         additionals: '0',
-        type: '',
+        type: 'topay',
         note: '',
     };
 
@@ -78,7 +78,7 @@ const AddElectricityScreen = () => {
             price: parseFloat(values.price),
             additionals: parseFloat(values.additionals),
             total: parseFloat((values.consumed * values.price) + parseFloat(values.additionals)),
-            type: values.type,
+            type: "topay",
             issuedAt,
             paidAt,
             startAt,
@@ -158,6 +158,8 @@ const AddElectricityScreen = () => {
                                             <Picker
                                                 selectedValue={field.value}
                                                 onValueChange={field.onChange('type')}
+                                                enabled={false}
+                                                style={{ backgroundColor: 'lightgray' }}
                                             >
                                                 <Picker.Item label="Choose Type" value="" disabled />
 

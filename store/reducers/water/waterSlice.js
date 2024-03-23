@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     isDeleted: false,
     isRestored: false,
+    isUpdated: false,
     error: null,
 };
 
@@ -29,6 +30,31 @@ export const deleteWater = createAsyncThunk('water/deleteWater', async (id, { di
 
     } catch (error) {
         dispatch(deleteWaterFail(error.response.data.message))
+        throw error.response.data.message;
+    }
+}
+);
+
+
+export const updateWaterStatus = createAsyncThunk('water/updateWaterStatus', async ({id, storeId}, { dispatch }) => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        
+
+        if (!token) {
+            dispatch(updateWaterReset());
+        }
+        const config = {
+            headers: {
+                Authorization: `${token}`,
+            },
+        };
+        const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/water/update-status`, { id, storeId }, config);
+        dispatch(updateWaterSuccess(data.success))
+        return data.success;
+
+    } catch (error) {
+        dispatch(updateWaterFail(error.response.data.message))
         throw error.response.data.message;
     }
 }
@@ -85,6 +111,22 @@ const waterSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        updateWaterSuccess: (state, action) => {
+            state.loading = false;
+            state.isUpdated = action.payload;
+        },
+        updateWaterReset: (state) => {
+            state.isUpdated = false;
+            state.error = null;
+        },
+        updateWaterFail: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+        updateWaterReset: (state) => {
+            state.isUpdated = false;
+            state.error = null;
+        },
         clearErrors: (state) => {
             state.error = null;
         },
@@ -98,6 +140,9 @@ export const {
     restoreWaterSuccess,
     restoreWaterReset,
     restoreWaterFail,
+    updateWaterSuccess,
+    updateWaterFail,
+    updateWaterReset,
     clearErrors,
 } = waterSlice.actions;
 

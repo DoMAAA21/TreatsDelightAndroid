@@ -78,7 +78,7 @@ const AddWaterScreen = () => {
             price: parseFloat(values.price),
             additionals: parseFloat(values.additionals),
             total: parseFloat((values.consumed * values.price) + parseFloat(values.additionals)),
-            type: values.type,
+            type: "topay",
             issuedAt,
             paidAt,
             startAt,
@@ -159,6 +159,8 @@ const AddWaterScreen = () => {
                                             <Picker
                                                 selectedValue={field.value}
                                                 onValueChange={field.onChange('type')}
+                                                enabled={false}
+                                                style={{backgroundColor: 'lightgray'}}
                                             >
                                                 <Picker.Item label="Choose Type" value="" disabled />
 

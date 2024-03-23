@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FlatList, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { deleteElectricity } from '../../store/reducers/electricity/electricitySlice';
+import { deleteElectricity, updateElectricityStatus } from '../../store/reducers/electricity/electricitySlice';
+
 
 const { width } = Dimensions.get('screen');
 
-const TransactionList = ({ electricity }) => {
+const TransactionList = ({ electricity, storeId }) => {
     const dispatch = useDispatch();
     const [searchQuery, setSearchQuery] = useState('');
 
+
+
+    const confirmPay = (id) => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want continue?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Pay',
+                    onPress: () => dispatch(updateElectricityStatus({ id, storeId })),
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
+        );
+    };
 
     const confirmDelete = (id) => {
         Alert.alert(
@@ -58,6 +79,13 @@ const TransactionList = ({ electricity }) => {
                                 <Text style={styles.count}>Paid At: {electricity?.paidAt ? new Date(electricity.paidAt).toISOString().slice(0, 10) : 'Not paid yet'}</Text>
                             </View>
                             <View style={styles.buttonContainer}>
+                                {electricity.type === "topay" &&
+                                    <TouchableOpacity
+                                    style={[styles.followButton, { backgroundColor: '#22C55E' }]}
+                                    onPress={() => confirmPay(electricity._id)}>
+                                    <Text style={styles.followButtonText}>Pay</Text>
+                                </TouchableOpacity>
+                                }
                                 <TouchableOpacity
                                     style={[styles.followButton, { backgroundColor: '#ff2752' }]}
                                     onPress={() => confirmDelete(electricity._id)}>
@@ -130,13 +158,13 @@ const styles = {
         color: 'black',
     },
     buttonContainer: {
-        flexDirection: 'row',
+        flexDirection: 'col',
         justifyContent: 'center',
         marginRight: 20,
     },
     followButton: {
         marginTop: 10,
-        height: 35,
+        height: 40,
         width: 80,
         padding: 10,
         flexDirection: 'row',
