@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BACKEND_URL } from '../../../shared/constants';
+import { login, loginSuccess } from '../auth/authenticationSlice';
 
 
 const initialState = {
@@ -51,6 +52,7 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
    
     const { data } = await axios.put(`${BACKEND_URL}/api/v1/admin/user/${id}`, userData, config);
     dispatch(updateUserSuccess(data.success));
+    dispatch(loginSuccess(data));
   
     return data.success;
   } catch (error) {
