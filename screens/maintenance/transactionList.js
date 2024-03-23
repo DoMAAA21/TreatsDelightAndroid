@@ -1,33 +1,51 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FlatList, View, Alert, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { deleteMaintenance } from '../../store/reducers/maintenance/maintenanceSlice';
+import { deleteMaintenance, updateMaintenanceStatus } from '../../store/reducers/maintenance/maintenanceSlice';
 
 const { width } = Dimensions.get('screen');
 
-const TransactionList = ({ maintenances }) => {
+const TransactionList = ({ maintenances, storeId }) => {
     const dispatch = useDispatch();
     const [searchQuery, setSearchQuery] = useState('');
 
+    const confirmPay = (id) => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to continue?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Pay',
+                    onPress: () => dispatch(updateMaintenanceStatus({ id, storeId })),
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
+        );
+    };
 
     const confirmDelete = (id) => {
         Alert.alert(
-          'Confirm Delete',
-          'Are you sure you want to delete this maintenance?',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Delete',
-              onPress: () => dispatch(deleteMaintenance(id)),
-              style: 'destructive',
-            },
-          ],
-          { cancelable: false }
+            'Confirm Delete',
+            'Are you sure you want to delete this maintenance?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Delete',
+                    onPress: () => dispatch(deleteMaintenance(id)),
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
         );
-      };
+    };
 
 
     return (
@@ -60,6 +78,13 @@ const TransactionList = ({ maintenances }) => {
                                 <Text style={styles.count}>Paid At: {maintenance?.paidAt ? new Date(maintenance.paidAt).toISOString().slice(0, 10) : 'Not paid yet'}</Text>
                             </View>
                             <View style={styles.buttonContainer}>
+                                {maintenance.type === "topay" &&
+                                    <TouchableOpacity
+                                        style={[styles.followButton, { backgroundColor: '#22C55E' }]}
+                                        onPress={() => confirmPay(maintenance._id)}>
+                                        <Text style={styles.followButtonText}>Pay</Text>
+                                    </TouchableOpacity>
+                                }
                                 <TouchableOpacity
                                     style={[styles.followButton, { backgroundColor: '#ff2752' }]}
                                     onPress={() => confirmDelete(maintenance._id)}>
@@ -132,13 +157,13 @@ const styles = {
         color: 'black',
     },
     buttonContainer: {
-        flexDirection: 'row',
+        flexDirection: 'col',
         justifyContent: 'center',
         marginRight: 20,
     },
     followButton: {
         marginTop: 10,
-        height: 35,
+        height: 40,
         width: 80,
         padding: 10,
         flexDirection: 'row',

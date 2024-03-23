@@ -59,7 +59,6 @@ const AddMaintenanceScreen = () => {
         }
 
         if (success) {
-            console.log('asda');
             navigation.navigate('MaintenanceTransactions', { id });
             dispatch(newMaintenanceReset())
             successMsg('New Maintenance Added');
@@ -70,7 +69,7 @@ const AddMaintenanceScreen = () => {
 
     const initialValues = {
         amount: '0',
-        type: '',
+        type: 'topay',
         cateredBy: '',
         note: '',
     };
@@ -79,7 +78,7 @@ const AddMaintenanceScreen = () => {
         const maintenanceData = {
             amount: parseFloat(values.amount),
             cateredBy: values.cateredBy,
-            type: values.type,
+            type: "topay",
             issuedAt,
             paidAt,
             storeId: id,
@@ -112,29 +111,6 @@ const AddMaintenanceScreen = () => {
                             ) : null}
 
 
-
-                            <View style={styles.inputContainer}>
-                                <Field name="type">
-                                    {({ field }) => (
-                                        <View style={styles.selectContainer}>
-                                            <Picker
-                                                selectedValue={field.value}
-                                                onValueChange={field.onChange('type')}
-                                            >
-                                                <Picker.Item label="Choose Type" value="" disabled />
-
-                                                {transactionType.map((transactionTypeOption) => (
-                                                    <Picker.Item label={transactionTypeOption.label} value={transactionTypeOption.value} key={transactionTypeOption.label} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    )}
-                                </Field>
-                                {formik.touched.type && formik.errors.type ? (
-                                    <Text style={styles.errorMessage}>{formik.errors.type}</Text>
-                                ) : null}
-                            </View>
-
                             <View style={styles.inputContainer}>
                                 <Field name="cateredBy">
                                     {({ field }) => (
@@ -156,6 +132,31 @@ const AddMaintenanceScreen = () => {
                                     <Text style={styles.errorMessage}>{formik.errors.cateredBy}</Text>
                                 ) : null}
                             </View>
+                            <View style={styles.inputContainer}>
+                                <Field name="type">
+                                    {({ field }) => (
+                                        <View style={styles.selectContainer}>
+                                            <Picker
+                                                selectedValue={field.value}
+                                                onValueChange={field.onChange('type')}
+                                                enabled={false}
+                                                style={{ backgroundColor: 'lightgray' }}
+                                            >
+                                                <Picker.Item label="Choose Type" value="" disabled />
+
+                                                {transactionType.map((transactionTypeOption) => (
+                                                    <Picker.Item label={transactionTypeOption.label} value={transactionTypeOption.value} key={transactionTypeOption.label} />
+                                                ))}
+                                            </Picker>
+                                        </View>
+                                    )}
+                                </Field>
+                                {formik.touched.type && formik.errors.type ? (
+                                    <Text style={styles.errorMessage}>{formik.errors.type}</Text>
+                                ) : null}
+                            </View>
+
+
 
                             <Field
                                 name="issuedAt"
@@ -204,17 +205,6 @@ const AddMaintenanceScreen = () => {
                                     )}
                                 />
                             )}
-
-
-                            <Field
-                                name="note"
-                                placeholder="Note"
-                                component={MyInput}
-                            />
-                            {formik.touched.note && formik.errors.note ? (
-                                <Text style={styles.errorMessage}>{formik.errors.note}</Text>
-                            ) : null}
-
 
 
                             <Button

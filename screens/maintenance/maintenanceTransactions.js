@@ -14,7 +14,7 @@ const MaintenanceTransactionScreen = () => {
     const route = useRoute();
     const { id } = route.params;
     const { error, maintenances } = useSelector(state => state.allMaintenance);
-    const { isDeleted } = useSelector(state => state.maintenance);
+    const { isDeleted, isUpdated } = useSelector(state => state.maintenance);
     const [firstLoading, setFirstLoading] = useState(true);
     useFocusEffect(
         useCallback(() => {
@@ -37,16 +37,20 @@ const MaintenanceTransactionScreen = () => {
             dispatch(deleteMaintenanceReset());
             dispatch(fetchAllMaintenances(id));
         }
-    }, [isDeleted])
+        if (isUpdated) {
+            successMsg('Deleted', 'Maintenance Removed');
+            dispatch(deleteMaintenanceReset());
+            dispatch(fetchAllMaintenances(id));
+        }
+    }, [isDeleted, isUpdated])
 
     return (
         <View style={styles.container}>
 
             <TouchableOpacity onPress={() => navigation.navigate('MaintenanceArchives', { id })} style={styles.archivesButton}>
-                <Text style={styles.archivesButtonText}>Go To Archives</Text>
-                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'white' }} />
+                <Ionicons name="archive" size={25} style={{ marginLeft: 'auto', color: 'black' }} />
             </TouchableOpacity>
-            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions maintenances={maintenances} />}
+            {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <Transactions maintenances={maintenances} storeId={id}/>}
             <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate('AddMaintenance', { id })}>
                 <Text style={styles.floatingButtonText}>+</Text>
             </TouchableOpacity>
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
     card: {
         padding: 20,
         marginVertical: 10,
-        backgroundColor: 'transpamaintenance',
+        backgroundColor: 'transparent',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 1,
         elevation: 2,
@@ -103,13 +107,13 @@ const styles = StyleSheet.create({
     },
     archivesButton: {
         flexDirection: 'row',
-        backgroundColor: '#6757DE',
-        padding: 10,
+        paddingHorizontal: 10,
         borderRadius: 5,
-        margin: 10
+        width: 50,
+        alignSelf: 'flex-end'
     },
     archivesButtonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 18,
         fontWeight: '700',
     },

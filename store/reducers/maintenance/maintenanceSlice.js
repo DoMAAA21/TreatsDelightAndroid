@@ -7,6 +7,7 @@ const initialState = {
     loading: false,
     isDeleted: false,
     isRestored: false,
+    isUpdated: false,
     error: null,
 };
 
@@ -56,6 +57,30 @@ export const restoreMaintenance = createAsyncThunk('maintenance/restoreMaintenan
 );
 
 
+export const updateMaintenanceStatus = createAsyncThunk('maintenance/updateMaintenanceStatus', async ({ id, storeId }, { dispatch }) => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+
+
+        if (!token) {
+            dispatch(updateMaintenanceReset());
+        }
+        const config = {
+            headers: {
+                Authorization: `${token}`,
+            },
+        };
+        const { data } = await axios.patch(`${BACKEND_URL}/api/v1/admin/maintenance/update-status`, { id, storeId }, config);
+        dispatch(updateMaintenanceSuccess(data.success))
+        return data.success;
+
+    } catch (error) {
+        dispatch(updateMaintenanceFail(error.response.data.message))
+        throw error.response.data.message;
+    }
+}
+);
+
 const maintenanceSlice = createSlice({
     name: 'maintenance',
     initialState,
@@ -84,6 +109,18 @@ const maintenanceSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        updateMaintenanceSuccess: (state, action) => {
+            state.loading = false;
+            state.isUpdated = action.payload;
+        },
+        updateMaintenanceReset: (state) => {
+            state.isUpdated = false;
+            state.error = null;
+        },
+        updateMaintenanceFail: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
         clearErrors: (state) => {
             state.error = null;
         },
@@ -97,6 +134,9 @@ export const {
     restoreMaintenanceSuccess,
     restoreMaintenanceReset,
     restoreMaintenanceFail,
+    updateMaintenanceSuccess,
+    updateMaintenanceReset,
+    updateMaintenanceFail,
     clearErrors,
 } = maintenanceSlice.actions;
 
