@@ -48,7 +48,12 @@
           "initialOrientation": "DEFAULT"
         }
       ]
-    ]
-
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bd5c91d9-eab9-4a27-8651-754bdfa30e58"
+      }
+    },
+    "owner": "domaaa21"
   }
 }
