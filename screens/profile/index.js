@@ -74,50 +74,48 @@ export default ProfileScreen = () => {
         <View style={styles.bodyContent}>
           <Text style={styles.name}>{user?.fname} {user?.lname}</Text>
           <Text style={styles.info}>{user?.email}</Text>
-          
-        <View style={styles.menuCard}>
-          <View style={styles.menuContainer} >
-            <TouchableOpacity style={styles.buttonContainer} onPress={()=> navigation.navigate('ProfileInfo')}>
-              <FontAwesome name="user" height={35} size={35} width={35} color="#abafac" />
-              <Text style={styles.menuText}>Profile</Text>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
-              </View>
-            </TouchableOpacity>
-          </View>
 
-          <View style={styles.menuContainer} >
-            <TouchableOpacity style={styles.buttonContainer} onPress={()=> navigation.navigate('MyOrder')} >
-              <Ionicons name="fast-food" height={35} size={35} width={35} color="#abafac" />
-              <Text style={styles.menuText}>My Orders</Text>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <View style={styles.menuCard}>
+            <View style={styles.menuContainer} >
+              <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ProfileInfo')}>
+                <FontAwesome name="user" height={35} size={35} width={35} color="#abafac" />
+                <Text style={styles.menuText}>Profile</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+                </View>
+              </TouchableOpacity>
+            </View>
 
+            <View style={styles.menuContainer} >
+              <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('HealthDeclaration')} >
+                <Ionicons name="heart" height={35} size={35} width={35} color="#abafac" />
+                <Text style={styles.menuText}>Health Declaration</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+                </View>
+              </TouchableOpacity>
+            </View>
 
-          {/* <View style={styles.menuContainer} >
-            <TouchableOpacity style={styles.buttonContainer} >
-              <FontAwesome name="info-circle" height={35} size={35} width={35} color="#abafac" />
-              <Text style={styles.menuText}>Information</Text>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
-              </View>
-            </TouchableOpacity>
-          </View> */}
-
+            <View style={styles.menuContainer} >
+              <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('MyOrder')} >
+                <Ionicons name="fast-food" height={35} size={35} width={35} color="#abafac" />
+                <Text style={styles.menuText}>My Orders</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+                </View>
+              </TouchableOpacity>
+            </View>
 
 
-          <View style={styles.menuContainer} >
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleLogout}>
-              <FontAwesome name="sign-out" height={35} size={35} width={35} color="#abafac" />
-              <Text style={styles.menuText}>Logout</Text>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
-              </View>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.menuContainer} >
+              <TouchableOpacity style={styles.buttonContainer} onPress={handleLogout}>
+                <FontAwesome name="sign-out" height={35} size={35} width={35} color="#abafac" />
+                <Text style={styles.menuText}>Logout</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <FontAwesome name="angle-right" height={35} size={35} width={35} color="#37c5d9" />
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
 
         </View>
@@ -164,7 +162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 0,
   },
-  menuText:{
+  menuText: {
     fontSize: 16,
     fontWeight: '600'
   },
@@ -176,7 +174,7 @@ const styles = StyleSheet.create({
     marginEnd: 10,
     alignItems: 'center',
   },
-  menuCard:{
+  menuCard: {
     width: '80%',
     borderColor: 'black',
     borderWidth: 0.5,

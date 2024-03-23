@@ -62,6 +62,34 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
 });
 
 
+export const submitHealthDeclaration = createAsyncThunk('user/submitHealthDeclaration', async ( userData, {dispatch}) => {
+  try {
+    dispatch(updateUserRequest())
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      dispatch(updateUserFail('Login First'));
+      throw error.response.data.message;
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${token}`,
+      },
+    };
+
+   
+    const { data } = await axios.patch(`${BACKEND_URL}/api/v1/user/health-declaration`, userData, config);
+    dispatch(updateUserSuccess(data.success));
+
+    return data.success;
+  } catch (error) {
+    dispatch(updateUserFail(error.response.data.message));
+    throw error.response.data.message;
+  }
+});
+
+
+
 export const updateProfile = createAsyncThunk('user/updateUser', async ({ id, userData }, {dispatch}) => {
   try {
     dispatch(updateUserRequest())

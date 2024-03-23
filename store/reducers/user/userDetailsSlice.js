@@ -35,6 +35,33 @@ export const getUserDetails = createAsyncThunk('userDetails/getUserDetails', asy
 }
 );
 
+
+export const getUserHealth = createAsyncThunk('userDetails/getUserDetails', async (id, { dispatch }) => {
+  try {
+    dispatch(userDetailsRequest()); 
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      dispatch(userDetailsFail('Login First'));
+      throw error.response.data.message;
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `${token}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${BACKEND_URL}/api/v1/user/get-health`,config);
+
+    dispatch(userDetailsSuccess(data.user));
+    return data.user;
+  } catch (error) {
+    dispatch(userDetailsFail(error.response.data.message))
+    throw error.response.data.message;
+  }
+}
+);
+
 const userDetailsSlice = createSlice({
   name: 'userDetails',
   initialState,
