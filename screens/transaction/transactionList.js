@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FlatList, View, TextInput, TouchableOpacity, Text, Modal } from 'react-native';
+import { FlatList, View, TextInput, TouchableOpacity, Text, Modal, RefreshControl } from 'react-native';
 import { updateTransaction } from '../../store/reducers/transaction/transactionSlice';
 const statuses = ['Pending', 'Paid', 'Completed', 'Incomplete'];
 const getStatusStyle = (status) => {
@@ -19,7 +19,7 @@ const getStatusStyle = (status) => {
 };
 
 
-const TransactionList = ({ transactions }) => {
+const TransactionList = ({ transactions, refreshing, handleRefresh }) => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -61,6 +61,9 @@ const TransactionList = ({ transactions }) => {
             );
           })}
         keyExtractor={(transaction) => transaction.orderItems.id.toString()}
+        refreshControl={ // Add RefreshControl to FlatList
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
         renderItem={({ item: transaction }) => (
           <View key={transaction?.orderItems.id} style={styles.itemContainer}>
             <TouchableOpacity style={styles.card} onPress={() => handleEdit(transaction.orderItems.id)}>

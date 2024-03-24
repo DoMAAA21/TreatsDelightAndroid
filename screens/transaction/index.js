@@ -13,6 +13,7 @@ const TransactionScreen = () => {
   const { error, transactions } = useSelector(state => state.allTransactions);
   const { isUpdated } = useSelector(state => state.transaction)
   const [firstLoading, setFirstLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -38,13 +39,19 @@ const TransactionScreen = () => {
       dispatch(fetchAllTransactions());
     }
 
-
   }, [isUpdated])
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    dispatch(fetchAllTransactions()).then(()=>{
+      setRefreshing(false);
+    });
+  };
 
 
   return (
     <View style={styles.container}>
-      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <TransactionList transactions={transactions} />}
+      {firstLoading ? <ActivityIndicator size="large" style={styles.loadingIndicator} /> : <TransactionList transactions={transactions} refreshing={refreshing} handleRefresh={handleRefresh} />}
     </View>
   );
 };
