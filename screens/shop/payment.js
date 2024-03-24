@@ -12,7 +12,7 @@ const PayPalIntegrationScreen = () => {
 
     const { cartItems, loading, success } = useSelector(state => state.cart);
     const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-   
+
     const onReserve = async () => {
         const isReserve = true;
         if (cartItems.length === 0) {
@@ -23,13 +23,13 @@ const PayPalIntegrationScreen = () => {
         dispatch(checkoutCart({ cartItems, totalPrice, isReserve }));
     };
 
-    useFocusEffect(
-        useCallback(() => {
-            if (success) {
-                navigation.navigate('Receipt');
-                dispatch(resetCheckOut());
-            }
-        }, [dispatch, success]));
+
+    useEffect(() => {
+        if (success) {
+            navigation.navigate('Receipt');
+            dispatch(resetCheckOut());
+        }
+    }, [dispatch, success]);
 
 
 

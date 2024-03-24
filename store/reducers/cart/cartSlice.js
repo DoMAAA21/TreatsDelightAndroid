@@ -37,33 +37,42 @@ export const addItemToCart = createAsyncThunk('cart/addItemToCart', async ({ id,
 }
 );
 
-export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartItems, totalPrice, isReserve }, { dispatch }) => {
-  try {
-    dispatch(checkoutRequest());
-    const user = await AsyncStorage.getItem('user');
-    const userCreds = JSON.parse(user);
-    const userId = userCreds?._id;
-    const userName = `${userCreds?.fname} ${userCreds?.lname}`;
-    const order = {
-      orderItems: cartItems,
-      user: {
-        id: userId,
-        name: userName
-      },
-      totalPrice,
-      isReserve
-
+export const checkoutCart = createAsyncThunk(
+  'cart/createOrder',
+  async ({ cartItems, totalPrice, isReserve }, { dispatch }) => {
+    try {
+      dispatch(checkoutRequest());
+      const user = await AsyncStorage.getItem('user');
+      const userCreds = JSON.parse(user);
+      const userId = userCreds?._id;
+      const userName = `${userCreds?.fname} ${userCreds?.lname}`;
+      const order = {
+        orderItems: cartItems,
+        user: {
+          id: userId,
+          name: userName,
+        },
+        totalPrice,
+        isReserve,
+      };
+      const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order);
+      console.log(data);
+      dispatch(showReceipt(data.order));
+      dispatch(checkoutSuccess(data.success));
+      dispatch(setQrCode(data.qrCodeURL));
+      dispatch(clearCart());
+      return data;
+    } catch (error) {
+      throw error.response.data.message;
     }
-    const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order);
-    dispatch(showReceipt(data.order));
-    dispatch(checkoutSuccess(data.success));
-    dispatch(setQrCode(data.qrCodeURL));
-    dispatch(clearCart());
-    return data;
-  } catch (error) {
-    throw error.response.data.message;
+  },
+  {
+    // Configure retry behavior
+    retries: 3, // Number of retries
+    retryDelay: 1000, // Delay between retries in milliseconds
+    // Optionally, you can provide a condition for retries:
+    // retryCondition: (error, retries) => retries < 3 && error.response.status === 500,
   }
-}
 );
 
 export const kioskCheckout = createAsyncThunk('cart/kioskCheckout', async ({ cartItems, totalPrice }, { dispatch }) => {
