@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Ima
 import Carousel from 'react-native-reanimated-carousel';
 import { getItemDetails } from '../../store/reducers/product/productDetailsSlice';
 import { addItemToCart, clearError, resetAddToCartSuccess } from '../../store/reducers/cart/cartSlice';
-import { topErrorMsg, topSuccessMsg } from '../../shared/toast';
+import { errorMsg, topErrorMsg, topSuccessMsg } from '../../shared/toast';
 
 const { width, height } = Dimensions.get('window');
 
@@ -92,7 +92,12 @@ const ItemInfo = () => {
     }
   }, [addToCartSuccess, error])
 
+
   const addToCart = () => {
+    if(product.stock === 0){
+        topErrorMsg('Insufficient Stock');
+        return 
+    }
 
     if (product?.nutrition?.cholesterol >= 50) {
       Alert.alert(
