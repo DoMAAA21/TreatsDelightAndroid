@@ -39,9 +39,7 @@ export const addItemToCart = createAsyncThunk('cart/addItemToCart', async ({ id,
 
 export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartItems, totalPrice, isReserve }, { dispatch }) => {
   try {
-
     dispatch(checkoutRequest());
-    const token = await AsyncStorage.getItem('token');
     const user = await AsyncStorage.getItem('user');
     const userCreds = JSON.parse(user);
     const userId = userCreds?._id;
@@ -56,16 +54,7 @@ export const checkoutCart = createAsyncThunk('cart/createOrder', async ({ cartIt
       isReserve
 
     }
-    if (!token) {
-      dispatch(newProductFail('Login First'));
-    }
-    const config = {
-      headers: {
-        Authorization: `${token}`,
-        "Content-Type": "application/json",
-      },
-    };
-    const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order, { config });
+    const { data } = await axios.post(`${BACKEND_URL}/api/v1/order/new`, order);
     dispatch(showReceipt(data.order));
     dispatch(checkoutSuccess(data.success));
     dispatch(setQrCode(data.qrCodeURL));
@@ -166,6 +155,9 @@ const cartSlice = createSlice({
     resetAddToCartSuccess: (state) => {
       state.addToCartSuccess = false;
     },
+    resetCheckOut: (state) =>{
+      state.success = false;
+    },
     clearError: (state) => {
       state.error = false;
     },
@@ -176,6 +168,6 @@ const cartSlice = createSlice({
 });
 
 export const { clearCart, saveShippingInfo, removeItemFromCart, addToCart, resetAddToCartSuccess, clearError, increaseItemQuantity,
-  decreaseItemQuantity, checkoutRequest, checkoutSuccess, setQrCode, showReceipt } = cartSlice.actions;
+  decreaseItemQuantity, checkoutRequest, checkoutSuccess, setQrCode, showReceipt, resetCheckOut } = cartSlice.actions;
 
 export default cartSlice.reducer;

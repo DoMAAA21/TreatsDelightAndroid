@@ -1,18 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { WEB_URL } from '../../shared/constants';
-import { checkoutCart } from '../../store/reducers/cart/cartSlice';
+import { checkoutCart, resetCheckOut } from '../../store/reducers/cart/cartSlice';
 const PayPalIntegrationScreen = () => {
     const webViewRef = useRef(null);
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
-    const { cartItems, loading } = useSelector(state => state.cart);
+    const { cartItems, loading, success } = useSelector(state => state.cart);
     const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-
+   
     const onReserve = async () => {
         const isReserve = true;
         if (cartItems.length === 0) {
@@ -20,11 +20,18 @@ const PayPalIntegrationScreen = () => {
             return;
         }
         const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-        await dispatch(checkoutCart({ cartItems, totalPrice, isReserve })).then(() => {
-            navigation.navigate('Receipt');
-        })
-
+        dispatch(checkoutCart({ cartItems, totalPrice, isReserve }));
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            if (success) {
+                navigation.navigate('Receipt');
+                dispatch(resetCheckOut());
+            }
+        }, [dispatch, success]));
+
+
 
     if (loading) {
         return (
