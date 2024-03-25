@@ -94,7 +94,7 @@ const ItemInfo = () => {
 
 
   const addToCart = () => {
-    if(product.stock === 0){
+    if(product.category.toLowerCase() !== "meals" && product.stock === 0){
         topErrorMsg('Insufficient Stock');
         return 
     }
